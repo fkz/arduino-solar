@@ -31,4 +31,5 @@ include_directories (${arduinoDirectory}/hardware/arduino/cores/arduino)
 
 add_subdirectory(lib)
 add_subdirectory(extLib)
-add_subdirectory(project)
+add_subdirectory(Solarboot)
+add_subdirectory(Fernbedienung)
