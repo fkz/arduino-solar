@@ -15,19 +15,6 @@ inline Print &operator<< (Print &print, const char *str)
 
 int main ()
 {
-  /*init();
-  pinMode(ledPin, OUTPUT);
-  pinMode(ledPin, INPUT);
-  
-  while (true)
-  {
-    digitalWrite(ledPin, HIGH);
-    delay(1000);
-    digitalWrite(ledPin, LOW);
-    delay (1000);
-    
-    EEPROM.read(10);
-    Serial.println ("Hallo Welt\n");
-  }*/
+
 }
 
