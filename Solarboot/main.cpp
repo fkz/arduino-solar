@@ -1,20 +1,69 @@
 #include <WProgram.h>
-#include <EEPROM/EEPROM.h>
 
+const int motorId = 5;
+const int turnId = 5;
 
-const int ledPin = 14;
+#define forever for(;;)
 
-// this line is for pure virtual functions in the vtable
-//extern "C" { void __cxa_pure_virtual () { } };
-
-inline Print &operator<< (Print &print, const char *str)
+void error (int errorMsg)
 {
-  print.print(str);
-  return print;
+  //anhalten
+  analogWrite (motorId, 128);
+  forever;
+}
+
+int readReally ()
+{
+  int result;
+  while ((result = Serial.read ()) == -1);
+  return result;
+}
+
+int readTurnData ()
+{
+  Serial.flush();
+  Serial.write('K');
+  int ack;
+  do {
+    ack = Serial.read ();
+  } while (ack != 'A');
+  return readReally ();
 }
 
 int main ()
 {
-
+  init ();
+  
+  pinMode (motorId, OUTPUT);
+  pinMode (turnId, OUTPUT);
+  
+  // initialisiere Motor
+  analogWrite (motorId, 128);
+  delay (1000);
+  analogWrite (motorId, 0);
+  delay (1000);
+  analogWrite (motorId, 255);
+  delay (1000);
+  
+  //bleibe zunächst stehen
+  analogWrite (motorId, 128);
+  
+  Serial.begin (9600);
+  
+  while (Serial.available() == 0)
+  {
+    Serial.write ('B');
+  }
+  
+  if (Serial.read() != 'I')
+    error (1);
+  
+  //start running
+  forever
+  {
+    int turn = readTurnData ();
+    analogWrite(turnId, turn);
+    analogWrite (motorId, 270);
+  }
+  
 }
-

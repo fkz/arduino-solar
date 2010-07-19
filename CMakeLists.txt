@@ -27,6 +27,7 @@ SET (arduinoDirectory /usr/share/arduino)
 
 include_directories (${arduinoDirectory}/libraries)
 include_directories (${arduinoDirectory}/hardware/arduino/cores/arduino)
+include_directories (extLib)
 
 
 add_subdirectory(lib)

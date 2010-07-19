@@ -14,3 +14,4 @@ add_library (arduinoLib STATIC ${path}/HardwareSerial.cpp
 set (libraries ${arduinoDirectory}/libraries)
 add_library (EEPROM STATIC ${libraries}/EEPROM/EEPROM.cpp)
 add_library (SoftSerial STATIC ${libraries}/SoftwareSerial/SoftwareSerial.cpp)
+add_library (Lcd STATIC ${libraries}/LiquidCrystal/LiquidCrystal.cpp)
