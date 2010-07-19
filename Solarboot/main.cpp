@@ -5,31 +5,6 @@ const int turnId = 5;
 
 #define forever for(;;)
 
-void error (int errorMsg)
-{
-  //anhalten
-  analogWrite (motorId, 128);
-  forever;
-}
-
-int readReally ()
-{
-  int result;
-  while ((result = Serial.read ()) == -1);
-  return result;
-}
-
-int readTurnData ()
-{
-  Serial.flush();
-  Serial.write('K');
-  int ack;
-  do {
-    ack = Serial.read ();
-  } while (ack != 'A');
-  return readReally ();
-}
-
 int main ()
 {
   init ();
