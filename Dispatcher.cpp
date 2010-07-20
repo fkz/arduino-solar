@@ -20,7 +20,7 @@ void Dispatcher<count>::call()
   long unsigned int now = millis();
   for (int i = 0; i != count; ++i)
   {
-    if (lastCall[i] < now)
+    if (lastCall[i] <= now)
     {
       lastCall[i] = now + interval[i];
       (objects[i]->*exec[i])();

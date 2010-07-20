@@ -1,24 +1,30 @@
 #include "solarboot.h"
 #include "../Dispatcher.h"
+#include <Servo/Servo.h>
 
 Solarboot::Solarboot(): MyXBee(XBeeAddress64 (addressOfRemoteControl1, addressOfRemoteControl2))
 {
-  pinMode (motorId, OUTPUT);
-  pinMode (turnId, OUTPUT);
+  static NoMPPT noMPPT;
+  mppt = &noMPPT;
   
-  //FIXME: initialisiere Motor
-  analogWrite (motorId, 128);
+  servoMotor.attach(motorId);
+  servoTurn.attach(turnId);
+  
+  //FIXME: initialize motor
+  servoMotor.write (90);
   delay (1000);
-  analogWrite (motorId, 0);
+  servoMotor.write (0);
   delay (1000);
-  analogWrite (motorId, 255);
+  servoMotor.write (180);
   delay (1000);
   
   //bleibe zunächst stehen
-  analogWrite (motorId, 128);
+  servoMotor.write (90);
   
-  addMethod(this, static_cast< void (Dispatcheable::*) () > (&Solarboot::readPackages), 0);
-  addMethod(this, static_cast< void (Dispatcheable::*) () > (&Solarboot::sendData), 500);
+  
+  addMethod(this, &Solarboot::readPackages, 0);
+  addMethod(this, &Solarboot::sendData, 500);
+  addMethod(this, &Solarboot::iterateMPPT, 2);
 }
 
 void Solarboot::error(uint8_t arg1)
@@ -60,11 +66,66 @@ void Solarboot::readData(uint8_t* data, uint8_t length)
   {
     case 'F':
     {
-      //FIXME: maybe use Servo-Class instead
-      analogWrite (motorId, data[1]);
-      analogWrite (turnId, data[2]);
+      mppt->updateSpeed (data[1]);
+      servoTurn.write (data[2]);
       break;
     }
   }
 }
+
+void Solarboot::iterateMPPT()
+{
+  int strom = analogRead (stromId);
+  int spannung = analogRead (spannungId);
+  int motor = mppt->loop(strom, spannung);
+  servoMotor.write (motor);
+}
+
+int NoMPPT::loop(int strom, int spannung)
+{
+  return speed * 180 / 256;
+}
+
+PerturbAndObserve::PerturbAndObserve()
+: lastServo(110), lastSpannung(0), lastStrom(0)
+{
+}
+
+int PerturbAndObserve::loop(int strom, int spannung)
+{
+  if (speed > 150)
+  {
+    int power = strom * spannung;
+    int lastPower = lastStrom * lastSpannung;
+    if (power > lastPower)
+    {
+      if (spannung > lastSpannung)
+	lastServo += diff;
+      else
+	lastServo -= diff;
+    }
+    else
+    {
+      if (spannung > lastSpannung)
+	lastServo -= diff;
+      else
+	lastServo += diff;
+    }
+    
+    if (lastServo < 95)
+      lastServo += 10;
+    else if (lastServo > 180)
+      lastServo -= 10;
+  }
+  else
+  {
+    lastServo = speed * 180 / 256;
+  }
+  lastStrom = strom;
+  lastSpannung = spannung;
+  return lastServo;
+}
+
+
+
 
