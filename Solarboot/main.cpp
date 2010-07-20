@@ -1,44 +1,20 @@
 #include <WProgram.h>
+#include "solarboot.h"
 
-const int motorId = 5;
-const int turnId = 5;
 
-#define forever for(;;)
+extern "C" void __cxa_pure_virtual () { for (;;); }
+
+//verify, that sizeof(int)=2. If this is not the case
+// this will lead to a compile time error
+int COMPILE_TIME_ASSERT_INT[(sizeof(int)==2)*2-1];
 
 int main ()
 {
   init ();
   
-  pinMode (motorId, OUTPUT);
-  pinMode (turnId, OUTPUT);
+  Solarboot solarboot;
   
-  // initialisiere Motor
-  analogWrite (motorId, 128);
-  delay (1000);
-  analogWrite (motorId, 0);
-  delay (1000);
-  analogWrite (motorId, 255);
-  delay (1000);
-  
-  //bleibe zunächst stehen
-  analogWrite (motorId, 128);
-  
-  Serial.begin (9600);
-  
-  while (Serial.available() == 0)
-  {
-    Serial.write ('B');
-  }
-  
-  if (Serial.read() != 'I')
-    error (1);
-  
-  //start running
-  forever
-  {
-    int turn = readTurnData ();
-    analogWrite(turnId, turn);
-    analogWrite (motorId, 270);
-  }
+  while (true)
+    solarboot.call();
   
 }

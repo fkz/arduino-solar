@@ -1,5 +1,6 @@
 set (path ${arduinoDirectory}/hardware/arduino/cores/arduino)
-add_library (arduinoLib STATIC ${path}/HardwareSerial.cpp
+add_library (arduinoLib STATIC 
+	${path}/HardwareSerial.cpp
 	${path}/Print.cpp
 	${path}/wiring.c
 	${path}/wiring_shift.c

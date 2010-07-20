@@ -1,7 +1,7 @@
 PROJECT(fernbedienung)
 
-add_executable (fernbedienung main.cpp)
-target_link_libraries(fernbedienung -Wl,--gc-sections arduinoLib)
+add_executable (fernbedienung main.cpp ../wireless.cpp fernbedienung.cpp)
+target_link_libraries(fernbedienung -Wl,--gc-sections arduinoLib Lcd XBee)
 
 ADD_CUSTOM_COMMAND(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/upload.hex
