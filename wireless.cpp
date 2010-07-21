@@ -18,12 +18,16 @@
 
 #include "wireless.h"
 
+#ifdef USE_XBEE_API
+
 MyXBee::MyXBee(const XBeeAddress64 &address)
 : lastConnection(0), waitAck(false), connectionError(false), receiver(address)
 {
   //FIXME: Baud rate
   xbee.begin (9600);
 }
+
+
 
 void MyXBee::readPackages()
 {
@@ -77,3 +81,93 @@ void MyXBee::writeData(uint8_t* data, uint8_t length)
   xbee.send(request);
 }
 
+#else
+
+MyXBeeSerial::MyXBeeSerial()
+: _isConnected(false), alredyRead(0)
+{
+  //FIXME: baud rate
+  Serial.begin(9600);
+}
+
+MyXBeeSerial::MyXBeeSerial(const XBeeAddress64 &)
+: _isConnected(false), alredyRead(0)
+{
+  //FIXME: baud rate
+  Serial.begin(9600);
+}
+
+
+bool MyXBeeSerial::isConnected()
+{
+  return _isConnected;
+}
+
+void MyXBeeSerial::readPackages()
+{
+  long unsigned int now = millis();
+  
+  if (now - lastPackageRead > MAX_TIME_BETWEEN_TWO_REQUESTS && _isConnected)
+  {
+    _isConnected = false;
+    connectionInterrupted();
+  }
+  
+  int b = Serial.read ();
+  while (b >= 0)
+  {
+    if (alredyRead == 0)
+    {
+      if (b == START_BYTE)
+      {
+	alredyRead = 1;
+      }
+      else
+	error (NO_START_BYTE);
+    }
+    else if (alredyRead >= 1)
+    {
+      if (b == ESCAPE)
+	package[alredyRead++-1] = Serial.read ()+32;
+      else if (b == START_BYTE)
+      {
+	error (START_BYTE_INSIDE_MESSAGE);
+	alredyRead = 0;
+      }
+      else
+	package[alredyRead++-1] = b;
+    }
+    
+    if (alredyRead == package[0])
+    {
+      writeData(package+1, package[0]-1);
+      alredyRead = 0;
+      lastPackageRead = now;
+      _isConnected = true;
+    }
+    
+    b = Serial.read();
+  }
+}
+
+void MyXBeeSerial::writeData(uint8_t* data, uint8_t length)
+{
+  Serial.write (START_BYTE);
+  writeEscaped (length);
+  for (uint8_t* it = data; it != data + length; ++it)
+    writeEscaped (*it);
+  
+}
+
+void MyXBeeSerial::writeEscaped(uint8_t arg1)
+{
+  if (arg1 == START_BYTE || arg1 == ESCAPE)
+  {
+    Serial.write(ESCAPE);
+    Serial.write (arg1 -32);
+  }
+  else
+    Serial.write (arg1);
+}
+
+#endif

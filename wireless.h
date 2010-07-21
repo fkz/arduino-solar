@@ -20,6 +20,8 @@
 #include <XBee/XBee.h>
 #include "Dispatcher.h"
 
+#ifdef USE_XBEE_API
+
 class MyXBee: public Dispatcheable
 { 
   public:
@@ -51,3 +53,51 @@ class MyXBee: public Dispatcheable
     bool waitAck;
     bool connectionError;
 };
+
+#else
+
+#undef START_BYTE
+#undef ESCAPE
+#define MyXBeeSerial MyXBee
+
+class MyXBeeSerial: public Dispatcheable
+{
+  public:
+    enum SpecialCharacters
+    {
+      START_BYTE = 200,
+      ESCAPE = 201
+    };
+    
+    enum ErrorMessages
+    {
+      NO_START_BYTE = 100,
+      START_BYTE_INSIDE_MESSAGE = 101
+    };
+    
+    const static int MAX_TIME_BETWEEN_TWO_REQUESTS = 100;
+    
+    MyXBeeSerial ();
+    MyXBeeSerial (const XBeeAddress64 &);
+    
+    void readPackages();
+    bool isConnected ();
+    
+    void writeData (uint8_t *data, uint8_t length);
+    void writeEscaped(uint8_t arg1);
+    
+  protected:
+    virtual void error(uint8_t arg1) = 0;
+    virtual void readData (uint8_t *data, uint8_t length) = 0;
+    virtual void connectionInterrupted () = 0;
+    
+  private:
+    
+    uint8_t package[100];
+    int alredyRead;
+    long unsigned int lastPackageRead;
+    
+    bool _isConnected;
+};
+
+#endif
