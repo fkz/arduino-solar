@@ -21,6 +21,8 @@ extern "C" void __cxa_pure_virtual () { for (;;); }
 
 int main ()
 {
+  init();
+  
   Fernbedienung fernbedienung;
   
   while (true)

@@ -16,11 +16,18 @@
 
 */
 #include "fernbedienung.h"
+#include <pins_arduino.h>
 
 Fernbedienung::Fernbedienung()
-: MyXBee(XBeeAddress64 (receiver1, receiver2)), lcd (LCD_RS, LCD_ENABLE, LCD_D0, LCD_D1, LCD_D2, LCD_D3)
+: lcd (LCD_RS, LCD_ENABLE, LCD_D0, LCD_D1, LCD_D2, LCD_D3), isInitializing (true)
 {
   addMethod(this, &Fernbedienung::readPackages, 0);
+  addMethod(this, &Fernbedienung::sendData, 1000);
+  lcd.begin(16, 2);
+  lcd.print ("Initialisiere");
+  pinMode (5, OUTPUT);
+  digitalWrite (5, LOW);  
+  writeData ((uint8_t*)"Creating object \"Fernbedienung\"", 30);
 }
 
 void Fernbedienung::error(uint8_t arg1)
@@ -34,11 +41,11 @@ void Fernbedienung::error(uint8_t arg1)
 
 void Fernbedienung::readData(uint8_t* data, uint8_t length)
 {
-  if (data[0] == 'd')
+  if (data[0] == 'S')
   {
     // show data
-    int spannung = data[1] + data[2] << 8;
-    int strom = data[3] + data[4] << 8;
+    int strom = data[1] + data[2] >> 8;
+    int spannung = data[3] + data[4] >> 8;
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print ("Spannung: ");
@@ -58,3 +65,24 @@ void Fernbedienung::connectionInterrupted()
   lcd.print ("Solarboat lost");
 }
 
+void Fernbedienung::sendData()
+{
+  uint8_t data[3];
+  int speed = analogRead (POT_SPEED);
+  int turn = analogRead (POT_TURN);
+  data[0] = 'F';
+  data[1] = speed << 2;
+  data[2] = turn << 2;
+  writeData(data, sizeof(data));
+  
+  //ASCII
+  static int nr = 0;
+  lcd.clear();
+  lcd.print ("Nr. :");
+  lcd.print (nr);
+  lcd.setCursor(0,1);
+  lcd.print("ASCII. :");
+  lcd.print ((char)nr++);
+  lcd.setCursor(8, 0);
+  lcd.print (getReadCount());
+}

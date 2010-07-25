@@ -19,7 +19,7 @@
 #include "../Dispatcher.h"
 #include <Servo/Servo.h>
 
-Solarboot::Solarboot(): MyXBee(XBeeAddress64 (addressOfRemoteControl1, addressOfRemoteControl2))
+Solarboot::Solarboot()
 {
   static NoMPPT noMPPT;
   mppt = &noMPPT;
@@ -66,8 +66,8 @@ void Solarboot::sendData()
 
 void Solarboot::connectionInterrupted()
 {
-  analogWrite (motorId, 128);
-  analogWrite (turnId, 128);
+  servoMotor.write(90);
+  servoTurn.write (90);
 }
 
 

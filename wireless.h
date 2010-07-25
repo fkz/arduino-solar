@@ -17,56 +17,20 @@
 */
 
 
-#include <XBee/XBee.h>
 #include "Dispatcher.h"
 
-#ifdef USE_XBEE_API
-
 class MyXBee: public Dispatcheable
-{ 
-  public:
-    const static int MAX_TIME_BETWEEN_TWO_REQUESTS = 100;
-    
-    MyXBee (const XBeeAddress64 &receiverAddress);
-    /**
-     this method has to be called repeatly, often enough,
-     so that there doesn't happen a buffer overrun
-    */
-    void readPackages ();
-    bool isConnected ()
-    {
-      return !connectionError && lastConnection;
-    }
-    
-    void writeData (uint8_t *data, uint8_t length);        
-    
-    
-  protected:
-    virtual void error(uint8_t arg1) = 0;
-    virtual void readData (uint8_t *data, uint8_t length) = 0;
-    virtual void connectionInterrupted () = 0;
-    
-  private:
-    XBeeAddress64 receiver;
-    XBee xbee;
-    unsigned long lastConnection;
-    bool waitAck;
-    bool connectionError;
-};
-
-#else
-
-#undef START_BYTE
-#undef ESCAPE
-#define MyXBeeSerial MyXBee
-
-class MyXBeeSerial: public Dispatcheable
 {
   public:
     enum SpecialCharacters
     {
+      #ifdef REAL_LIFE 
       START_BYTE = 200,
       ESCAPE = 201
+      #else
+      START_BYTE = 'S',
+      ESCAPE = 'E'
+      #endif
     };
     
     enum ErrorMessages
@@ -75,16 +39,17 @@ class MyXBeeSerial: public Dispatcheable
       START_BYTE_INSIDE_MESSAGE = 101
     };
     
-    const static int MAX_TIME_BETWEEN_TWO_REQUESTS = 100;
+    const static int MAX_TIME_BETWEEN_TWO_REQUESTS = 500;
     
-    MyXBeeSerial ();
-    MyXBeeSerial (const XBeeAddress64 &);
+    MyXBee ();
     
     void readPackages();
     bool isConnected ();
     
     void writeData (uint8_t *data, uint8_t length);
     void writeEscaped(uint8_t arg1);
+    
+    long getReadCount () { return read_count; }
     
   protected:
     virtual void error(uint8_t arg1) = 0;
@@ -94,10 +59,9 @@ class MyXBeeSerial: public Dispatcheable
   private:
     
     uint8_t package[100];
-    int alredyRead;
+    long unsigned int alredyRead;
     long unsigned int lastPackageRead;
     
     bool _isConnected;
+    long read_count;
 };
-
-#endif

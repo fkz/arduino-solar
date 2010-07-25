@@ -68,9 +68,6 @@ class Solarboot: public MyXBee, public NDispatcher
     static const int stromId = 0;
     static const int spannungId = 1;
     
-    static const uint32_t addressOfRemoteControl1 = 0x2;
-    static const uint32_t addressOfRemoteControl2 = 0x1;
-
      /// initialize pin modes and XBee connection
     Solarboot();
     

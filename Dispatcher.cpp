@@ -41,7 +41,8 @@ void Dispatcher<count>::call()
     if (lastCall[i] <= now)
     {
       lastCall[i] = now + interval[i];
-      (objects[i]->*exec[i])();
+      if (exec[i] != 0)
+	(objects[i]->*exec[i])();
     }
   }
 }
@@ -51,6 +52,6 @@ void Dispatcher<count>::setMethod(int id, Dispatcheable *object, void (Dispatche
 {
   this->exec[id] = method;
   this->interval[id] = interval;
-  this->lastCall[id] = 0xFFFF;
+  this->lastCall[id] = 0;
   this->objects[id] = object;
 }
