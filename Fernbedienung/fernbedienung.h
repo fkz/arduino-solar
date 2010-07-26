@@ -33,8 +33,10 @@ class Fernbedienung: public MyXBee, public NDispatcher
     static const uint8_t POT_SPEED = 1;
     static const uint8_t POT_TURN = 2;
     
+    static const uint8_t BATTERY = 3;
+    
     Fernbedienung();
-  
+    
   protected:
     virtual void error(uint8_t arg1);
     virtual void readData(uint8_t* data, uint8_t length);
@@ -44,5 +46,14 @@ class Fernbedienung: public MyXBee, public NDispatcher
     LiquidCrystal lcd;
     bool isInitializing;
     void sendData ();
+    void checkBatteryState();
+    char lcd_various_data[2][8];
+    void writeLcd()
+    {
+      writeLcd (true);
+    }
     
+    int lcdCodePage;
+    
+    void writeLcd (bool inInterval);
 };

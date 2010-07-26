@@ -147,7 +147,25 @@ void MyXBee::readPackages ()
 	Serial.println ("Ende der Nachricht");
       }
       else
+      {
+	if (b == 'x')
+	{
+	  //lese Hexadezimalzahl
+	  while (Serial.available() < 2);
+	  b = Serial.read();
+	  if (b >= 'A')
+	    b = b - 'A' + 10;
+	  else
+	    b = b - '0';
+	  int b2 = Serial.read();
+	  if (b2 >= 'A')
+	    b2 = b2 - 'A' + 10;
+	  else
+	    b2 = b2 - '0';
+	  b = b << 4 | (b2 & 0xF);
+	}
 	package[alredyRead++-1] = b;
+      }
     }
     
     if (alredyRead >= 2 && alredyRead-2 == package[0])
