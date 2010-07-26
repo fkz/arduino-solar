@@ -30,11 +30,7 @@ Solarboot::Solarboot()
   //FIXME: initialize motor
   servoMotor.write (90);
   delay (1000);
-  servoMotor.write (0);
-  delay (1000);
-  servoMotor.write (180);
-  delay (1000);
-  
+
   //bleibe zunächst stehen
   servoMotor.write (90);
   

@@ -28,8 +28,8 @@ class MyXBee: public Dispatcheable
       START_BYTE = 200,
       ESCAPE = 201
       #else
-      START_BYTE = 'S',
-      ESCAPE = 'E'
+      START_BYTE = 's',
+      ESCAPE = 'e'
       #endif
     };
     

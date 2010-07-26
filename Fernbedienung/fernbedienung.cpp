@@ -26,8 +26,7 @@ Fernbedienung::Fernbedienung()
   lcd.begin(16, 2);
   lcd.print ("Initialisiere");
   pinMode (5, OUTPUT);
-  digitalWrite (5, LOW);  
-  writeData ((uint8_t*)"Creating object \"Fernbedienung\"", 30);
+  digitalWrite (5, LOW);
 }
 
 void Fernbedienung::error(uint8_t arg1)
@@ -44,15 +43,15 @@ void Fernbedienung::readData(uint8_t* data, uint8_t length)
   if (data[0] == 'S')
   {
     // show data
-    int strom = data[1] + data[2] >> 8;
-    int spannung = data[3] + data[4] >> 8;
+    int strom = data[1] + (data[2] << 8);
+    int spannung = data[3] + (data[4] << 8);
     lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print ("Spannung: ");
     lcd.print (spannung, DEC);
-    lcd.setCursor (0, 1);
-    lcd.print ("Strom: ");
+    lcd.print ("U");
+    lcd.setCursor (8, 0);
     lcd.print(strom, DEC);
+    lcd.print("I");
   }
 }
 
@@ -60,9 +59,9 @@ void Fernbedienung::connectionInterrupted()
 {
   lcd.clear();
   lcd.setCursor (0,0);
-  lcd.print ("Connection with");
+  lcd.print ("Verbindung");
   lcd.setCursor (0, 1);
-  lcd.print ("Solarboat lost");
+  lcd.print ("unterbrochen");
 }
 
 void Fernbedienung::sendData()
@@ -74,15 +73,4 @@ void Fernbedienung::sendData()
   data[1] = speed << 2;
   data[2] = turn << 2;
   writeData(data, sizeof(data));
-  
-  //ASCII
-  static int nr = 0;
-  lcd.clear();
-  lcd.print ("Nr. :");
-  lcd.print (nr);
-  lcd.setCursor(0,1);
-  lcd.print("ASCII. :");
-  lcd.print ((char)nr++);
-  lcd.setCursor(8, 0);
-  lcd.print (getReadCount());
 }

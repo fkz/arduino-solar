@@ -31,6 +31,8 @@ bool MyXBee::isConnected()
   return _isConnected;
 }
 
+#ifdef REALLY_WORLD
+
 void MyXBee::readPackages()
 {
   long unsigned int now = millis();
@@ -68,7 +70,7 @@ void MyXBee::readPackages()
     
     if (alredyRead >= 2 && alredyRead-2 == package[0])
     {
-      writeData(package+1, package[0]);
+      readData(package+1, package[0]);
       alredyRead = 0;
       lastPackageRead = now;
       _isConnected = true;
@@ -98,3 +100,83 @@ void MyXBee::writeEscaped(uint8_t arg1)
   else
     Serial.write (arg1);
 }
+
+#else
+
+void MyXBee::readPackages ()
+{
+  long unsigned int now = millis();
+  
+  if (now - lastPackageRead > 20*MAX_TIME_BETWEEN_TWO_REQUESTS /* menschlicher Zusatzfaktor  */ && _isConnected)
+  {
+    _isConnected = false;
+    connectionInterrupted();
+  }
+  
+  int b = Serial.read ();
+  while (b >= 0)
+  {
+    if (alredyRead == 0)
+    {
+      if (b == 's')
+      {
+	alredyRead = 1;
+	Serial.println ("Start eines Pakets");
+	package[0] = 100;
+	++alredyRead;
+      }
+      else
+      {
+	error (NO_START_BYTE);
+	Serial.println ("Start-Byte erwartet, aber etwas anderes gefunden");
+      }
+    }
+    else if (alredyRead >= 1)
+    {
+      if (b == ESCAPE)
+	package[alredyRead++-1] = Serial.read ()+32;
+      else if (b == START_BYTE)
+      {
+	error (START_BYTE_INSIDE_MESSAGE);
+	Serial.println ("Fehler: Start-Byte innerhalb Nachricht");
+	alredyRead = 1;
+      }
+      else if (b == 'E')
+      {
+	package[0] = alredyRead-2;
+	Serial.println ("Ende der Nachricht");
+      }
+      else
+	package[alredyRead++-1] = b;
+    }
+    
+    if (alredyRead >= 2 && alredyRead-2 == package[0])
+    {
+      Serial.print ("Sende Nachricht (Länge: ");
+      Serial.print (package[0], DEC);
+      Serial.print ("): ");
+      package[package[0]+2]=0;
+      Serial.println ((char*)(package+1));
+      readData(package+1, package[0]);
+      alredyRead = 0;
+      lastPackageRead = now;
+      _isConnected = true;
+    }
+    
+    b = Serial.read();
+  }
+  ++read_count;
+}
+
+void MyXBee::writeData (unsigned char *data, unsigned char length)
+{
+  Serial.print ("Paket emfangen(Länge:");
+  Serial.print ((int)length);
+  Serial.print ("): ");
+  for (int i = 0; i != length; ++i)
+    Serial.write (data[i]);
+  Serial.println ();
+}
+
+
+#endif

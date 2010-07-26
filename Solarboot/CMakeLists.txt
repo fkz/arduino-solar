@@ -1,7 +1,7 @@
 PROJECT(project)
 
 add_executable (solarboot main.cpp solarboot.cpp ../wireless.cpp)
-target_link_libraries(solarboot -Wl,--gc-sections arduinoLib XBee Servo)
+target_link_libraries(solarboot -Wl,--gc-sections arduinoLib Servo)
 
 ADD_CUSTOM_COMMAND(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/upload.hex

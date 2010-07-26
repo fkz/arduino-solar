@@ -44,4 +44,5 @@ class Fernbedienung: public MyXBee, public NDispatcher
     LiquidCrystal lcd;
     bool isInitializing;
     void sendData ();
+    
 };
