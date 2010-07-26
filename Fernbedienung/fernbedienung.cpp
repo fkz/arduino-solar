@@ -20,33 +20,15 @@
 #include "../MessageTypes.h"
 
 Fernbedienung::Fernbedienung()
-: lcd (LCD_RS, LCD_ENABLE, LCD_D0, LCD_D1, LCD_D2, LCD_D3), isInitializing (true), lcdCodePage (0)
+: lcd (LCD_RS, LCD_ENABLE, LCD_D0, LCD_D1, LCD_D2, LCD_D3), menu(lcd), isInitializing (true)
 {
   addMethod(this, &Fernbedienung::readPackages, 0);
   addMethod(this, &Fernbedienung::sendData, 1000);
   addMethod(this, &Fernbedienung::checkBatteryState, 60000);
-  addMethod (this, &Fernbedienung::writeLcd, 1000);
   lcd.begin(16, 2);
   lcd.print ("Initialisiere");
   pinMode (5, OUTPUT);
   digitalWrite (5, LOW);
-  lcd_various_data[0][0] = 'H';
-  lcd_various_data[0][1] = 'a';
-  lcd_various_data[0][2] = 'l';
-  lcd_various_data[0][3] = 'l';
-  lcd_various_data[0][4] = 'o';
-  lcd_various_data[0][5] = ' ';
-  lcd_various_data[0][6] = 'd';
-  lcd_various_data[0][7] = 'u';
-  lcd_various_data[1][0] = 'E';
-  lcd_various_data[1][1] = 's';
-  lcd_various_data[1][2] = ' ';
-  lcd_various_data[1][3] = 'i';
-  lcd_various_data[1][4] = 's';
-  lcd_various_data[1][5] = 't';
-  lcd_various_data[1][6] = ' ';
-  lcd_various_data[1][7] = ' ';
-  
 }
 
 void Fernbedienung::error(uint8_t arg1)
@@ -57,6 +39,8 @@ void Fernbedienung::error(uint8_t arg1)
   lcd.setCursor(0,1);
   lcd.print (arg1, DEC);
 }
+
+
 
 void Fernbedienung::readData(uint8_t* data, uint8_t length)
 {
@@ -72,23 +56,14 @@ void Fernbedienung::readData(uint8_t* data, uint8_t length)
     // ==> 0,015267V pro Stelle
     spannung *= 15267; 
     spannung /= 1000; // spannung in mV
-    
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print (spannung, DEC);
-    lcd.print ("mV");
-    lcd.setCursor (8, 0);
-    lcd.print(strom, DEC);
-    lcd.print("mA");
-    
-    long power = strom * spannung;
-    power /= 1000;
-    lcd.setCursor (0, 1);
-    lcd.print (power);
-    lcd.print ("mW");
-    
-    writeLcd ();
+    menu.writeData(spannung, strom);
   }
+  else if (data[0] == '-')
+    menu.setAction(-1);
+  else if (data[0] == '+')
+    menu.setAction(+1);
+  else if (data[0] == 'R')
+    menu.setExecute();
 }
 
 void Fernbedienung::connectionInterrupted()
@@ -113,26 +88,5 @@ void Fernbedienung::sendData()
 
 void Fernbedienung::checkBatteryState()
 {
-  int value = analogRead (BATTERY);
-  if (value < 700)
-  {
-    const char *message = "Batterie";
-    const char *message2 = "leer    ";
-    for (int i = 0; i != 8; ++i)
-    {
-      lcd_various_data[0][i] = message[i];
-      lcd_various_data[1][i] = message2[i];
-    }
-  }
-}
-
-void Fernbedienung::writeLcd(bool inInterval)
-{
-  if (inInterval)
-    lcdCodePage = (lcdCodePage + 1) % 2;
-  lcd.setCursor(8, 1);
-  for (int i = 0; i != 8; ++i)
-  {
-    lcd.write (lcd_various_data[lcdCodePage][i]);
-  }
+  
 }
