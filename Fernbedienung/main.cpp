@@ -27,5 +27,4 @@ int main ()
   
   while (true)
     fernbedienung.call();
-  
 }

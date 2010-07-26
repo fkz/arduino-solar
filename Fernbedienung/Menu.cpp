@@ -1,9 +1,26 @@
+/*
+    Copyright (C) 2010 Fabian Schmitthenner
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
 #include "Menu.h"
 
 const uint8_t commandData[4][5][2] = {
   { { 16, 21}, {21, 26}, {26, 31}, {12, 15}, {32, 32} },
   { { 16, 19}, {32, 32}, {32, 32}, {32, 32}, {32, 32} },
-  { { 16, 19}, {22, 25}, {28, 31}, {32, 32}, {32, 32} },
+  { { 16, 21}, {22, 27}, {28, 31}, {32, 32}, {32, 32} },
   { {  0,  3}, {16, 19}, {19, 23}, {23, 26}, {26, 30} }
 };
 
@@ -29,7 +46,7 @@ void Menu::setAction(int8_t richtung)
     else
     {
       actual += richtung;
-      if (commandData[mode][actual][0] == 32)
+      if (actual == 5 || commandData[mode][actual][0] == 32)
 	actual = 0;
     }
     highlight('_');
@@ -105,6 +122,7 @@ void Menu::writeData(int spannung, int strom)
 {
   if (mode == RUNNING)
   {
+    lcd.clear();
     lcd.setCursor (0, 0);
     lcd.print (spannung);
     lcd.print ("U");
@@ -114,5 +132,33 @@ void Menu::writeData(int spannung, int strom)
     lcd.setCursor (0, 1);
     lcd.print (spannung * (long)strom);
     lcd.print ("W");
+    interval();
   }
+}
+
+void Menu::interval()
+{
+  lcd.setCursor (8,1);
+  switch (mppt)
+  {
+    case UNKNOWN:
+      lcd.print ("??  ");
+      break;
+    case NO_MPPT:
+      lcd.print ("No  ");
+      break;
+    case PANDP:
+      lcd.print ("P&P ");
+      break;
+    case PE:
+      lcd.print ("PE  ");
+      break;
+    case PEE:
+      lcd.print ("PEE ");
+      break;
+  }
+  
+  lcd.write (flags & CONNECTION ? ' ' : 'x');
+  lcd.write (flags & BATTERY_FERNBEDIENUNG ? '!' : ' ');
+  lcd.write (flags & BATTERY_SOLARBOOT ? '!' : ' ');
 }

@@ -25,6 +25,7 @@ Fernbedienung::Fernbedienung()
   addMethod(this, &Fernbedienung::readPackages, 0);
   addMethod(this, &Fernbedienung::sendData, 1000);
   addMethod(this, &Fernbedienung::checkBatteryState, 60000);
+  addMethod(&menu, &Menu::interval, 2000);
   lcd.begin(16, 2);
   lcd.print ("Initialisiere");
   pinMode (5, OUTPUT);
@@ -44,6 +45,7 @@ void Fernbedienung::error(uint8_t arg1)
 
 void Fernbedienung::readData(uint8_t* data, uint8_t length)
 {
+  menu.setConnection(true);
   if (data[0] == Message::DATA_FROM_SOLARBOAT)
   {
     // show data
@@ -68,11 +70,7 @@ void Fernbedienung::readData(uint8_t* data, uint8_t length)
 
 void Fernbedienung::connectionInterrupted()
 {
-  lcd.clear();
-  lcd.setCursor (0,0);
-  lcd.print ("Verbindung");
-  lcd.setCursor (0, 1);
-  lcd.print ("unterbrochen");
+  menu.setConnection(false);
 }
 
 void Fernbedienung::sendData()
@@ -88,5 +86,7 @@ void Fernbedienung::sendData()
 
 void Fernbedienung::checkBatteryState()
 {
-  
+  int value = analogRead (BATTERY);
+  if (value < 600)
+    menu.setFernBattery();
 }
