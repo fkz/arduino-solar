@@ -16,7 +16,7 @@
 
 */
 #pragma once
-#include "../wireless.h"
+#include <wireless.h>
 #include <LiquidCrystal/LiquidCrystal.h>
 #include "Menu.h"
 
@@ -33,13 +33,14 @@ class Fernbedienung: public MyXBee, public NDispatcher
     
     static const uint8_t POT_SPEED = 0;
     static const uint8_t POT_TURN = 1;
+    static const uint8_t BATTERY = 3;
+    
     static const uint8_t POT_STEUERUNG = 2;
     static const int POT_STEUERUNG_DOWN = 450;
     static const int POT_STEUERUNG_SWITCH = 512;
     static const int POT_STEUERUNG_UP = 550;
     
-    static const int POT_SWITCH_MODE = 4;
-    static const uint8_t BATTERY = 3;
+    static const int PUSH_BUTTON_EXECUTE = 13;
     
     Fernbedienung();
     
@@ -53,4 +54,9 @@ class Fernbedienung: public MyXBee, public NDispatcher
     Menu menu;
     void sendData ();
     void checkBatteryState();
+    
+    // STATE SECTION
+    bool push_button_state;
+    int8_t  pot_steuerung_state;
+    void controlButtons();
 };

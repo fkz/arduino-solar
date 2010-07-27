@@ -16,10 +16,10 @@
 
 */
 #include "solarboot.h"
-#include "../Dispatcher.h"
+#include <Dispatcher.h>
 #include <Servo/Servo.h>
 #include "mppt.h"
-#include "../MessageTypes.h"
+#include <MessageTypes.h>
 
 NoMPPT noMPPT;
 PerturbAndObserve perturbAndObserve;

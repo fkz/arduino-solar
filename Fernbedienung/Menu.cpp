@@ -16,7 +16,7 @@
 
 */
 #include "Menu.h"
-#include "../MessageTypes.h"
+#include <MessageTypes.h>
 #include "fernbedienung.h"
 
 const uint8_t commandData[Menu::MENU_COUNT][5][2] = {
@@ -241,7 +241,7 @@ void Menu::interval()
       default:
 	lcd.print ("ERROR ");
 	break;
-    } 
+    }
   }
 }
 

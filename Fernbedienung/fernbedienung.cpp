@@ -17,19 +17,24 @@
 */
 #include "fernbedienung.h"
 #include <pins_arduino.h>
-#include "../MessageTypes.h"
+#include <MessageTypes.h>
 
 Fernbedienung::Fernbedienung()
-: lcd (LCD_RS, LCD_ENABLE, LCD_D0, LCD_D1, LCD_D2, LCD_D3), menu(lcd, *this)
+: lcd (LCD_RS, LCD_ENABLE, LCD_D0, LCD_D1, LCD_D2, LCD_D3), menu(lcd, *this), push_button_state(false), pot_steuerung_state(0)
 {
   addMethod(this, &Fernbedienung::readPackages, 0);
   addMethod(this, &Fernbedienung::sendData, 1000);
   addMethod(this, &Fernbedienung::checkBatteryState, 60000);
   addMethod(&menu, &Menu::interval, 2000);
+  addMethod(this, &Fernbedienung::controlButtons, 0);
   lcd.begin(16, 2);
   lcd.print ("Initialisiere");
+  pinMode (PUSH_BUTTON_EXECUTE, INPUT);
+  
+  //Kontrast -- TODO: remove in product version
   pinMode (5, OUTPUT);
   digitalWrite (5, LOW);
+  pinMode (12, INPUT);
 }
 
 void Fernbedienung::error(uint8_t arg1)
@@ -94,4 +99,33 @@ void Fernbedienung::checkBatteryState()
   int value = analogRead (BATTERY);
   if (value < 600)
     menu.setFernBattery();
+}
+
+void Fernbedienung::controlButtons()
+{
+  bool push_button = digitalRead (PUSH_BUTTON_EXECUTE);
+  if (push_button != push_button_state)
+  {
+    push_button_state = push_button;
+    if (push_button)
+      menu.setExecute();
+  }
+  /*
+  int value = analogRead (POT_STEUERUNG);
+  int8_t command;
+  if (value > POT_STEUERUNG_UP)
+    command = +1;
+  else if (value < POT_STEUERUNG_DOWN)
+    command = -1;
+  else
+    command = 0;
+  */
+  int8_t command;
+  command = digitalRead (12);
+  if (command != pot_steuerung_state)
+  {
+    pot_steuerung_state = command;
+    if (command != 0)
+      menu.setAction(command);
+  }
 }

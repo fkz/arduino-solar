@@ -16,10 +16,10 @@
 
 */
 #pragma once
-#include "../Dispatcher.h"
+#include <Dispatcher.h>
 #include <LiquidCrystal/LiquidCrystal.h>
-#include "../wireless.h"
-#include "../MessageTypes.h"
+#include <wireless.h>
+#include <MessageTypes.h>
 
 class Menu: public Dispatcheable
 {

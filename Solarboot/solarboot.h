@@ -16,9 +16,9 @@
 
 */
 #pragma once
-#include "../wireless.h"
+#include <wireless.h>
 #include <LiquidCrystal/LiquidCrystal.h>
-#include "../Dispatcher.h"
+#include <Dispatcher.h>
 #include <Servo/Servo.h>
 
 class MPPT;
