@@ -69,7 +69,11 @@ void Menu::activate(Menu::Mode m)
 {
   mode = m;
   actual = 0;
-  if (m != RUNNING)
+  if (m == CUSTOM_TRIM)
+  {
+    
+  }
+  else if (m != RUNNING)
   {
     lcd.setCursor (0,0);
     lcd.print (commandStrings[m][0]);

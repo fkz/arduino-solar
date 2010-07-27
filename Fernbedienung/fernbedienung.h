@@ -59,4 +59,9 @@ class Fernbedienung: public MyXBee, public NDispatcher
     bool push_button_state;
     int8_t  pot_steuerung_state;
     void controlButtons();
+    
+    int TURN_MIN;
+    int TURN_MAX;
+    int SPEED_MIN;
+    int SPEED_MAX;
 };
