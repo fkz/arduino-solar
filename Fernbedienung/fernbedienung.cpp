@@ -20,7 +20,7 @@
 #include "../MessageTypes.h"
 
 Fernbedienung::Fernbedienung()
-: lcd (LCD_RS, LCD_ENABLE, LCD_D0, LCD_D1, LCD_D2, LCD_D3), menu(lcd), isInitializing (true)
+: lcd (LCD_RS, LCD_ENABLE, LCD_D0, LCD_D1, LCD_D2, LCD_D3), menu(lcd, *this)
 {
   addMethod(this, &Fernbedienung::readPackages, 0);
   addMethod(this, &Fernbedienung::sendData, 1000);
@@ -46,19 +46,24 @@ void Fernbedienung::error(uint8_t arg1)
 void Fernbedienung::readData(uint8_t* data, uint8_t length)
 {
   menu.setConnection(true);
-  if (data[0] == Message::DATA_FROM_SOLARBOAT)
+  if (data[0] == Message::DATA_FROM_SOLARBOAT && length == 6)
   {
     // show data
     long strom = data[1] | (data[2] << 8);
     strom *= 5;
-    
     
     long spannung = data[3] | (data[4] << 8);
     // 0 = 0V, 1024=(5V*(14,7)/4,7)=3.127*5=15,635
     // ==> 0,015267V pro Stelle
     spannung *= 15267; 
     spannung /= 1000; // spannung in mV
+    menu.setActualMPPTType (data[5]);
     menu.writeData(spannung, strom);
+  }
+  else if (data[0] == Message::BATTERY)
+  {
+    int value = data[1] | (data[2] << 8);
+    menu.setSolarBattery(value);
   }
   else if (data[0] == '-')
     menu.setAction(-1);

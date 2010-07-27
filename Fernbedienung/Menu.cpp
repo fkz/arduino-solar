@@ -16,19 +16,23 @@
 
 */
 #include "Menu.h"
+#include "../MessageTypes.h"
+#include "fernbedienung.h"
 
-const uint8_t commandData[4][5][2] = {
+const uint8_t commandData[Menu::MENU_COUNT][5][2] = {
   { { 16, 21}, {21, 26}, {26, 31}, {12, 15}, {32, 32} },
   { { 16, 19}, {32, 32}, {32, 32}, {32, 32}, {32, 32} },
   { { 16, 21}, {22, 27}, {28, 31}, {32, 32}, {32, 32} },
-  { {  0,  3}, {16, 19}, {19, 23}, {23, 26}, {26, 30} }
+  { {  0,  3}, {16, 19}, {19, 23}, {23, 26}, {26, 30} },
+  { { 21, 24}, {32, 32}, {32, 32}, {32, 32}, {32, 32} }
 };
 
-const char *commandStrings[4][2] = {
+const char *commandStrings[Menu::MENU_COUNT][2] = {
   {"Hauptmen\xF5    up ", " MPPT Akku Trim "},
   {"Akku Sol.       "   , " up Fern.       "},
   {"   ---Trim---   "   , " Pot1  Pot2  up "},
-  {" up akt.:       "   , " No P&P PE PEE  "}
+  {" up akt.:       "   , " No P&O PE PEE  "},
+  {" MPPT ge\xE1ndert  ", "      ok        "}
 };
 
 void Menu::setAction(int8_t richtung)
@@ -88,7 +92,10 @@ void Menu::setExecute()
       if (actual == 0)
 	activate (MPPT);
       else if (actual == 1)
+      {
 	activate (AKKU);
+	battery_solarboot = 0;
+      }
       else if (actual == 2)
 	activate (TRIM);
       else if (actual == 3)
@@ -109,13 +116,38 @@ void Menu::setExecute()
       else
 	chooseMPPT ();
       break;
+    case MPPT_DATA_SEND:
+      activate (MAINMENU);
+    default:;
   }
 }
 
 void Menu::chooseMPPT()
 {
-  
+  uint8_t data[2];
+  data[0] = Message::CHANGE_MPPT_TYPE;
+  data[1] = getMPPTChar (actual);
+  xbee.writeData(data, 2);
+  activate (MPPT_DATA_SEND);
 }
+
+char Menu::getMPPTChar(uint8_t arg1)
+{
+  switch (arg1)
+  {
+    case 1:
+      return Message::MPPT_NOMPPT;
+    case 2:
+      return Message::MPPT_PERTURBEANDOBSERVE;
+    case 3:
+      return Message::MPPT_ESTIMATEPERTURB;
+    case 4:
+      return Message::MPPT_ESTIMATEESTIMATEPERTURB;
+    default:
+      return 0;
+  }
+}
+
 
 
 void Menu::writeData(int spannung, int strom)
@@ -138,27 +170,82 @@ void Menu::writeData(int spannung, int strom)
 
 void Menu::interval()
 {
-  lcd.setCursor (8,1);
-  switch (mppt)
+  if (mode == RUNNING)
   {
-    case UNKNOWN:
-      lcd.print ("??  ");
-      break;
-    case NO_MPPT:
-      lcd.print ("No  ");
-      break;
-    case PANDP:
-      lcd.print ("P&P ");
-      break;
-    case PE:
-      lcd.print ("PE  ");
-      break;
-    case PEE:
-      lcd.print ("PEE ");
-      break;
+    lcd.setCursor (8,1);
+    switch (mppt)
+    {
+      case UNKNOWN:
+	lcd.print ("??  ");
+	break;
+      case NO_MPPT:
+	lcd.print ("No  ");
+	break;
+      case PANDP:
+	lcd.print ("P&O ");
+	break;
+      case PE:
+	lcd.print ("PE  ");
+	break;
+      case PEE:
+	lcd.print ("PEE ");
+	break;
+      default:
+	lcd.print ("ERR ");
+	break;
+    }
+    
+    lcd.write (flags & CONNECTION ? ' ' : 'x');
+    lcd.write (flags & BATTERY_FERNBEDIENUNG ? '!' : ' ');
+    lcd.write (flags & BATTERY_SOLARBOOT ? '!' : ' ');
   }
-  
-  lcd.write (flags & CONNECTION ? ' ' : 'x');
-  lcd.write (flags & BATTERY_FERNBEDIENUNG ? '!' : ' ');
-  lcd.write (flags & BATTERY_SOLARBOOT ? '!' : ' ');
+  else if (mode == AKKU)
+  {
+    int value = analogRead (Fernbedienung::BATTERY);
+    lcd.setCursor(10, 0);
+    lcd.print (value);
+    lcd.print ("  ");
+    uint8_t data[1];
+    data[0] = Message::REQUEST_BATTERY;
+    xbee.writeData(data, 1);
+    
+    lcd.setCursor (10, 1);
+    if (battery_solarboot == 0)
+      lcd.print ("----");
+    else
+    {
+      lcd.print (battery_solarboot);
+      lcd.print ("  ");
+    }
+  }
+  else if (mode == MPPT)
+  {
+    lcd.setCursor (10, 0);
+    switch (mppt)
+    {
+      case UNKNOWN:
+	lcd.print ("------");
+	break;
+      case NO_MPPT:
+	lcd.print ("NoMPPT");
+	break;
+      case PANDP:
+	lcd.print ("P&O   ");
+	break;
+      case PE:
+	lcd.print ("PE    ");
+	break;
+      case PEE:
+	lcd.print ("PEE   ");
+	break;
+      default:
+	lcd.print ("ERROR ");
+	break;
+    } 
+  }
+}
+
+void Menu::setActualMPPTType(uint8_t arg1)
+{
+  mppt = (MPPTType)arg1;
 }

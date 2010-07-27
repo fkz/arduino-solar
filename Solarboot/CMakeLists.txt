@@ -1,6 +1,6 @@
 PROJECT(project)
 
-add_executable (solarboot main.cpp solarboot.cpp ../wireless.cpp)
+add_executable (solarboot main.cpp solarboot.cpp mppt.cpp ../wireless.cpp)
 target_link_libraries(solarboot -Wl,--gc-sections arduinoLib Servo)
 
 ADD_CUSTOM_COMMAND(

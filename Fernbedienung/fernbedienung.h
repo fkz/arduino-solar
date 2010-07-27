@@ -51,7 +51,6 @@ class Fernbedienung: public MyXBee, public NDispatcher
   private:
     LiquidCrystal lcd;
     Menu menu;
-    bool isInitializing;
     void sendData ();
     void checkBatteryState();
 };

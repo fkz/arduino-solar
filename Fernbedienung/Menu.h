@@ -18,19 +18,24 @@
 #pragma once
 #include "../Dispatcher.h"
 #include <LiquidCrystal/LiquidCrystal.h>
+#include "../wireless.h"
+#include "../MessageTypes.h"
 
 class Menu: public Dispatcheable
 {
   public:
-    Menu (LiquidCrystal &lcd) : lcd (lcd), mode (RUNNING), flags (NONE), mppt (UNKNOWN) { }
+    Menu (LiquidCrystal &lcd, MyXBee &xbee) : lcd (lcd), xbee (xbee), mode (RUNNING), flags (NONE), mppt (UNKNOWN) { }
     
     void setAction (int8_t richtung);
     void setExecute ();
     void writeData (int spannung, int strom);
     
-    void setSolarBattery ()
+    void setSolarBattery (int value = 0)
     {
-      flags = (Flags)(flags | BATTERY_SOLARBOOT);
+      if (value == 0)
+	flags = (Flags)(flags | BATTERY_SOLARBOOT);
+      else
+	battery_solarboot = value;
     }
     
     void setFernBattery ()
@@ -44,8 +49,8 @@ class Menu: public Dispatcheable
     }
     
     void interval ();
+    void setActualMPPTType(uint8_t arg1);
     
-  private:
     enum Mode 
     {
       RUNNING = 255,
@@ -53,12 +58,14 @@ class Menu: public Dispatcheable
       AKKU,
       TRIM,
       MPPT,
+      MPPT_DATA_SEND,
       MENU_COUNT,
       CUSTOM_TRIM
     };
     
-    
+  private:    
     LiquidCrystal &lcd;
+    MyXBee &xbee;
     Mode mode;
     uint8_t actual;
     
@@ -66,6 +73,7 @@ class Menu: public Dispatcheable
     void activate (Mode m);
     
     void chooseMPPT();
+    char getMPPTChar(uint8_t arg1);
     
     enum Flags
     {
@@ -77,13 +85,14 @@ class Menu: public Dispatcheable
     
     enum MPPTType
     {
-      UNKNOWN,
-      NO_MPPT,
-      PANDP,
-      PE,
-      PEE
+      UNKNOWN = Message::MPPT_UNKNOWN,
+      NO_MPPT = Message::MPPT_NOMPPT,
+      PANDP = Message::MPPT_PERTURBEANDOBSERVE,
+      PE = Message::MPPT_ESTIMATEPERTURB,
+      PEE = Message::MPPT_ESTIMATEESTIMATEPERTURB
     };
     
-    MPPTType mppt;
     Flags flags;
+    MPPTType mppt;
+    int battery_solarboot;
 };

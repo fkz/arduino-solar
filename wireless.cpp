@@ -19,9 +19,8 @@
 #include "wireless.h"
 
 MyXBee::MyXBee()
-: _isConnected(false), alredyRead(0), read_count(0)
+: alredyRead(0), _isConnected(false), read_count(0)
 {
-  //FIXME: baud rate
   Serial.begin(9600);
 }
 
@@ -107,7 +106,7 @@ void MyXBee::readPackages ()
 {
   long unsigned int now = millis();
   
-  if (now - lastPackageRead > 200*MAX_TIME_BETWEEN_TWO_REQUESTS /* menschlicher Zusatzfaktor  */ && _isConnected)
+  if (now - lastPackageRead > 40*MAX_TIME_BETWEEN_TWO_REQUESTS /* menschlicher Zusatzfaktor  */ && _isConnected)
   {
     _isConnected = false;
     connectionInterrupted();

@@ -23,8 +23,9 @@ namespace Message
 
 const char DATA_FROM_SOLARBOAT = 'd';
 const char BATTERY = 'b';
+const char REQUEST_BATTERY = 'B';
 const char POTI_DATA = 'P';
-const char MPPT_TYPE = 'M';
+const char CHANGE_MPPT_TYPE = 'M';
 
 // MPPT types
 const char MPPT_NOMPPT = 'n';

@@ -18,11 +18,19 @@
 #include "solarboot.h"
 #include "../Dispatcher.h"
 #include <Servo/Servo.h>
+#include "mppt.h"
+#include "../MessageTypes.h"
+
+NoMPPT noMPPT;
+PerturbAndObserve perturbAndObserve;
+PerturbEstimate perturbEstimate;
+PerturbEstimateEstimate perturbEstimateEstimate;
 
 Solarboot::Solarboot()
 {
   static NoMPPT noMPPT;
   mppt = &noMPPT;
+  mpptType = Message::MPPT_NOMPPT;
   
   servoMotor.attach(motorId);
   servoTurn.attach(turnId);
@@ -38,6 +46,7 @@ Solarboot::Solarboot()
   addMethod(this, &Solarboot::readPackages, 0);
   addMethod(this, &Solarboot::sendData, 500);
   addMethod(this, &Solarboot::iterateMPPT, 2);
+  addMethod(this, &Solarboot::checkBattery, 60000);
 }
 
 void Solarboot::error(uint8_t arg1)
@@ -50,12 +59,13 @@ void Solarboot::sendData()
   int strom = analogRead (stromId);
   int spannung = analogRead (spannungId);
   
-  uint8_t data[5];
-  data[0] = 'S';
+  uint8_t data[6];
+  data[0] = Message::DATA_FROM_SOLARBOAT;
   data[1] = strom & 0xFF;
   data[2] = strom << 8;
   data[3] = spannung & 0xFF;
   data[4] = spannung << 8;
+  data[5] = mpptType;
   
   writeData(data, sizeof(data));
 }
@@ -77,14 +87,54 @@ void Solarboot::readData(uint8_t* data, uint8_t length)
   
   switch (data[0])
   {
-    case 'F':
+    case Message::POTI_DATA:
     {
       mppt->updateSpeed (data[1]);
       servoTurn.write (data[2]);
       break;
     }
+    case Message::CHANGE_MPPT_TYPE:
+    {
+      mpptType = data[1];
+      changeMPPT ();
+      break;
+    }
+    case Message::REQUEST_BATTERY:
+    {
+      int value = analogRead (BATTERY);
+      uint8_t d_data[3];
+      d_data[0] = Message::BATTERY;
+      d_data[1] = value & 0xFF;
+      d_data[2] = value >> 8;
+      writeData (d_data, 3);
+      break;
+    }
   }
 }
+
+void Solarboot::changeMPPT()
+{
+  switch (mpptType)
+  {
+    case Message::MPPT_NOMPPT:
+      mppt = &noMPPT;
+      break;
+    case Message::MPPT_PERTURBEANDOBSERVE:
+      mppt = &perturbAndObserve;
+      break;
+    case Message::MPPT_ESTIMATEPERTURB:
+      mppt = &perturbEstimate;
+      break;
+    case Message::MPPT_ESTIMATEESTIMATEPERTURB:
+      mppt = &perturbEstimateEstimate;
+      break;
+    default:
+      mpptType = Message::MPPT_NOMPPT;
+      mppt = &noMPPT;
+      break;
+  }
+}
+
 
 void Solarboot::iterateMPPT()
 {
@@ -94,51 +144,17 @@ void Solarboot::iterateMPPT()
   servoMotor.write (motor);
 }
 
-int NoMPPT::loop(int strom, int spannung)
+void Solarboot::checkBattery()
 {
-  return speed * 180 / 256;
-}
-
-PerturbAndObserve::PerturbAndObserve()
-: lastServo(110), lastSpannung(0), lastStrom(0)
-{
-}
-
-int PerturbAndObserve::loop(int strom, int spannung)
-{
-  if (speed > 150)
+  int value = analogRead (BATTERY);
+  if (value < 500)
   {
-    int power = strom * spannung;
-    int lastPower = lastStrom * lastSpannung;
-    if (power > lastPower)
-    {
-      if (spannung > lastSpannung)
-	lastServo += diff;
-      else
-	lastServo -= diff;
-    }
-    else
-    {
-      if (spannung > lastSpannung)
-	lastServo -= diff;
-      else
-	lastServo += diff;
-    }
-    
-    if (lastServo < 95)
-      lastServo += 10;
-    else if (lastServo > 180)
-      lastServo -= 10;
+    uint8_t data[3];
+    data[0] = Message::BATTERY;
+    data[1] = 0;
+    data[2] = 0;
+    writeData(data, 3);
   }
-  else
-  {
-    lastServo = speed * 180 / 256;
-  }
-  lastStrom = strom;
-  lastSpannung = spannung;
-  return lastServo;
 }
-
-
 
 

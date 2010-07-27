@@ -16,7 +16,7 @@
 
 */
 
-
+#pragma once
 #include "Dispatcher.h"
 
 class MyXBee: public Dispatcheable
