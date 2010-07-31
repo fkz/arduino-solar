@@ -109,6 +109,11 @@ void Solarboot::readData(uint8_t* data, uint8_t length)
       writeData (d_data, 3);
       break;
     }
+    case Message::REQUEST_MPPT:
+    {
+      mppt->receiveData(*this, data+1, length-1);
+      break;
+    }
   }
 }
 

@@ -24,7 +24,10 @@ const uint8_t commandData[Menu::MENU_COUNT][5][2] = {
   { { 16, 19}, {32, 32}, {32, 32}, {32, 32}, {32, 32} },
   { { 16, 21}, {22, 27}, {28, 31}, {32, 32}, {32, 32} },
   { {  0,  3}, {16, 19}, {19, 23}, {23, 26}, {26, 30} },
-  { { 21, 24}, {32, 32}, {32, 32}, {32, 32}, {32, 32} }
+  { { 16, 19}, {19, 31}, {32, 32}, {32, 32}, {32, 32} },
+  { { 19, 26}, {27, 30}, {32, 32}, {32, 32}, {32, 32} },
+  { { 25, 28}, {28, 31}, {32, 32}, {32, 32}, {32, 32} },
+  { { 16, 19}, {19, 22}, {29, 31}, {32, 32}, {32, 32} }
 };
 
 const char *commandStrings[Menu::MENU_COUNT][2] = {
@@ -32,7 +35,10 @@ const char *commandStrings[Menu::MENU_COUNT][2] = {
   {"Akku Sol.       "   , " up Fern.       "},
   {"   ---Trim---   "   , " Pot1  Pot2  up "},
   {" up akt.:       "   , " No P&O PE PEE  "},
-  {" MPPT ge\xE1ndert  ", "      ok        "}
+  {" MPPT ge\xE1ndert  ", " ok diff einst. "},
+  {"Pot        -    "   , "    einst.  up  "},
+  {"einst.     -    "   , "Wert:     ok up "},
+  {"-diff-    akt.: "   , " up ok einst.   "}
 };
 
 void Menu::setAction(int8_t richtung)
@@ -46,6 +52,11 @@ void Menu::setAction(int8_t richtung)
 	if (commandData[mode][actual][0] == 32)
 	  break;
       --actual;
+    }
+    else if (mode == MPPT_SET_DIFF && actual == 2)
+    {
+      mppt_diff_act += richtung;
+      interval();
     }
     else
     {
@@ -69,11 +80,7 @@ void Menu::activate(Menu::Mode m)
 {
   mode = m;
   actual = 0;
-  if (m == CUSTOM_TRIM)
-  {
-    
-  }
-  else if (m != RUNNING)
+  if (m != RUNNING)
   {
     lcd.setCursor (0,0);
     lcd.print (commandStrings[m][0]);
@@ -94,7 +101,10 @@ void Menu::setExecute()
       break;
     case MAINMENU:
       if (actual == 0)
+      {
+	mppt_diff = 255;
 	activate (MPPT);
+      }
       else if (actual == 1)
       {
 	activate (AKKU);
@@ -110,9 +120,34 @@ void Menu::setExecute()
       break;
     case TRIM:
       if (actual == 0 || actual == 1)
+      {
+	trim_poti = actual;
 	activate (CUSTOM_TRIM);
+      }
       else
 	activate (MAINMENU);
+      break;
+    case CUSTOM_TRIM:
+      if (actual == 0)
+      {
+	activate (CUSTOM_TRIM2);
+	max_pot_backup = max_pot (trim_poti);
+	min_pot_backup = min_pot (trim_poti);
+	max_pot (trim_poti) = min_pot (trim_poti) = pot_value (trim_poti);
+	++max_pot (trim_poti);
+      }
+      else
+	activate (MAINMENU);
+      break;
+    case CUSTOM_TRIM2:
+      if (actual == 0)
+	activate (CUSTOM_TRIM);
+      else
+      {
+	max_pot(trim_poti) = max_pot_backup;
+	min_pot(trim_poti) = min_pot_backup;
+	activate (CUSTOM_TRIM);
+      }
       break;
     case MPPT:
       if (actual == 0)
@@ -121,7 +156,34 @@ void Menu::setExecute()
 	chooseMPPT ();
       break;
     case MPPT_DATA_SEND:
-      activate (MAINMENU);
+      if (actual == 1)
+      {
+	mppt_diff_act = mppt_diff;
+	activate (MPPT_SET_DIFF);
+      }
+      else
+	activate (MAINMENU);
+      break;
+    case MPPT_SET_DIFF:
+      if (actual == 0)
+	activate (MAINMENU);
+      else if (actual == 1)
+      {
+	uint8_t data[3];
+	data[0] = Message::SEND_MPPT;
+	data[1] = 's';
+	data[2] = mppt_diff_act;
+	xbee.writeData(data, 3);
+	mppt_diff = 255;
+	activate (MPPT);
+      }
+      else if (actual == 2)
+      {
+	highlight(' ');
+	actual = 0;
+	highlight ('_');
+      }
+      break;
     default:;
   }
 }
@@ -224,32 +286,124 @@ void Menu::interval()
   }
   else if (mode == MPPT)
   {
+    uint8_t data[2];
+    data[0] = Message::REQUEST_MPPT;
+    data[1] = 'r';
+    xbee.writeData(data, 2);
     lcd.setCursor (10, 0);
-    switch (mppt)
+    if (++status & 1)
     {
-      case UNKNOWN:
-	lcd.print ("------");
-	break;
-      case NO_MPPT:
-	lcd.print ("NoMPPT");
-	break;
-      case PANDP:
-	lcd.print ("P&O   ");
-	break;
-      case PE:
-	lcd.print ("PE    ");
-	break;
-      case PEE:
-	lcd.print ("PEE   ");
-	break;
-      default:
-	lcd.print ("ERROR ");
-	break;
+      switch (mppt)
+      {
+	case UNKNOWN:
+	  lcd.print ("------");
+	  break;
+	case NO_MPPT:
+	  lcd.print ("NoMPPT");
+	  break;
+	case PANDP:
+	  lcd.print ("P&O   ");
+	  break;
+	case PE:
+	  lcd.print ("PE    ");
+	  break;
+	case PEE:
+	  lcd.print ("PEE   ");
+	  break;
+	default:
+	  lcd.print ("ERROR ");
+	  break;
+      }
     }
+    else
+    {
+      lcd.print ("diff:");
+      if (mppt_diff == 255)
+	lcd.write ('-');
+      else
+	lcd.write (mppt_diff + '0');
+    }
+  }
+  else if (mode == CUSTOM_TRIM || mode == CUSTOM_TRIM2)
+  {
+    int max = max_pot (trim_poti);
+    int min = min_pot (trim_poti);
+    
+    if (mode == CUSTOM_TRIM)
+      lcd.setCursor (0, 1);
+    else
+      lcd.setCursor (6, 1);
+    int value = pot_value (trim_poti);
+    if (value > max)
+    {
+      if (mode == CUSTOM_TRIM2)
+	max_pot (trim_poti) = value;
+      value = 255;
+    }
+    else if (value < min)
+    {
+      if (mode == CUSTOM_TRIM2)
+	min_pot(trim_poti) = value;
+      value = 0;
+    }
+    else
+    {
+      value -= min;
+      value = (long)value * 256 / (max - min);
+    }
+    lcd.print (value);
+    lcd.write (' ');
+    
+    lcd.setCursor (7, 0);
+    lcd.print (min);
+    lcd.setCursor (12, 0);
+    lcd.print (max);
+    
+  }
+  else if (mode == MPPT_SET_DIFF)
+  {
+    lcd.setCursor (15, 0);
+    if (mppt_diff == 255)
+      lcd.write ('-');
+    else
+      lcd.write (mppt_diff + '0');
+    lcd.setCursor (14, 1);
+    lcd.write (mppt_diff_act + '0');
   }
 }
 
 void Menu::setActualMPPTType(uint8_t arg1)
 {
   mppt = (MPPTType)arg1;
+}
+
+int& Menu::max_pot(uint8_t poti)
+{
+  return POT_MAX[poti];
+}
+
+int& Menu::min_pot(uint8_t poti)
+{
+  return POT_MIN[poti];
+}
+
+int Menu::pot_value(uint8_t poti)
+{
+  return analogRead (poti == SPEED ? Fernbedienung::POT_SPEED : Fernbedienung::POT_TURN);
+}
+
+uint8_t Menu::getPotiValue(Menu::Poti poti)
+{
+  if (mode == CUSTOM_TRIM || mode == CUSTOM_TRIM2)
+    return 128;
+  else
+  {
+    int value = pot_value (poti);
+    if (value > max_pot (poti))
+      return 255;
+    else if (value < min_pot(poti))
+      return 0;
+    else
+      return (value-min_pot(poti))*256/(max_pot(poti)-min_pot(poti));
+  }
 }

@@ -34,6 +34,7 @@ class Fernbedienung: public MyXBee, public NDispatcher
     static const uint8_t POT_SPEED = 0;
     static const uint8_t POT_TURN = 1;
     static const uint8_t BATTERY = 3;
+    static const int MIN_BATTERY_VALUE = 570;
     
     static const uint8_t POT_STEUERUNG = 2;
     static const int POT_STEUERUNG_DOWN = 450;
@@ -41,6 +42,7 @@ class Fernbedienung: public MyXBee, public NDispatcher
     static const int POT_STEUERUNG_UP = 550;
     
     static const int PUSH_BUTTON_EXECUTE = 13;
+    
     
     Fernbedienung();
     
@@ -59,9 +61,4 @@ class Fernbedienung: public MyXBee, public NDispatcher
     bool push_button_state;
     int8_t  pot_steuerung_state;
     void controlButtons();
-    
-    int TURN_MIN;
-    int TURN_MAX;
-    int SPEED_MIN;
-    int SPEED_MAX;
 };

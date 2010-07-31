@@ -21,7 +21,6 @@
 
 Fernbedienung::Fernbedienung()
 : lcd (LCD_RS, LCD_ENABLE, LCD_D0, LCD_D1, LCD_D2, LCD_D3), menu(lcd, *this), push_button_state(false), pot_steuerung_state(0)
-, TURN_MIN (450), TURN_MAX (550), SPEED_MIN (450), SPEED_MAX (550) // TODO: read speed/turn_max/min from EEPROM
 {
   addMethod(this, &Fernbedienung::readPackages, 0);
   addMethod(this, &Fernbedienung::sendData, 1000);
@@ -71,6 +70,11 @@ void Fernbedienung::readData(uint8_t* data, uint8_t length)
     int value = data[1] | (data[2] << 8);
     menu.setSolarBattery(value);
   }
+  else if (data[0] == Message::REQUEST_MPPT)
+  {
+    if (data[1] == 'r')
+      menu.setMPPTDiff (data[2]);
+  }
   else if (data[0] == '-')
     menu.setAction(-1);
   else if (data[0] == '+')
@@ -87,37 +91,17 @@ void Fernbedienung::connectionInterrupted()
 void Fernbedienung::sendData()
 {
   uint8_t data[3];
-  int speed = analogRead (POT_SPEED);
-  int turn = analogRead (POT_TURN);
-  if (speed > SPEED_MAX)
-    speed = 255;
-  else if (speed < SPEED_MIN)
-    speed = 0;
-  else
-  {
-    speed -= SPEED_MIN;
-    speed = speed * (SPEED_MAX - SPEED_MIN) / 256;
-  }
-  if (turn > TURN_MAX)
-    turn = 255;
-  else if (turn < TURN_MIN)
-    turn = 0;
-  else
-  {
-    turn -= TURN_MIN;
-    turn = turn * (TURN_MAX - TURN_MIN) / 256;
-  }
   
   data[0] = Message::POTI_DATA;
-  data[1] = speed >> 2;
-  data[2] = turn >> 2;
+  data[1] = menu.getPotiValue(Menu::SPEED);
+  data[2] = menu.getPotiValue(Menu::TURN);
   writeData(data, sizeof(data));
 }
 
 void Fernbedienung::checkBatteryState()
 {
   int value = analogRead (BATTERY);
-  if (value < 600)
+  if (value < MIN_BATTERY_VALUE)
     menu.setFernBattery();
 }
 
@@ -130,7 +114,8 @@ void Fernbedienung::controlButtons()
     if (push_button)
       menu.setExecute();
   }
-  /*
+  //TODO: remove in product version
+  
   int value = analogRead (POT_STEUERUNG);
   int8_t command;
   if (value > POT_STEUERUNG_UP)
@@ -139,7 +124,7 @@ void Fernbedienung::controlButtons()
     command = -1;
   else
     command = 0;
-  */
+  
   int8_t command;
   command = digitalRead (12);
   if (command != pot_steuerung_state)

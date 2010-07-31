@@ -24,7 +24,14 @@
 class Menu: public Dispatcheable
 {
   public:
-    Menu (LiquidCrystal &lcd, MyXBee &xbee) : lcd (lcd), xbee (xbee), mode (RUNNING), flags (NONE), mppt (UNKNOWN) { }
+    Menu (LiquidCrystal &lcd, MyXBee &xbee) : lcd (lcd), xbee (xbee), mode (RUNNING), flags (NONE), mppt (UNKNOWN) 
+    { 
+      POT_MIN[SPEED] = 379;
+      POT_MAX[SPEED] = 648;
+      POT_MIN[TURN] = 450;
+      POT_MAX[TURN] = 649;
+      //TODO: read values from EEPROM
+    }
     
     void setAction (int8_t richtung);
     void setExecute ();
@@ -59,15 +66,31 @@ class Menu: public Dispatcheable
       TRIM,
       MPPT,
       MPPT_DATA_SEND,
-      MENU_COUNT,
-      CUSTOM_TRIM
+      CUSTOM_TRIM,
+      CUSTOM_TRIM2,
+      MPPT_SET_DIFF,
+      MENU_COUNT
     };
+    
+    enum Poti
+    {
+      SPEED,
+      TURN
+    };
+    
+    uint8_t getPotiValue (Poti poti);
+    void setMPPTDiff(uint8_t arg1)
+    {
+      mppt_diff = arg1;
+    }
+    
     
   private:    
     LiquidCrystal &lcd;
     MyXBee &xbee;
     Mode mode;
     uint8_t actual;
+    uint8_t status;
     
     void highlight(char value);
     void activate (Mode m);
@@ -80,7 +103,8 @@ class Menu: public Dispatcheable
       NONE = 0,
       BATTERY_SOLARBOOT = 1,
       BATTERY_FERNBEDIENUNG = 2,
-      CONNECTION = 4
+      CONNECTION = 4,
+      FLAGS_ALL = 7
     };
     
     enum MPPTType
@@ -95,4 +119,17 @@ class Menu: public Dispatcheable
     Flags flags;
     MPPTType mppt;
     int battery_solarboot;
+    
+    uint8_t mppt_diff;
+    uint8_t mppt_diff_act;
+    
+    int POT_MIN[2];
+    int POT_MAX[2];
+    
+    uint8_t trim_poti;
+    int min_pot_backup;
+    int max_pot_backup;
+    int pot_value(uint8_t poti);
+    int &max_pot(uint8_t poti);
+    int &min_pot(uint8_t poti);
 };
