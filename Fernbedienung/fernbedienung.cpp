@@ -114,7 +114,7 @@ void Fernbedienung::controlButtons()
     if (push_button)
       menu.setExecute();
   }
-  //TODO: remove in product version
+  //TODO: look for a better solution
   
   int value = analogRead (POT_STEUERUNG);
   int8_t command;
@@ -125,12 +125,12 @@ void Fernbedienung::controlButtons()
   else
     command = 0;
   
-  int8_t command;
-  command = digitalRead (12);
   if (command != pot_steuerung_state)
   {
     pot_steuerung_state = command;
-    if (command != 0)
+    if (command == 1)
       menu.setAction(command);
+    else if (command == -1)
+      menu.setExecute();
   }
 }
