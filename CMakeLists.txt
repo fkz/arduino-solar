@@ -27,6 +27,14 @@ SET(CMAKE_CXX_FLAGS ${CXXFLAGS})
 
 add_definitions (-DARDUINO=18)
 
+IF(REALLY_WORLD)
+ add_definitions(-DREALLY_WORLD)
+ MESSAGE("Compiling for really use")
+ELSE(REALLY_WORLD)
+ MESSAGE("Compiling for human readable Standard input")
+ MESSAGE("this program should not be used together with the XBee")
+ MESSAGE("if you want to use that, please add parameter -DREALLY_WORLD=true")
+ENDIF(REALLY_WORLD)
 
 SET (arduinoDirectory /usr/share/arduino)
 
