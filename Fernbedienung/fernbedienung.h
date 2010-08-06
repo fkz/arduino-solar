@@ -24,12 +24,12 @@ class Fernbedienung: public MyXBee, public NDispatcher
 {
   public:
     
-    static const uint8_t LCD_RS = 2;
-    static const uint8_t LCD_ENABLE = 3;
-    static const uint8_t LCD_D0 = 8;
-    static const uint8_t LCD_D1 = 9;
-    static const uint8_t LCD_D2 = 10;
-    static const uint8_t LCD_D3 = 11;
+    static const uint8_t LCD_RS = 12;
+    static const uint8_t LCD_ENABLE = 11;
+    static const uint8_t LCD_D0 = 5;
+    static const uint8_t LCD_D1 = 4;
+    static const uint8_t LCD_D2 = 3;
+    static const uint8_t LCD_D3 = 2;
     
     static const uint8_t POT_SPEED = 0;
     static const uint8_t POT_TURN = 1;
