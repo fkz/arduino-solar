@@ -216,23 +216,31 @@ char Menu::getMPPTChar(uint8_t arg1)
 
 
 
-void Menu::writeData(int spannung, int strom)
+void Menu::writeData(long spannung, long strom)
 {
   if (mode == RUNNING)
   {
     lcd.clear();
     lcd.setCursor (0, 0);
-    lcd.print (spannung);
-    lcd.print ("U");
+    writeCommaNumber (spannung, "V");
     lcd.setCursor (8, 0);
-    lcd.print (strom);
-    lcd.print ("A");
+    writeCommaNumber (strom, "A");
     lcd.setCursor (0, 1);
-    lcd.print (spannung * (long)strom);
-    lcd.print ("W");
+    writeCommaNumber (spannung * (long)strom / 1000, "W");
     interval();
   }
 }
+
+void Menu::writeCommaNumber(long int arg1, const char *str)
+{
+  lcd.print (arg1 / 1000);
+  lcd.write ('.');
+  int nc = arg1 % 1000;
+  lcd.write ((nc / 100) + '0');
+  lcd.write (((nc % 100)/10) + '0');
+  lcd.print (str);
+}
+
 
 void Menu::interval()
 {

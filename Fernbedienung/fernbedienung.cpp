@@ -49,6 +49,7 @@ void Fernbedienung::readData(uint8_t* data, uint8_t length)
   {
     // show data
     long strom = data[1] | (data[2] << 8);
+    //FIXME: set correct factor
     strom *= 5;
     
     long spannung = data[3] | (data[4] << 8);

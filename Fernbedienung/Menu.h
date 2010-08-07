@@ -35,7 +35,7 @@ class Menu: public Dispatcheable
     
     void setAction (int8_t richtung);
     void setExecute ();
-    void writeData (int spannung, int strom);
+    void writeData (long int spannung, long int strom);
     
     void setSolarBattery (int value = 0)
     {
@@ -83,6 +83,7 @@ class Menu: public Dispatcheable
     {
       mppt_diff = arg1;
     }
+    void writeCommaNumber(long int arg1, const char* str);
     
     
   private:    
