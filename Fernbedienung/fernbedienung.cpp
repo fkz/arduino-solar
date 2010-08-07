@@ -29,12 +29,6 @@ Fernbedienung::Fernbedienung()
   addMethod(this, &Fernbedienung::controlButtons, 0);
   lcd.begin(16, 2);
   lcd.print ("Initialisiere");
-  pinMode (PUSH_BUTTON_EXECUTE, INPUT);
-  
-  //Kontrast -- TODO: remove in product version
-  pinMode (5, OUTPUT);
-  digitalWrite (5, LOW);
-  pinMode (12, INPUT);
 }
 
 void Fernbedienung::error(uint8_t arg1)
