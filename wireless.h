@@ -24,7 +24,7 @@ class MyXBee: public Dispatcheable
   public:
     enum SpecialCharacters
     {
-      #ifdef REAL_LIFE 
+      #ifdef REALLY_WORLD
       START_BYTE = 200,
       ESCAPE = 201
       #else
