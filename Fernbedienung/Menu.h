@@ -35,6 +35,7 @@ class Menu: public Dispatcheable
     
     void setAction (int8_t richtung);
     void setExecute ();
+    void goUp ();
     void writeData (long int spannung, long int strom);
     
     void setSolarBattery (int value = 0)
@@ -96,7 +97,18 @@ class Menu: public Dispatcheable
     void highlight(char value);
     void activate (Mode m);
     
+  public:
     void chooseMPPT();
+    void start()
+    {
+      activate (MAINMENU);
+    }
+    bool isStarted()
+    {
+      return mode != RUNNING;
+    }
+    
+  private:
     char getMPPTChar(uint8_t arg1);
     
     enum Flags

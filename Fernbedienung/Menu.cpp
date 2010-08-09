@@ -188,6 +188,33 @@ void Menu::setExecute()
   }
 }
 
+void Menu::goUp()
+{
+  switch (mode)
+  {
+    case RUNNING:
+      break;
+    case MAINMENU:
+      activate (RUNNING);
+      break;
+    case AKKU:
+    case TRIM:
+    case CUSTOM_TRIM:
+    case MPPT:
+    case MPPT_DATA_SEND:
+    case MPPT_SET_DIFF:
+      activate (MAINMENU);
+      break;
+    case CUSTOM_TRIM2:
+      activate (CUSTOM_TRIM);
+      break;
+    case MENU_COUNT:;
+  }
+}
+
+
+
+
 void Menu::chooseMPPT()
 {
   uint8_t data[2];
@@ -402,7 +429,7 @@ int Menu::pot_value(uint8_t poti)
 
 uint8_t Menu::getPotiValue(Menu::Poti poti)
 {
-  if (mode == CUSTOM_TRIM || mode == CUSTOM_TRIM2)
+  if (mode != RUNNING)
     return 128;
   else
   {

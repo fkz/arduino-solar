@@ -36,13 +36,15 @@ class Fernbedienung: public MyXBee, public NDispatcher
     static const uint8_t BATTERY = 3;
     static const int MIN_BATTERY_VALUE = 570;
     
+    static const int POT_TURN_LOW = 400;
+    static const int POT_TURN_HIGH = 500;
+    static const int POT_SPEED_LOW = 400;
+    static const int POT_SPEED_HIGH = 500;
+    
     static const uint8_t POT_STEUERUNG = 2;
-    static const int POT_STEUERUNG_DOWN = 450;
-    static const int POT_STEUERUNG_SWITCH = 512;
-    static const int POT_STEUERUNG_UP = 550;
-    
-    static const int PUSH_BUTTON_EXECUTE = 13;
-    
+    static const int POT_STEUERUNG_1 = 400;
+    static const int POT_STEUERUNG_2 = 500;
+    static const int POT_STEUERUNG_3 = 600;
     
     Fernbedienung();
     
@@ -52,13 +54,17 @@ class Fernbedienung: public MyXBee, public NDispatcher
     virtual void connectionInterrupted();
     
   private:
+    void setMPPT (char mpptType);
+    
+    
     LiquidCrystal lcd;
     Menu menu;
     void sendData ();
     void checkBatteryState();
     
     // STATE SECTION
-    bool push_button_state;
     int8_t  pot_steuerung_state;
+    int8_t  pot_speed_state;
+    int8_t  pot_turn_state;
     void controlButtons();
 };

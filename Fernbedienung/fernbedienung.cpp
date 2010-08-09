@@ -20,7 +20,7 @@
 #include <MessageTypes.h>
 
 Fernbedienung::Fernbedienung()
-: lcd (LCD_RS, LCD_ENABLE, LCD_D0, LCD_D1, LCD_D2, LCD_D3), menu(lcd, *this), push_button_state(false), pot_steuerung_state(0)
+: lcd (LCD_RS, LCD_ENABLE, LCD_D0, LCD_D1, LCD_D2, LCD_D3), menu(lcd, *this), pot_steuerung_state(0xFF)
 {
   addMethod(this, &Fernbedienung::readPackages, 0);
   addMethod(this, &Fernbedienung::sendData, 1000);
@@ -100,32 +100,92 @@ void Fernbedienung::checkBatteryState()
     menu.setFernBattery();
 }
 
+void Fernbedienung::setMPPT(char mpptType)
+{
+  uint8_t data[2];
+  data[0] = Message::SEND_MPPT;
+  data[1] = mpptType;
+  writeData (data, 2);
+}
+
+
 void Fernbedienung::controlButtons()
 {
-  bool push_button = digitalRead (PUSH_BUTTON_EXECUTE);
-  if (push_button != push_button_state)
-  {
-    push_button_state = push_button;
-    if (push_button)
-      menu.setExecute();
-  }
-  //TODO: look for a better solution
-  
   int value = analogRead (POT_STEUERUNG);
-  int8_t command;
-  if (value > POT_STEUERUNG_UP)
-    command = +1;
-  else if (value < POT_STEUERUNG_DOWN)
-    command = -1;
-  else
+  uint8_t command;
+  if (value < POT_STEUERUNG_1)
     command = 0;
+  else if (value < POT_STEUERUNG_2)
+    command = 1;
+  else if (value < POT_STEUERUNG_3)
+    command = 2;
+  else
+    command = 3;
   
   if (command != pot_steuerung_state)
   {
     pot_steuerung_state = command;
-    if (command == 1)
-      menu.setAction(command);
-    else if (command == -1)
-      menu.setExecute();
+    
+    if (command == 4)
+    {
+      menu.start();
+    }
+    else
+    {
+      char mpptType;
+      switch (command)
+      {
+	case 0:
+	  mpptType = Message::MPPT_NOMPPT;
+	  break;
+	case 1:
+	  mpptType = Message::MPPT_PERTURBEANDOBSERVE;
+	  break;
+	case 2:
+	  mpptType = Message::MPPT_ESTIMATEPERTURB;
+	  break;
+	case 3:
+	  mpptType = Message::MPPT_ESTIMATEESTIMATEPERTURB;
+	  break;
+      }
+      setMPPT (mpptType);
+    }
+  }
+  else if (menu.isStarted ())
+  {
+    int speed = analogRead (POT_SPEED);
+    int8_t speed_c;
+    if (speed < POT_SPEED_LOW)
+      speed_c = -1;
+    else if (speed < POT_SPEED_HIGH)
+      speed_c = 0;
+    else
+      speed_c = 1;
+    
+    if (speed_c != pot_speed_state)
+    {
+      pot_speed_state = speed_c;
+      if (speed_c == -1)
+	menu.goUp();
+      else if (speed_c == 1)
+	menu.setExecute();
+    }
+    
+    int turn = analogRead (POT_TURN);
+    int8_t turn_c;
+    if (turn < POT_TURN_LOW)
+      turn_c = -1;
+    else if (turn < POT_TURN_HIGH)
+      turn_c = 0;
+    else
+      turn_c = 1;
+    
+    if (turn_c != pot_turn_state)
+    {
+      pot_turn_state = turn_c;
+      if (turn_c != 0)
+	menu.setAction(turn_c);
+    }
+    
   }
 }
