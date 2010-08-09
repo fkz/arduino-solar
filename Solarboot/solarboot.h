@@ -47,6 +47,8 @@ class Solarboot: public MyXBee, public NDispatcher
     
     
   private:
+    int mpptRythm;
+    
     void sendData ();
     void iterateMPPT ();
     MPPT *mppt;

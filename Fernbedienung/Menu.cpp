@@ -24,7 +24,7 @@ const uint8_t commandData[Menu::MENU_COUNT][5][2] = {
   { { 16, 19}, {32, 32}, {32, 32}, {32, 32}, {32, 32} },
   { { 16, 21}, {22, 27}, {28, 31}, {32, 32}, {32, 32} },
   { {  13,  15}, {26, 29}, {32, 32}, {32, 32}, {32, 32} },
-  { { 16, 19}, {19, 31}, {32, 32}, {32, 32}, {32, 32} },
+  { { 16, 19}, {19, 22}, {29, 31}, {32, 32}, {32, 32} },
   { { 19, 26}, {27, 30}, {32, 32}, {32, 32}, {32, 32} },
   { { 25, 28}, {28, 31}, {32, 32}, {32, 32}, {32, 32} },
   { { 16, 19}, {19, 22}, {29, 31}, {32, 32}, {32, 32} }
@@ -35,7 +35,7 @@ const char *commandStrings[Menu::MENU_COUNT][2] = {
   {"Akku Sol.       "   , " up Fern.       "},
   {"   ---Trim---   "   , " Pot1  Pot2  up "},
   {"--MPPT--diff:   "   , "Intervall:      "},
-  {" MPPT ge\xE1ndert  ", " ok diff einst. "},
+  {"-inter.-akt.:   "   , " up ok einst.   "},
   {"Pot        -    "   , "    einst.  up  "},
   {"einst.     -    "   , "Wert:     ok up "},
   {"-diff-    akt.: "   , " up ok einst.   "}
@@ -53,9 +53,9 @@ void Menu::setAction(int8_t richtung)
 	  break;
       --actual;
     }
-    else if (mode == MPPT_SET_DIFF && actual == 2)
+    else if ((mode == MPPT_SET_DIFF || mode == MPPT_SET_INTERVAL) && actual == 2)
     {
-      mppt_diff_act += richtung;
+      mppt_act += richtung;
       interval();
     }
     else
@@ -103,6 +103,7 @@ void Menu::setExecute()
       if (actual == 0)
       {
 	mppt_diff = 255;
+	mppt_interval = 255;
 	activate (MPPT);
       }
       else if (actual == 1)
@@ -152,35 +153,38 @@ void Menu::setExecute()
     case MPPT:
       if (actual == 0)
       {
-	mppt_diff_act = mppt_diff;
+	mppt_act = mppt_diff;
 	activate (MPPT_SET_DIFF);
       }
       else
       {
-	//TODO
-	c
+	mppt_act = mppt_interval;
+	activate (MPPT_SET_INTERVAL);
       }
-      break;
-    case MPPT_DATA_SEND:
-      if (actual == 1)
-      {
-	mppt_diff_act = mppt_diff;
-	activate (MPPT_SET_DIFF);
-      }
-      else
-	activate (MAINMENU);
       break;
     case MPPT_SET_DIFF:
+    case MPPT_SET_INTERVAL:
       if (actual == 0)
 	activate (MAINMENU);
       else if (actual == 1)
       {
-	uint8_t data[3];
-	data[0] = Message::SEND_MPPT;
-	data[1] = 's';
-	data[2] = mppt_diff_act;
-	xbee.writeData(data, 3);
+	if (mode == MPPT_SET_DIFF)
+	{
+	  uint8_t data[3];
+	  data[0] = Message::SEND_MPPT;
+	  data[1] = 's';
+	  data[2] = mppt_act;
+	  xbee.writeData(data, 3);
+	}
+	else
+	{
+	  uint8_t data[2];
+	  data[0] = Message::SET_MPPT_INTERVAL;
+	  data[1] = mppt_act;
+	  xbee.writeData(data, 2);
+	}
 	mppt_diff = 255;
+	mppt_interval = 255;
 	activate (MPPT);
       }
       else if (actual == 2)
@@ -207,7 +211,7 @@ void Menu::goUp()
     case TRIM:
     case CUSTOM_TRIM:
     case MPPT:
-    case MPPT_DATA_SEND:
+    case MPPT_SET_INTERVAL:
     case MPPT_SET_DIFF:
       activate (MAINMENU);
       break;
@@ -308,8 +312,11 @@ void Menu::interval()
       lcd.write ('-');
     else
       lcd.write (mppt_diff + '0');
-    //TODO: write interval
-    in
+    lcd.setCursor (11, 1);
+    if (mppt_interval == 255)
+      lcd.print ("--");
+    else
+      lcd.print (mppt_interval);
   }
   else if (mode == CUSTOM_TRIM || mode == CUSTOM_TRIM2)
   {
@@ -355,7 +362,17 @@ void Menu::interval()
     else
       lcd.write (mppt_diff + '0');
     lcd.setCursor (14, 1);
-    lcd.write (mppt_diff_act + '0');
+    lcd.write (mppt_act + '0');
+  }
+  else if (mode == MPPT_SET_INTERVAL)
+  {
+    lcd.setCursor (13, 0);
+    if (mppt_interval == 255)
+      lcd.write ('-');
+    else
+      lcd.print (mppt_diff);
+    lcd.setCursor (14, 1);
+    lcd.print (mppt_act);
   }
 }
 

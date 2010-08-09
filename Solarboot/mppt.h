@@ -38,6 +38,7 @@ class MPPT: public Dispatcheable
     }
     
     static int diff;
+    static int interval;
   protected:
     uint8_t speed;
 };

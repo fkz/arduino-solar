@@ -28,6 +28,9 @@ const char POTI_DATA = 'P';
 const char CHANGE_MPPT_TYPE = 'M';
 const char REQUEST_MPPT = 'm';
 const char SEND_MPPT = '1';
+const char REQUEST_MPPT_INTERVAL = 'i';
+const char RESPONSE_MPPT_INTERVAL = 'I';
+const char SET_MPPT_INTERVAL = '8';
 
 // MPPT types
 const char MPPT_NOMPPT = 'n';

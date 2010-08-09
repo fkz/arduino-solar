@@ -66,7 +66,7 @@ class Menu: public Dispatcheable
       AKKU,
       TRIM,
       MPPT,
-      MPPT_DATA_SEND,
+      MPPT_SET_INTERVAL,
       CUSTOM_TRIM,
       CUSTOM_TRIM2,
       MPPT_SET_DIFF,
@@ -138,7 +138,8 @@ class Menu: public Dispatcheable
     int battery_solarboot;
     
     uint8_t mppt_diff;
-    uint8_t mppt_diff_act;
+    uint8_t mppt_act;
+    uint8_t mppt_interval;
     
     int POT_MIN[2];
     int POT_MAX[2];

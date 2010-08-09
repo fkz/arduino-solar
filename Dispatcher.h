@@ -60,6 +60,16 @@ class Dispatcher
       return actualId++;
     }
     
+    unsigned long getInterval (int id)
+    {
+      return interval[id];
+    }
+    
+    void setInterval (int id, unsigned long _interval)
+    {
+      interval[id] = _interval;
+    }
+    
   private:
     void (Dispatcheable::*exec[count])();
     unsigned long int lastCall[count];

@@ -45,7 +45,7 @@ Solarboot::Solarboot()
   
   addMethod(this, &Solarboot::readPackages, 0);
   addMethod(this, &Solarboot::sendData, 500);
-  addMethod(this, &Solarboot::iterateMPPT, 2);
+  mpptRythm = addMethod(this, &Solarboot::iterateMPPT, 2);
   addMethod(this, &Solarboot::checkBattery, 60000);
 }
 
@@ -112,6 +112,19 @@ void Solarboot::readData(uint8_t* data, uint8_t length)
     case Message::REQUEST_MPPT:
     {
       mppt->receiveData(*this, data+1, length-1);
+      break;
+    }
+    case Message::REQUEST_MPPT_INTERVAL:
+    {
+      uint8_t d_data[2];
+      d_data[0] = Message::RESPONSE_MPPT_INTERVAL;
+      d_data[1] = getInterval(mpptRythm);
+      writeData (d_data, 2);
+      break;
+    }
+    case Message::SET_MPPT_INTERVAL:
+    {
+      setInterval(mpptRythm, data[1]);
       break;
     }
   }

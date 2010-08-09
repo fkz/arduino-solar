@@ -29,7 +29,7 @@ void MPPT::receiveData(MyXBee& xbee, uint8_t* data, uint8_t size)
     r_data[0] = Message::SEND_MPPT;
     r_data[1] = 'r';
     r_data[2] = diff;
-    xbee.writeData(data, 3);
+    xbee.writeData(data, 2);
   }
   else if (data[0] == 's')
   {
