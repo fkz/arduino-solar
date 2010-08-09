@@ -103,7 +103,7 @@ void Fernbedienung::checkBatteryState()
 void Fernbedienung::setMPPT(char mpptType)
 {
   uint8_t data[2];
-  data[0] = Message::SEND_MPPT;
+  data[0] = Message::CHANGE_MPPT_TYPE;
   data[1] = mpptType;
   writeData (data, 2);
 }
@@ -132,6 +132,7 @@ void Fernbedienung::controlButtons()
     }
     else
     {
+      menu.end();
       char mpptType;
       switch (command)
       {

@@ -92,16 +92,20 @@ class Menu: public Dispatcheable
     MyXBee &xbee;
     Mode mode;
     uint8_t actual;
-    uint8_t status;
+    //uint8_t status;
     
     void highlight(char value);
     void activate (Mode m);
     
   public:
-    void chooseMPPT();
+    //void chooseMPPT();
     void start()
     {
       activate (MAINMENU);
+    }
+    void end ()
+    {
+      activate (RUNNING);
     }
     bool isStarted()
     {
@@ -109,7 +113,7 @@ class Menu: public Dispatcheable
     }
     
   private:
-    char getMPPTChar(uint8_t arg1);
+    //char getMPPTChar(uint8_t arg1);
     
     enum Flags
     {

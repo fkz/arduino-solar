@@ -23,7 +23,7 @@ const uint8_t commandData[Menu::MENU_COUNT][5][2] = {
   { { 16, 21}, {21, 26}, {26, 31}, {12, 15}, {32, 32} },
   { { 16, 19}, {32, 32}, {32, 32}, {32, 32}, {32, 32} },
   { { 16, 21}, {22, 27}, {28, 31}, {32, 32}, {32, 32} },
-  { {  0,  3}, {16, 19}, {19, 23}, {23, 26}, {26, 30} },
+  { {  13,  15}, {26, 29}, {32, 32}, {32, 32}, {32, 32} },
   { { 16, 19}, {19, 31}, {32, 32}, {32, 32}, {32, 32} },
   { { 19, 26}, {27, 30}, {32, 32}, {32, 32}, {32, 32} },
   { { 25, 28}, {28, 31}, {32, 32}, {32, 32}, {32, 32} },
@@ -34,7 +34,7 @@ const char *commandStrings[Menu::MENU_COUNT][2] = {
   {"Hauptmen\xF5    up ", " MPPT Akku Trim "},
   {"Akku Sol.       "   , " up Fern.       "},
   {"   ---Trim---   "   , " Pot1  Pot2  up "},
-  {" up akt.:       "   , " No P&O PE PEE  "},
+  {"--MPPT--diff:   "   , "Intervall:      "},
   {" MPPT ge\xE1ndert  ", " ok diff einst. "},
   {"Pot        -    "   , "    einst.  up  "},
   {"einst.     -    "   , "Wert:     ok up "},
@@ -151,9 +151,15 @@ void Menu::setExecute()
       break;
     case MPPT:
       if (actual == 0)
-	activate (MAINMENU);
+      {
+	mppt_diff_act = mppt_diff;
+	activate (MPPT_SET_DIFF);
+      }
       else
-	chooseMPPT ();
+      {
+	//TODO
+	c
+      }
       break;
     case MPPT_DATA_SEND:
       if (actual == 1)
@@ -212,34 +218,6 @@ void Menu::goUp()
   }
 }
 
-
-
-
-void Menu::chooseMPPT()
-{
-  uint8_t data[2];
-  data[0] = Message::CHANGE_MPPT_TYPE;
-  data[1] = getMPPTChar (actual);
-  xbee.writeData(data, 2);
-  activate (MPPT_DATA_SEND);
-}
-
-char Menu::getMPPTChar(uint8_t arg1)
-{
-  switch (arg1)
-  {
-    case 1:
-      return Message::MPPT_NOMPPT;
-    case 2:
-      return Message::MPPT_PERTURBEANDOBSERVE;
-    case 3:
-      return Message::MPPT_ESTIMATEPERTURB;
-    case 4:
-      return Message::MPPT_ESTIMATEESTIMATEPERTURB;
-    default:
-      return 0;
-  }
-}
 
 
 
@@ -325,39 +303,13 @@ void Menu::interval()
     data[0] = Message::REQUEST_MPPT;
     data[1] = 'r';
     xbee.writeData(data, 2);
-    lcd.setCursor (10, 0);
-    if (++status & 1)
-    {
-      switch (mppt)
-      {
-	case UNKNOWN:
-	  lcd.print ("------");
-	  break;
-	case NO_MPPT:
-	  lcd.print ("NoMPPT");
-	  break;
-	case PANDP:
-	  lcd.print ("P&O   ");
-	  break;
-	case PE:
-	  lcd.print ("PE    ");
-	  break;
-	case PEE:
-	  lcd.print ("PEE   ");
-	  break;
-	default:
-	  lcd.print ("ERROR ");
-	  break;
-      }
-    }
+    lcd.setCursor (14, 0);
+    if (mppt_diff == 255)
+      lcd.write ('-');
     else
-    {
-      lcd.print ("diff:");
-      if (mppt_diff == 255)
-	lcd.write ('-');
-      else
-	lcd.write (mppt_diff + '0');
-    }
+      lcd.write (mppt_diff + '0');
+    //TODO: write interval
+    in
   }
   else if (mode == CUSTOM_TRIM || mode == CUSTOM_TRIM2)
   {
