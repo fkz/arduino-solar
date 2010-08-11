@@ -36,7 +36,9 @@ ELSE(REALLY_WORLD)
  MESSAGE("if you want to use that, please add parameter -DREALLY_WORLD=true")
 ENDIF(REALLY_WORLD)
 
-SET (arduinoDirectory /usr/share/arduino)
+FILE (TO_NATIVE_PATH /usr/share/arduino arduinoDirectory)
+SET (avrdude ${arduinoDirectory}/hardware/tools/avrdude)
+SET (avrdudeConf ${arduinoDirectory}/hardware/tools/avrdude.conf)
 
 
 include_directories (${arduinoDirectory}/libraries)
