@@ -32,7 +32,7 @@ const uint8_t commandData[Menu::MENU_COUNT][5][2] = {
 
 const char *commandStrings[Menu::MENU_COUNT][2] = {
   {"Hauptmen\xF5    up ", " MPPT Akku Trim "},
-  {"Akku Sol.       "   , " up Fern.       "},
+  {"Akku Fer.       "   , " up Sola.       "},
   {"   ---Trim---   "   , " Pot1  Pot2  up "},
   {"--MPPT--diff:   "   , "Intervall:      "},
   {"-inter.-akt.:   "   , " up ok einst.   "},
@@ -250,6 +250,12 @@ void Menu::writeCommaNumber(long int arg1, const char *str)
   lcd.print (str);
 }
 
+void Menu::writeSpannung15(int arg1)
+{
+  long spannung = (long)arg1 * 15267 / 1000;
+}
+
+
 
 void Menu::interval()
 {
@@ -286,7 +292,7 @@ void Menu::interval()
   {
     int value = analogRead (Fernbedienung::BATTERY);
     lcd.setCursor(10, 0);
-    lcd.print (value);
+    writeSpannung15 (value);
     lcd.print ("  ");
     uint8_t data[1];
     data[0] = Message::REQUEST_BATTERY;
@@ -297,7 +303,7 @@ void Menu::interval()
       lcd.print ("----");
     else
     {
-      lcd.print (battery_solarboot);
+      writeSpannung15 (battery_solarboot);
       lcd.print ("  ");
     }
   }

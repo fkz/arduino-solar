@@ -150,4 +150,5 @@ class Menu: public Dispatcheable
     int pot_value(uint8_t poti);
     int &max_pot(uint8_t poti);
     int &min_pot(uint8_t poti);
+    void writeSpannung15(int arg1);
 };
