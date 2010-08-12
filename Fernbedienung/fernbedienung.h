@@ -39,10 +39,10 @@ class Fernbedienung: public MyXBee, public NDispatcher
     static const uint8_t BATTERY = 3;
     static const int MIN_BATTERY_VALUE = 570;
     
-    static const int POT_TURN_LOW = 400;
-    static const int POT_TURN_HIGH = 500;
+    static const int POT_TURN_LOW = 500;
+    static const int POT_TURN_HIGH = 600;
     static const int POT_SPEED_LOW = 400;
-    static const int POT_SPEED_HIGH = 500;
+    static const int POT_SPEED_HIGH = 600;
     
     static const uint8_t POT_STEUERUNG = 2;
     static const int POT_STEUERUNG_1 = 400;
