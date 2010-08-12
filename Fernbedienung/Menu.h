@@ -55,6 +55,8 @@ class Menu: public Dispatcheable
     
     /**
      writes the spannung with writeCommaNumber()
+     this is for a value with a voltage divider 10+4.7 as 14.7:4.7 
+     @param arg1 should be a value between 0 and 1023, as read by readAnalog()
     */
     void writeSpannung15(int arg1);
     
