@@ -141,7 +141,8 @@ class Menu: public Dispatcheable
     void activate (Mode m);
     
   public:
-    //void chooseMPPT();
+
+    
     void start()
     {
       activate (MAINMENU);
