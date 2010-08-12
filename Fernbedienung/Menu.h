@@ -35,7 +35,7 @@ class Menu: public Dispatcheable
     
     /** 
      navigation in the menu, go left or right
-     @p richtung should be -1 or 1 to go left/right
+     @param richtung should be -1 or 1 to go left/right
     */
     void setAction (int8_t richtung);
     /**
@@ -48,8 +48,8 @@ class Menu: public Dispatcheable
     void goUp ();
     /**
      updates strom, spannung and power
-     @p spannung spannung in mV
-     @p strom strom in mA
+     @param spannung spannung in mV
+     @param strom strom in mA
     */
     void writeStromAndSpannung (long int spannung, long int strom);
     
@@ -60,7 +60,7 @@ class Menu: public Dispatcheable
     
     /**
      sets the solar battery intensity. (only used if one is build in)
-     @p value either 0, stands for "LOW BATTERY" or between 1 and 1023 which
+     @param value either 0, stands for "LOW BATTERY" or between 1 and 1023 which
         is the value returned by analogRead().
     */
     void setSolarBattery (int value = 0)
@@ -125,8 +125,8 @@ class Menu: public Dispatcheable
     
     /**
      writes a number on lcd with two digits after comma
-     @p arg1 number*1000
-     @p str Einheit (which is appended)
+     @param arg1 number*1000
+     @param str Einheit (which is appended)
     */
     void writeCommaNumber(long int arg1, const char* str);
     
