@@ -225,7 +225,7 @@ void Menu::goUp()
 
 
 
-void Menu::writeData(long spannung, long strom)
+void Menu::writeStromAndSpannung(long spannung, long strom)
 {
   if (mode == RUNNING)
   {
@@ -253,6 +253,7 @@ void Menu::writeCommaNumber(long int arg1, const char *str)
 void Menu::writeSpannung15(int arg1)
 {
   long spannung = (long)arg1 * 15267 / 1000;
+  writeCommaNumber(spannung);
 }
 
 

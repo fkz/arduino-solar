@@ -33,11 +33,36 @@ class Menu: public Dispatcheable
       //TODO: read values from EEPROM
     }
     
+    /** 
+     navigation in the menu, go left or right
+     @p richtung should be -1 or 1 to go left/right
+    */
     void setAction (int8_t richtung);
+    /**
+     "ok" clicked
+    */
     void setExecute ();
+    /**
+     go down
+    */
     void goUp ();
-    void writeData (long int spannung, long int strom);
+    /**
+     updates strom, spannung and power
+     @p spannung spannung in mV
+     @p strom strom in mA
+    */
+    void writeStromAndSpannung (long int spannung, long int strom);
     
+    /**
+     writes the spannung with writeCommaNumber()
+    */
+    void writeSpannung15(int arg1);
+    
+    /**
+     sets the solar battery intensity. (only used if one is build in)
+     @p value either 0, stands for "LOW BATTERY" or between 1 and 1023 which
+        is the value returned by analogRead().
+    */
     void setSolarBattery (int value = 0)
     {
       if (value == 0)
@@ -46,17 +71,30 @@ class Menu: public Dispatcheable
 	battery_solarboot = value;
     }
     
+    /**
+     sets the flag of the battery. Should be called, if the battery is low
+    */
     void setFernBattery ()
     {
       flags = (Flags)(flags | BATTERY_FERNBEDIENUNG);
     }
     
+    /**
+     sets the connection flag
+    */
     void setConnection (bool connection)
     {
       flags = (Flags)((flags & 3) | (connection << 2));      
     }
     
+    /**
+     this method is regularily called and updates the menu
+    */
     void interval ();
+    
+    /**
+     sets the actual mppt type as returned by the boat
+    */
     void setActualMPPTType(uint8_t arg1);
     
     enum Mode 
@@ -84,6 +122,12 @@ class Menu: public Dispatcheable
     {
       mppt_diff = arg1;
     }
+    
+    /**
+     writes a number on lcd with two digits after comma
+     @p arg1 number*1000
+     @p str Einheit (which is appended)
+    */
     void writeCommaNumber(long int arg1, const char* str);
     
     
@@ -92,7 +136,6 @@ class Menu: public Dispatcheable
     MyXBee &xbee;
     Mode mode;
     uint8_t actual;
-    //uint8_t status;
     
     void highlight(char value);
     void activate (Mode m);
@@ -113,7 +156,6 @@ class Menu: public Dispatcheable
     }
     
   private:
-    //char getMPPTChar(uint8_t arg1);
     
     enum Flags
     {
@@ -150,5 +192,4 @@ class Menu: public Dispatcheable
     int pot_value(uint8_t poti);
     int &max_pot(uint8_t poti);
     int &min_pot(uint8_t poti);
-    void writeSpannung15(int arg1);
 };

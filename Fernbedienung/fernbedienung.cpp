@@ -58,7 +58,7 @@ void Fernbedienung::readData(uint8_t* data, uint8_t length)
     spannung *= 15267; 
     spannung /= 1000; // spannung in mV
     menu.setActualMPPTType (data[5]);
-    menu.writeData(spannung, strom);
+    menu.writeStromAndSpannung(spannung, strom);
   }
   else if (data[0] == Message::BATTERY)
   {

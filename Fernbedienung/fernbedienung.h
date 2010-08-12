@@ -20,6 +20,9 @@
 #include <LiquidCrystal/LiquidCrystal.h>
 #include "Menu.h"
 
+/**
+@short Basisklasse für die Fernbedienung
+*/
 class Fernbedienung: public MyXBee, public NDispatcher
 {
   public:
@@ -54,11 +57,19 @@ class Fernbedienung: public MyXBee, public NDispatcher
     virtual void connectionInterrupted();
     
   private:
+    /**
+     sends MPPT type to solar boat
+     @p mpptType type as listed in MessageTypes.h
+    */
     void setMPPT (char mpptType);
     
     
     LiquidCrystal lcd;
     Menu menu;
+    
+    /**
+     sends data of speed and turn to solar boat 
+    */
     void sendData ();
     void checkBatteryState();
     
