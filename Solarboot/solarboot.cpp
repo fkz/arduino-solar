@@ -30,7 +30,7 @@ Solarboot::Solarboot()
 {
   static NoMPPT noMPPT;
   mppt = &noMPPT;
-  mpptType = Message::MPPT_NOMPPT;
+  mpptType = Message::MPPT::NOMPPT;
   
   servoMotor.attach(motorId);
   servoTurn.attach(turnId);
@@ -134,20 +134,20 @@ void Solarboot::changeMPPT()
 {
   switch (mpptType)
   {
-    case Message::MPPT_NOMPPT:
+    case Message::MPPT::NOMPPT:
       mppt = &noMPPT;
       break;
-    case Message::MPPT_PERTURBEANDOBSERVE:
+    case Message::MPPT::PERTURBEANDOBSERVE:
       mppt = &perturbAndObserve;
       break;
-    case Message::MPPT_ESTIMATEPERTURB:
+    case Message::MPPT::ESTIMATEPERTURB:
       mppt = &perturbEstimate;
       break;
-    case Message::MPPT_ESTIMATEESTIMATEPERTURB:
+    case Message::MPPT::ESTIMATEESTIMATEPERTURB:
       mppt = &perturbEstimateEstimate;
       break;
     default:
-      mpptType = Message::MPPT_NOMPPT;
+      mpptType = Message::MPPT::NOMPPT;
       mppt = &noMPPT;
       break;
   }

@@ -48,6 +48,8 @@ class Fernbedienung: public MyXBee, public NDispatcher
     static const int POT_STEUERUNG_1 = 400;
     static const int POT_STEUERUNG_2 = 500;
     static const int POT_STEUERUNG_3 = 600;
+    static const int POT_STEUERUNG_4 = 900;
+    
     
     Fernbedienung();
     

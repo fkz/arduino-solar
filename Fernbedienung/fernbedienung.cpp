@@ -119,7 +119,7 @@ void Fernbedienung::controlButtons()
     command = 1;
   else if (value < POT_STEUERUNG_3)
     command = 2;
-  else
+  else if (value < POT_STEUERUNG_4)
     command = 3;
   
   if (command != pot_steuerung_state)
@@ -134,7 +134,8 @@ void Fernbedienung::controlButtons()
     {
       menu.end();
       char mpptType;
-      switch (command)
+      // the following command is equivalent to this
+      /*switch (command)
       {
 	case 0:
 	  mpptType = Message::MPPT_NOMPPT;
@@ -148,7 +149,8 @@ void Fernbedienung::controlButtons()
 	case 3:
 	  mpptType = Message::MPPT_ESTIMATEESTIMATEPERTURB;
 	  break;
-      }
+      }*/
+      mpptType = command;
       setMPPT (mpptType);
     }
   }

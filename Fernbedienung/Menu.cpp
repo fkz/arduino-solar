@@ -265,19 +265,19 @@ void Menu::interval()
     lcd.setCursor (8,1);
     switch (mppt)
     {
-      case UNKNOWN:
+      case Message::MPPT::UNKNOWN:
 	lcd.print ("??  ");
 	break;
-      case NO_MPPT:
+      case Message::MPPT::NOMPPT:
 	lcd.print ("No  ");
 	break;
-      case PANDP:
+      case Message::MPPT::PERTURBEANDOBSERVE:
 	lcd.print ("P&O ");
 	break;
-      case PE:
+      case Message::MPPT::ESTIMATEPERTURB:
 	lcd.print ("PE  ");
 	break;
-      case PEE:
+      case Message::MPPT::ESTIMATEESTIMATEPERTURB:
 	lcd.print ("PEE ");
 	break;
       default:
@@ -385,7 +385,7 @@ void Menu::interval()
 
 void Menu::setActualMPPTType(uint8_t arg1)
 {
-  mppt = (MPPTType)arg1;
+  mppt = arg1;
 }
 
 int& Menu::max_pot(uint8_t poti)

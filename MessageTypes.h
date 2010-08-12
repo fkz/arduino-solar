@@ -33,12 +33,17 @@ const char RESPONSE_MPPT_INTERVAL = 'I';
 const char SET_MPPT_INTERVAL = '8';
 
 // MPPT types
-const char MPPT_NOMPPT = 'n';
-const char MPPT_PERTURBEANDOBSERVE = 'p';
-const char MPPT_ESTIMATEPERTURB = 'e';
-const char MPPT_ESTIMATEESTIMATEPERTURB = 'E';
-const char MPPT_UNKNOWN = 'u';
 
+namespace MPPT
+{
+
+const char NOMPPT = 0;
+const char PERTURBEANDOBSERVE = 1;
+const char ESTIMATEPERTURB = 2;
+const char ESTIMATEESTIMATEPERTURB = 3;
+const char UNKNOWN = 255;
+
+};
 
 
 };

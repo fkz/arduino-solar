@@ -24,7 +24,7 @@
 class Menu: public Dispatcheable
 {
   public:
-    Menu (LiquidCrystal &lcd, MyXBee &xbee) : lcd (lcd), xbee (xbee), mode (RUNNING), flags (NONE), mppt (UNKNOWN) 
+    Menu (LiquidCrystal &lcd, MyXBee &xbee) : lcd (lcd), xbee (xbee), mode (RUNNING), flags (NONE), mppt (Message::MPPT::UNKNOWN) 
     { 
       POT_MIN[SPEED] = 379;
       POT_MAX[SPEED] = 648;
@@ -169,17 +169,8 @@ class Menu: public Dispatcheable
       FLAGS_ALL = 7
     };
     
-    enum MPPTType
-    {
-      UNKNOWN = Message::MPPT_UNKNOWN,
-      NO_MPPT = Message::MPPT_NOMPPT,
-      PANDP = Message::MPPT_PERTURBEANDOBSERVE,
-      PE = Message::MPPT_ESTIMATEPERTURB,
-      PEE = Message::MPPT_ESTIMATEESTIMATEPERTURB
-    };
-    
     Flags flags;
-    MPPTType mppt;
+    char mppt;
     int battery_solarboot;
     
     uint8_t mppt_diff;
