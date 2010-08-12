@@ -36,10 +36,17 @@ ELSE(REALLY_WORLD)
  MESSAGE("if you want to use that, please add parameter -DREALLY_WORLD=true")
 ENDIF(REALLY_WORLD)
 
+if (WIN32)
+FILE (TO_NATIVE_PATH C:/Programme/arduino-0018 arduinoDirectory)
+SET (avrdude ${arduinoDirectory}/hardware/tools/avr/bin/avrdude)
+SET (avrdudeConf ${arduinoDirectory}/hardware/tools/avr/etc/avrdude.conf)
+SET (avrdudePort com3)
+else(WIN32)
 FILE (TO_NATIVE_PATH /usr/share/arduino arduinoDirectory)
 SET (avrdude ${arduinoDirectory}/hardware/tools/avrdude)
 SET (avrdudeConf ${arduinoDirectory}/hardware/tools/avrdude.conf)
-
+SET (avrdudePort)
+endif(WIN32)
 
 include_directories (${arduinoDirectory}/libraries)
 include_directories (${arduinoDirectory}/hardware/arduino/cores/arduino)

@@ -12,6 +12,12 @@ add_custom_target(generate-fernbedienung
   
  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/upload.hex)
 
+if (avrdudePort)
+add_custom_target(upload-fernbedienung
+ ${avrdude} -C${avrdudeConf} -v -patmega328p -cstk500v1 -P${avrdudePort} -b57600 -D -Uflash:w:${CMAKE_CURRENT_BINARY_DIR}/upload.hex:i 
+DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/upload.hex)
+else (avrdudePort)
 add_custom_target(upload-fernbedienung
  ${avrdude} -C${avrdudeConf} -v -patmega328p -cstk500v1 -P`ls /dev/ttyUSB*` -b57600 -D -Uflash:w:${CMAKE_CURRENT_BINARY_DIR}/upload.hex:i 
 DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/upload.hex)
+endif (avrdudePort)
