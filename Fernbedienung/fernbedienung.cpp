@@ -50,12 +50,13 @@ void Fernbedienung::readData(uint8_t* data, uint8_t length)
     // show data
     unsigned long strom = data[1] | (data[2] << 8);
     //FIXME: set correct factor
-    strom *= 5;
+    strom *= 26394;
+    strom /= 1000;
     
     unsigned long spannung = data[3] | (data[4] << 8);
     // 0 = 0V, 1024=(5V*(14,7)/4,7)=3.127*5=15,635
     // ==> 0,015267V pro Stelle
-    spannung *= 15267; 
+    spannung *= 15271;
     spannung /= 1000; // spannung in mV
     menu.setActualMPPTType (data[5]);
     menu.writeStromAndSpannung(spannung, strom);

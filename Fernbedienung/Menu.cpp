@@ -255,7 +255,7 @@ void Menu::writeCommaNumber(unsigned long int arg1, const char *str)
 
 void Menu::writeSpannung15(int arg1)
 {
-  unsigned long spannung = (unsigned long)arg1 * 15267 / 1000;
+  unsigned long spannung = (unsigned long)arg1 * 15271 / 1000;
   writeCommaNumber(spannung, "V");
 }
 
