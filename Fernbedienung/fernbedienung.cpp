@@ -45,14 +45,13 @@ void Fernbedienung::error(uint8_t arg1)
 void Fernbedienung::readData(uint8_t* data, uint8_t length)
 {
   menu.setConnection(true);
-  if (data[0] == Message::DATA_FROM_SOLARBOAT && length == 6)
+  if (data[0] == Message::FromSolarboat::DATA_FROM_SOLARBOAT && length == 6)
   {
     // show data
     unsigned long strom = data[1] | (data[2] << 8);
     //FIXME: set correct factor
     strom *= 26394;
     strom /= 1000;
-    
     unsigned long spannung = data[3] | (data[4] << 8);
     // 0 = 0V, 1024=(5V*(14,7)/4,7)=3.127*5=15,635
     // ==> 0,015267V pro Stelle
@@ -61,15 +60,19 @@ void Fernbedienung::readData(uint8_t* data, uint8_t length)
     menu.setActualMPPTType (data[5]);
     menu.writeStromAndSpannung(spannung, strom);
   }
-  else if (data[0] == Message::BATTERY)
+  else if (data[0] == Message::FromSolarboat::BATTERY)
   {
     int value = data[1] | (data[2] << 8);
     menu.setSolarBattery(value);
   }
-  else if (data[0] == Message::REQUEST_MPPT)
+  else if (data[0] == Message::FromSolarboat::SEND_MPPT) // NOWLOOK
   {
     if (data[1] == 'r')
       menu.setMPPTDiff (data[2]);
+  }
+  else if (data[0] == Message::FromSolarboat::RESPONSE_MPPT_INTERVAL)
+  {
+    unsigned int interval = data[1] | (data[2] << 8);
   }
 #ifndef REALLY_WORLD
   else if (data[0] == '-')
@@ -90,7 +93,7 @@ void Fernbedienung::sendData()
 {
   uint8_t data[3];
   
-  data[0] = Message::POTI_DATA;
+  data[0] = Message::ToSolarboat::POTI_DATA;
   data[1] = menu.getPotiValue(Menu::SPEED);
   data[2] = menu.getPotiValue(Menu::TURN);
   writeData(data, sizeof(data));
@@ -106,7 +109,7 @@ void Fernbedienung::checkBatteryState()
 void Fernbedienung::setMPPT(char mpptType)
 {
   uint8_t data[2];
-  data[0] = Message::CHANGE_MPPT_TYPE;
+  data[0] = Message::ToSolarboat::CHANGE_MPPT_TYPE;
   data[1] = mpptType;
   writeData (data, 2);
 }

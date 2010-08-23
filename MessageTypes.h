@@ -21,16 +21,26 @@
 namespace Message
 {
 
+namespace FromSolarboat {
+
 const char DATA_FROM_SOLARBOAT = 'd';
 const char BATTERY = 'b';
+const char SEND_MPPT = '1';
+const char RESPONSE_MPPT_INTERVAL = 'I';
+  
+};
+
+namespace ToSolarboat {
+
 const char REQUEST_BATTERY = 'B';
 const char POTI_DATA = 'P';
 const char CHANGE_MPPT_TYPE = 'M';
 const char REQUEST_MPPT = 'm';
-const char SEND_MPPT = '1';
 const char REQUEST_MPPT_INTERVAL = 'i';
-const char RESPONSE_MPPT_INTERVAL = 'I';
 const char SET_MPPT_INTERVAL = '8';
+
+};
+
 
 // MPPT types
 

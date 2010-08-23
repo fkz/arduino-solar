@@ -129,6 +129,12 @@ class Menu: public Dispatcheable
       mppt_diff = arg1;
     }
     
+    void setMPPTInterval(unsigned int arg1)
+    {
+      mppt_interval = arg1;
+    }
+    
+    
     /**
      writes a number on lcd with two digits after comma
      @param arg1 number*1000
@@ -179,7 +185,7 @@ class Menu: public Dispatcheable
     
     uint8_t mppt_diff;
     uint8_t mppt_act;
-    uint8_t mppt_interval;
+    unsigned int mppt_interval;
     
     int POT_MIN[2];
     int POT_MAX[2];
@@ -190,4 +196,6 @@ class Menu: public Dispatcheable
     int pot_value(uint8_t poti);
     int &max_pot(uint8_t poti);
     int &min_pot(uint8_t poti);
+    
+    int interval_page;
 };

@@ -60,7 +60,7 @@ void Solarboot::sendData()
   int spannung = analogRead (spannungId);
   
   uint8_t data[6];
-  data[0] = Message::DATA_FROM_SOLARBOAT;
+  data[0] = Message::FromSolarboat::DATA_FROM_SOLARBOAT;
   data[1] = strom & 0xFF;
   data[2] = strom >> 8;
   data[3] = spannung & 0xFF;
@@ -87,44 +87,46 @@ void Solarboot::readData(uint8_t* data, uint8_t length)
   
   switch (data[0])
   {
-    case Message::POTI_DATA:
+    case Message::ToSolarboat::POTI_DATA:
     {
       mppt->updateSpeed (data[1]);
       servoTurn.write (data[2]);
       break;
     }
-    case Message::CHANGE_MPPT_TYPE:
+    case Message::ToSolarboat::CHANGE_MPPT_TYPE:
     {
       mpptType = data[1];
       changeMPPT ();
       break;
     }
-    case Message::REQUEST_BATTERY:
+    case Message::ToSolarboat::REQUEST_BATTERY:
     {
       int value = analogRead (BATTERY);
       uint8_t d_data[3];
-      d_data[0] = Message::BATTERY;
+      d_data[0] = Message::FromSolarboat::BATTERY;
       d_data[1] = value & 0xFF;
       d_data[2] = value >> 8;
       writeData (d_data, 3);
       break;
     }
-    case Message::REQUEST_MPPT:
+    case Message::ToSolarboat::REQUEST_MPPT:
     {
       mppt->receiveData(*this, data+1, length-1);
       break;
     }
-    case Message::REQUEST_MPPT_INTERVAL:
+    case Message::ToSolarboat::REQUEST_MPPT_INTERVAL:
     {
-      uint8_t d_data[2];
-      d_data[0] = Message::RESPONSE_MPPT_INTERVAL;
-      d_data[1] = getInterval(mpptRythm);
-      writeData (d_data, 2);
+      uint8_t d_data[3];
+      d_data[0] = Message::FromSolarboat::RESPONSE_MPPT_INTERVAL;
+      long unsigned int mpptInterval = getInterval(mpptRythm);
+      d_data[1] = mpptInterval & 0xFF;
+      d_data[2] = mpptInterval >> 8;
+      writeData (d_data, 3);
       break;
     }
-    case Message::SET_MPPT_INTERVAL:
+    case Message::ToSolarboat::SET_MPPT_INTERVAL:
     {
-      setInterval(mpptRythm, data[1]);
+      setInterval(mpptRythm, data[1] | (data[2] << 8));
       break;
     }
   }
@@ -168,7 +170,7 @@ void Solarboot::checkBattery()
   if (value < 500)
   {
     uint8_t data[3];
-    data[0] = Message::BATTERY;
+    data[0] = Message::FromSolarboat::BATTERY;
     data[1] = 0;
     data[2] = 0;
     writeData(data, 3);

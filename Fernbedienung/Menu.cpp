@@ -103,7 +103,7 @@ void Menu::setExecute()
       if (actual == 0)
       {
 	mppt_diff = 255;
-	mppt_interval = 255;
+	mppt_interval = 65535;
 	activate (MPPT);
       }
       else if (actual == 1)
@@ -171,20 +171,21 @@ void Menu::setExecute()
 	if (mode == MPPT_SET_DIFF)
 	{
 	  uint8_t data[3];
-	  data[0] = Message::SEND_MPPT;
+	  data[0] = Message::ToSolarboat::REQUEST_MPPT;
 	  data[1] = 's';
 	  data[2] = mppt_act;
 	  xbee.writeData(data, 3);
 	}
 	else
 	{
-	  uint8_t data[2];
-	  data[0] = Message::SET_MPPT_INTERVAL;
-	  data[1] = mppt_act;
-	  xbee.writeData(data, 2);
+	  uint8_t data[3];
+	  data[0] = Message::ToSolarboat::SET_MPPT_INTERVAL;
+	  data[1] = mppt_act & 0xFF;
+	  data[2] = mppt_act >> 8;
+	  xbee.writeData(data, 3);
 	}
 	mppt_diff = 255;
-	mppt_interval = 255;
+	mppt_interval = 65535;
 	activate (MPPT);
       }
       else if (actual == 2)
@@ -266,31 +267,49 @@ void Menu::interval()
   if (mode == RUNNING)
   {
     lcd.setCursor (8,1);
-    switch (mppt)
-    {
-      case Message::MPPT::UNKNOWN:
-	lcd.print ("??  ");
-	break;
-      case Message::MPPT::NOMPPT:
-	lcd.print ("No  ");
-	break;
-      case Message::MPPT::PERTURBEANDOBSERVE:
-	lcd.print ("P&O ");
-	break;
-      case Message::MPPT::ESTIMATEPERTURB:
-	lcd.print ("PE  ");
-	break;
-      case Message::MPPT::ESTIMATEESTIMATEPERTURB:
-	lcd.print ("PEE ");
-	break;
-      default:
-	lcd.print ("ERR ");
-	break;
+    if (interval_page)
+    {   
+      switch (mppt)
+      {
+	case Message::MPPT::UNKNOWN:
+	  lcd.print ("??  ");
+	  break;
+	case Message::MPPT::NOMPPT:
+	  lcd.print ("No  ");
+	  break;
+	case Message::MPPT::PERTURBEANDOBSERVE:
+	  lcd.print ("P&O ");
+	  break;
+	case Message::MPPT::ESTIMATEPERTURB:
+	  lcd.print ("PE  ");
+	  break;
+	case Message::MPPT::ESTIMATEESTIMATEPERTURB:
+	  lcd.print ("PEE ");
+	  break;
+	default:
+	  lcd.print ("ERR ");
+	  break;
+      }
+      
+      lcd.write (flags & CONNECTION ? ' ' : 'x');
+      lcd.write (flags & BATTERY_FERNBEDIENUNG ? '!' : ' ');
+      lcd.write (flags & BATTERY_SOLARBOOT ? '!' : ' ');
     }
-    
-    lcd.write (flags & CONNECTION ? ' ' : 'x');
-    lcd.write (flags & BATTERY_FERNBEDIENUNG ? '!' : ' ');
-    lcd.write (flags & BATTERY_SOLARBOOT ? '!' : ' ');
+    else
+    {
+      if (mppt_interval == 65535)
+      {
+	lcd.print ("????");
+	
+	uint8_t data[1];
+	data[0] = Message::ToSolarboat::REQUEST_MPPT_INTERVAL;
+	xbee.writeData(data, 1);
+      }
+      else
+	lcd.print (mppt_interval);
+      lcd.setCursor (14, 1);
+      lcd.print (mppt_diff);
+    }
   }
   else if (mode == AKKU)
   {
@@ -299,7 +318,7 @@ void Menu::interval()
     writeSpannung15 (value);
     lcd.print ("  ");
     uint8_t data[1];
-    data[0] = Message::REQUEST_BATTERY;
+    data[0] = Message::ToSolarboat::REQUEST_BATTERY;
     xbee.writeData(data, 1);
     
     lcd.setCursor (10, 1);
@@ -314,7 +333,7 @@ void Menu::interval()
   else if (mode == MPPT)
   {
     uint8_t data[2];
-    data[0] = Message::REQUEST_MPPT;
+    data[0] = Message::ToSolarboat::REQUEST_MPPT;
     data[1] = 'r';
     xbee.writeData(data, 2);
     lcd.setCursor (14, 0);
@@ -323,7 +342,7 @@ void Menu::interval()
     else
       lcd.write (mppt_diff + '0');
     lcd.setCursor (11, 1);
-    if (mppt_interval == 255)
+    if (mppt_interval == 65536)
       lcd.print ("--");
     else
       lcd.print (mppt_interval);
@@ -377,10 +396,10 @@ void Menu::interval()
   else if (mode == MPPT_SET_INTERVAL)
   {
     lcd.setCursor (13, 0);
-    if (mppt_interval == 255)
+    if (mppt_interval == 65535)
       lcd.write ('-');
     else
-      lcd.print (mppt_diff);
+      lcd.print (mppt_interval);
     lcd.setCursor (14, 1);
     lcd.print (mppt_act);
   }
