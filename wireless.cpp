@@ -106,7 +106,7 @@ void MyXBee::readPackages ()
 {
   long unsigned int now = millis();
   
-  if (now - lastPackageRead > 40*MAX_TIME_BETWEEN_TWO_REQUESTS /* menschlicher Zusatzfaktor  */ && _isConnected)
+  if (now - lastPackageRead > MAX_TIME_BETWEEN_TWO_REQUESTS  && _isConnected)
   {
     _isConnected = false;
     connectionInterrupted();

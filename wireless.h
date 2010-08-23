@@ -39,7 +39,7 @@ class MyXBee: public Dispatcheable
       START_BYTE_INSIDE_MESSAGE = 101
     };
     
-    const static int MAX_TIME_BETWEEN_TWO_REQUESTS = 500;
+    const static int MAX_TIME_BETWEEN_TWO_REQUESTS = 2000; // 2 seconds
     
     MyXBee ();
     
