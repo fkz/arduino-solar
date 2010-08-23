@@ -73,6 +73,7 @@ void Fernbedienung::readData(uint8_t* data, uint8_t length)
   else if (data[0] == Message::FromSolarboat::RESPONSE_MPPT_INTERVAL)
   {
     unsigned int interval = data[1] | (data[2] << 8);
+    menu.setMPPTInterval (interval);
   }
 #ifndef REALLY_WORLD
   else if (data[0] == '-')

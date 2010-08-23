@@ -184,7 +184,7 @@ class Menu: public Dispatcheable
     int battery_solarboot;
     
     uint8_t mppt_diff;
-    uint8_t mppt_act;
+    unsigned int mppt_act;
     unsigned int mppt_interval;
     
     int POT_MIN[2];
