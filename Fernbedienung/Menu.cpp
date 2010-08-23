@@ -235,13 +235,16 @@ void Menu::writeStromAndSpannung(unsigned long spannung, unsigned long strom)
     lcd.setCursor (8, 0);
     writeCommaNumber (strom, "A");
     lcd.setCursor (0, 1);
-    writeCommaNumber (spannung * (long)strom / 1000, "W");
+    writeCommaNumber (spannung * strom / 1000, "W");
     interval();
   }
 }
 
 void Menu::writeCommaNumber(unsigned long int arg1, const char *str)
 {
+  //Runden
+  if (arg1 % 10 >= 5)
+    arg1 += 10;
   lcd.print (arg1 / 1000);
   lcd.write ('.');
   int nc = arg1 % 1000;

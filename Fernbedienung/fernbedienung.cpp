@@ -48,11 +48,11 @@ void Fernbedienung::readData(uint8_t* data, uint8_t length)
   if (data[0] == Message::DATA_FROM_SOLARBOAT && length == 6)
   {
     // show data
-    long strom = data[1] | (data[2] << 8);
+    unsigned long strom = data[1] | (data[2] << 8);
     //FIXME: set correct factor
     strom *= 5;
     
-    long spannung = data[3] | (data[4] << 8);
+    unsigned long spannung = data[3] | (data[4] << 8);
     // 0 = 0V, 1024=(5V*(14,7)/4,7)=3.127*5=15,635
     // ==> 0,015267V pro Stelle
     spannung *= 15267; 
