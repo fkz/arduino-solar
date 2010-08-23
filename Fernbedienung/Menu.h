@@ -97,7 +97,11 @@ class Menu: public Dispatcheable
     /**
      sets the actual mppt type as returned by the boat
     */
-    void setActualMPPTType(uint8_t arg1);
+    void setActualMPPTType(char arg1);
+    char getActualMPPTType ()
+    {
+      return mppt;
+    }
     
     enum Mode 
     {

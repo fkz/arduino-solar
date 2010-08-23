@@ -19,6 +19,8 @@
 #include <wireless.h>
 #include <LiquidCrystal/LiquidCrystal.h>
 #include "Menu.h"
+#include "Poti.h"
+
 
 /**
 @short Basisklasse für die Fernbedienung
@@ -39,17 +41,9 @@ class Fernbedienung: public MyXBee, public NDispatcher
     static const uint8_t BATTERY = 3;
     static const int MIN_BATTERY_VALUE = 570;
     
-    static const int POT_TURN_LOW = 500;
-    static const int POT_TURN_HIGH = 600;
-    static const int POT_SPEED_LOW = 400;
-    static const int POT_SPEED_HIGH = 600;
-    
-    static const uint8_t POT_STEUERUNG = 2;
-    static const int POT_STEUERUNG_1 = 400;
-    static const int POT_STEUERUNG_2 = 500;
-    static const int POT_STEUERUNG_3 = 600;
-    static const int POT_STEUERUNG_4 = 900;
-    
+    static const uint8_t POT_STEUERUNG_X = 2;
+    static const uint8_t POT_STEUERUNG_Y = 4;
+    static const uint8_t STEUERUNG_PRESS = 10;
     
     Fernbedienung();
     
@@ -75,9 +69,10 @@ class Fernbedienung: public MyXBee, public NDispatcher
     void sendData ();
     void checkBatteryState();
     
-    // STATE SECTION
-    int8_t  pot_steuerung_state;
-    int8_t  pot_speed_state;
-    int8_t  pot_turn_state;
-    void controlButtons();
+    // Potis
+    Poti< POT_STEUERUNG_X, 490, 510 > steuerungX;
+    Poti< POT_STEUERUNG_Y, 490, 510 > steuerungY;
+    PushButton< STEUERUNG_PRESS > steuerungPress;
+    
+    void controlButtons();    
 };

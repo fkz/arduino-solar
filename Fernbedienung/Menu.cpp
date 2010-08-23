@@ -386,7 +386,7 @@ void Menu::interval()
   }
 }
 
-void Menu::setActualMPPTType(uint8_t arg1)
+void Menu::setActualMPPTType(char arg1)
 {
   mppt = arg1;
 }

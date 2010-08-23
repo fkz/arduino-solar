@@ -20,7 +20,7 @@
 #include <MessageTypes.h>
 
 Fernbedienung::Fernbedienung()
-: lcd (LCD_RS, LCD_ENABLE, LCD_D0, LCD_D1, LCD_D2, LCD_D3), menu(lcd, *this), pot_steuerung_state(0xFF)
+: lcd (LCD_RS, LCD_ENABLE, LCD_D0, LCD_D1, LCD_D2, LCD_D3), menu(lcd, *this)
 {
   addMethod(this, &Fernbedienung::readPackages, 0);
   addMethod(this, &Fernbedienung::sendData, 1000);
@@ -70,12 +70,14 @@ void Fernbedienung::readData(uint8_t* data, uint8_t length)
     if (data[1] == 'r')
       menu.setMPPTDiff (data[2]);
   }
+#ifndef REALLY_WORLD
   else if (data[0] == '-')
     menu.setAction(-1);
   else if (data[0] == '+')
     menu.setAction(+1);
   else if (data[0] == 'R')
     menu.setExecute();
+#endif
 }
 
 void Fernbedienung::connectionInterrupted()
@@ -111,84 +113,33 @@ void Fernbedienung::setMPPT(char mpptType)
 
 void Fernbedienung::controlButtons()
 {
-  int value = analogRead (POT_STEUERUNG);
-  uint8_t command;
-  if (value < POT_STEUERUNG_1)
-    command = 0;
-  else if (value < POT_STEUERUNG_2)
-    command = 1;
-  else if (value < POT_STEUERUNG_3)
-    command = 2;
-  else if (value < POT_STEUERUNG_4)
-    command = 3;
-  
-  if (command != pot_steuerung_state)
+  if (menu.isStarted())
   {
-    pot_steuerung_state = command;
+    steuerungX.control();
+    if (steuerungX.isUp())
+      menu.setAction(1);
+    else if (steuerungX.isDown())
+      menu.setAction(-1);
     
-    if (command == 4)
-    {
-      menu.start();
-    }
-    else
-    {
-      menu.end();
-      char mpptType;
-      // the following command is equivalent to this
-      /*switch (command)
-      {
-	case 0:
-	  mpptType = Message::MPPT_NOMPPT;
-	  break;
-	case 1:
-	  mpptType = Message::MPPT_PERTURBEANDOBSERVE;
-	  break;
-	case 2:
-	  mpptType = Message::MPPT_ESTIMATEPERTURB;
-	  break;
-	case 3:
-	  mpptType = Message::MPPT_ESTIMATEESTIMATEPERTURB;
-	  break;
-      }*/
-      mpptType = command;
-      setMPPT (mpptType);
-    }
+    steuerungY.control();
+    if (steuerungY.isUp())
+      menu.goUp();
+    
+    if (steuerungPress.isPressed())
+      menu.setExecute();
   }
-  else if (menu.isStarted ())
+  else
   {
-    int speed = analogRead (POT_SPEED);
-    int8_t speed_c;
-    if (speed < POT_SPEED_LOW)
-      speed_c = -1;
-    else if (speed < POT_SPEED_HIGH)
-      speed_c = 0;
+    if (steuerungPress.isPressed())
+      menu.start();
     else
-      speed_c = 1;
-    
-    if (speed_c != pot_speed_state)
     {
-      pot_speed_state = speed_c;
-      if (speed_c == -1)
-	menu.goUp();
-      else if (speed_c == 1)
-	menu.setExecute();
+      steuerungX.control();
+      if (steuerungX.isUp())
+      {
+	setMPPT ((menu.getActualMPPTType() + 1) % Message::MPPT::COUNT);
+	menu.setActualMPPTType(Message::MPPT::UNKNOWN);
+      }
     }
-    
-    int turn = analogRead (POT_TURN);
-    int8_t turn_c;
-    if (turn < POT_TURN_LOW)
-      turn_c = -1;
-    else if (turn < POT_TURN_HIGH)
-      turn_c = 0;
-    else
-      turn_c = 1;
-    
-    if (turn_c != pot_turn_state)
-    {
-      pot_turn_state = turn_c;
-      if (turn_c != 0)
-	menu.setAction(turn_c);
-    }
-    
   }
 }
