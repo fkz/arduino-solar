@@ -225,7 +225,7 @@ void Menu::goUp()
 
 
 
-void Menu::writeStromAndSpannung(long spannung, long strom)
+void Menu::writeStromAndSpannung(unsigned long spannung, unsigned long strom)
 {
   if (mode == RUNNING)
   {
@@ -240,7 +240,7 @@ void Menu::writeStromAndSpannung(long spannung, long strom)
   }
 }
 
-void Menu::writeCommaNumber(long int arg1, const char *str)
+void Menu::writeCommaNumber(unsigned long int arg1, const char *str)
 {
   lcd.print (arg1 / 1000);
   lcd.write ('.');
@@ -252,7 +252,7 @@ void Menu::writeCommaNumber(long int arg1, const char *str)
 
 void Menu::writeSpannung15(int arg1)
 {
-  long spannung = (long)arg1 * 15267 / 1000;
+  unsigned long spannung = (unsigned long)arg1 * 15267 / 1000;
   writeCommaNumber(spannung, "V");
 }
 

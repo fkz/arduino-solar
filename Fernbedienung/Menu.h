@@ -51,7 +51,7 @@ class Menu: public Dispatcheable
      @param spannung spannung in mV
      @param strom strom in mA
     */
-    void writeStromAndSpannung (long int spannung, long int strom);
+    void writeStromAndSpannung (long unsigned int spannung, long unsigned int strom);
     
     /**
      writes the spannung with writeCommaNumber()
@@ -130,7 +130,7 @@ class Menu: public Dispatcheable
      @param arg1 number*1000
      @param str Einheit (which is appended)
     */
-    void writeCommaNumber(long int arg1, const char* str);
+    void writeCommaNumber(long unsigned int arg1, const char* str);
     
     
   private:    

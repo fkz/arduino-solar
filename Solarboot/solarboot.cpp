@@ -62,9 +62,9 @@ void Solarboot::sendData()
   uint8_t data[6];
   data[0] = Message::DATA_FROM_SOLARBOAT;
   data[1] = strom & 0xFF;
-  data[2] = strom << 8;
+  data[2] = strom >> 8;
   data[3] = spannung & 0xFF;
-  data[4] = spannung << 8;
+  data[4] = spannung >> 8;
   data[5] = mpptType;
   
   writeData(data, sizeof(data));
