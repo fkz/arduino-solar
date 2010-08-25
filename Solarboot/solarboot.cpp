@@ -45,7 +45,7 @@ Solarboot::Solarboot()
   
   addMethod(this, &Solarboot::readPackages, 0);
   addMethod(this, &Solarboot::sendData, 500);
-  mpptRythm = addMethod(this, &Solarboot::iterateMPPT, 2);
+  mpptRythm = addMethod(this, &Solarboot::iterateMPPT, 300);
   addMethod(this, &Solarboot::checkBattery, 60000);
 }
 
@@ -79,11 +79,11 @@ void Solarboot::connectionInterrupted()
 
 void Solarboot::readData(uint8_t* data, uint8_t length)
 {
-  if (length < 3)
+  /*if (length < 3)
   {
     error (100);
     return;
-  }
+  }*/
   
   switch (data[0])
   {
