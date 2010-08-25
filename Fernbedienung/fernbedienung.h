@@ -46,6 +46,8 @@ class Fernbedienung: public MyXBee, public NDispatcher
     static const uint8_t STEUERUNG_PRESS = 10;
     
     Fernbedienung();
+    void sendMPPTDiff(uint8_t arg1);
+    void sendMPPTInterval(unsigned int arg1);
     
   protected:
     virtual void error(uint8_t arg1);
@@ -70,8 +72,8 @@ class Fernbedienung: public MyXBee, public NDispatcher
     void checkBatteryState();
     
     // Potis
-    Poti< POT_STEUERUNG_X, 490, 510 > steuerungX;
-    Poti< POT_STEUERUNG_Y, 490, 510 > steuerungY;
+    Poti< POT_STEUERUNG_X, 500, 524 > steuerungX;
+    Poti< POT_STEUERUNG_Y, 500, 524 > steuerungY;
     PushButton< STEUERUNG_PRESS > steuerungPress;
     
     void controlButtons();    
