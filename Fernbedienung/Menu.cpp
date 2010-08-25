@@ -436,7 +436,7 @@ int Menu::pot_value(uint8_t poti)
 
 uint8_t Menu::getPotiValue(Menu::Poti poti)
 {
-  if (mode != RUNNING)
+  if (mode != TRIM && mode != CUSTOM_TRIM && mode != CUSTOM_TRIM2)
     return 128;
   else
   {
