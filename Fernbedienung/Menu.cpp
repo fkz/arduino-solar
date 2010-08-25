@@ -308,7 +308,16 @@ void Menu::interval()
       else
 	lcd.print (mppt_interval);
       lcd.setCursor (14, 1);
-      lcd.print (mppt_diff);
+      if (mppt_diff == 255)
+      {
+	lcd.print ("??");
+	uint8_t data[2];
+	data[0] = Message::ToSolarboat::REQUEST_MPPT;
+	data[1] = 'r';
+	xbee.writeData(data, 2);
+      }
+      else
+	lcd.print (mppt_diff);
     }
   }
   else if (mode == AKKU)

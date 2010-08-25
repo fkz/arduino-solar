@@ -115,6 +115,27 @@ void Fernbedienung::setMPPT(char mpptType)
   writeData (data, 2);
 }
 
+void Fernbedienung::sendMPPTDiff(uint8_t arg1)
+{
+  uint8_t data[3];
+  data[0] = Message::ToSolarboat::REQUEST_MPPT;
+  data[1] = 's';
+  data[2] = arg1;
+  writeData (data, 3);
+}
+
+void Fernbedienung::sendMPPTInterval(unsigned int arg1)
+{
+  uint8_t data[3];
+  data[0] = Message::ToSolarboat::SET_MPPT_INTERVAL;
+  data[1] = arg1 & 0xFF;
+  data[2] = arg1 >> 8;
+  writeData(data, 3);
+}
+
+
+
+
 
 void Fernbedienung::controlButtons()
 {
@@ -144,6 +165,29 @@ void Fernbedienung::controlButtons()
       {
 	setMPPT ((menu.getActualMPPTType() + 1) % Message::MPPT::COUNT);
 	menu.setActualMPPTType(Message::MPPT::UNKNOWN);
+      }
+      else if (steuerungX.isDown())
+      {
+	menu.flipPage();
+      }
+      steuerungY.control();
+      if (steuerungY.isUp())
+      {
+	uint8_t diff = menu.getMPPTDiff();
+	sendMPPTDiff ((diff+1)%10);
+	menu.setMPPTDiff(255);
+	menu.setPage (1);
+      }
+      else if (steuerungY.isDown())
+      {
+	unsigned int inte = menu.getMPPTInterval();
+	inte += 50;
+	if (inte > 1000)
+	  inte = 100;
+	sendMPPTInterval (inte);
+	menu.setMPPTInterval(65535);
+	menu.setPage(1);
+	
       }
     }
   }

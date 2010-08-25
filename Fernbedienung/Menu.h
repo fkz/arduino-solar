@@ -24,7 +24,7 @@
 class Menu: public Dispatcheable
 {
   public:
-    Menu (LiquidCrystal &lcd, MyXBee &xbee) : lcd (lcd), xbee (xbee), mode (RUNNING), flags (NONE), mppt (Message::MPPT::UNKNOWN) 
+    Menu (LiquidCrystal &lcd, MyXBee &xbee) : lcd (lcd), xbee (xbee), mode (RUNNING), flags (NONE), mppt (Message::MPPT::UNKNOWN), interval_page(1)
     { 
       POT_MIN[SPEED] = 379;
       POT_MAX[SPEED] = 648;
@@ -89,6 +89,20 @@ class Menu: public Dispatcheable
       flags = (Flags)((flags & 3) | (connection << 2));      
     }
     
+    void flipPage ()
+    {
+      ++interval_page;
+      interval_page %= 2;
+      interval();
+    }
+    
+    void setPage(int arg1)
+    {
+      interval_page = arg1;
+      interval();
+    }
+
+    
     /**
      this method is regularily called and updates the menu
     */
@@ -123,15 +137,26 @@ class Menu: public Dispatcheable
       TURN
     };
     
+    
     uint8_t getPotiValue (Poti poti);
     void setMPPTDiff(uint8_t arg1)
     {
       mppt_diff = arg1;
     }
+    uint8_t getMPPTDiff (uint8_t arg1)
+    {
+      return mppt_diff;
+    }
+    
     
     void setMPPTInterval(unsigned int arg1)
     {
       mppt_interval = arg1;
+    }
+    
+    unsigned int getMPPTInterval()
+    {
+      return mppt_interval;
     }
     
     
