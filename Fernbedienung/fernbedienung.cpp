@@ -49,6 +49,10 @@ void Fernbedienung::readData(uint8_t* data, uint8_t length)
   {
     // show data
     unsigned long strom = data[1] | (data[2] << 8);
+    if (strom < 512)
+      strom = 512 - strom;
+    else
+      strom -= 512;
     //FIXME: set correct factor
     strom *= 26394;
     strom /= 1000;
