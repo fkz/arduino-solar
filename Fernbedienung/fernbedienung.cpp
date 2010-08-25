@@ -23,7 +23,7 @@ Fernbedienung::Fernbedienung()
 : lcd (LCD_RS, LCD_ENABLE, LCD_D0, LCD_D1, LCD_D2, LCD_D3), menu(lcd, *this)
 {
   addMethod(this, &Fernbedienung::readPackages, 0);
-  addMethod(this, &Fernbedienung::sendData, 1000);
+  addMethod(this, &Fernbedienung::sendData, 100);
   addMethod(this, &Fernbedienung::checkBatteryState, 60000);
   addMethod(&menu, &Menu::interval, 2000);
   addMethod(this, &Fernbedienung::controlButtons, 0);
