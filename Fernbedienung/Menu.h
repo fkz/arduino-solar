@@ -143,7 +143,7 @@ class Menu: public Dispatcheable
     {
       mppt_diff = arg1;
     }
-    uint8_t getMPPTDiff (uint8_t arg1)
+    uint8_t getMPPTDiff ()
     {
       return mppt_diff;
     }
