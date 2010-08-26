@@ -72,8 +72,8 @@ class Fernbedienung: public MyXBee, public NDispatcher
     void checkBatteryState();
     
     // Potis
-    Poti< POT_STEUERUNG_X, 500, 524 > steuerungX;
-    Poti< POT_STEUERUNG_Y, 500, 524 > steuerungY;
+    Poti< POT_STEUERUNG_X, 400, 640 > steuerungX;
+    Poti< POT_STEUERUNG_Y, 400, 640 > steuerungY;
     PushButton< STEUERUNG_PRESS > steuerungPress;
     
     void controlButtons();    
