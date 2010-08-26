@@ -1,7 +1,7 @@
 PROJECT(fernbedienung)
 
 add_executable (fernbedienung main.cpp ../wireless.cpp fernbedienung.cpp Menu.cpp)
-target_link_libraries(fernbedienung -Wl,--gc-sections arduinoLib Lcd)
+target_link_libraries(fernbedienung -Wl,--gc-sections arduinoLib Lcd EEPROM)
 
 ADD_CUSTOM_COMMAND(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/upload.hex

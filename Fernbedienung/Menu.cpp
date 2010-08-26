@@ -19,6 +19,19 @@
 #include <MessageTypes.h>
 #include "fernbedienung.h"
 
+void Menu::writePotToEEPROM()
+{
+  EEPROM.write(0, POT_MIN[SPEED] & 0xFF);
+  EEPROM.write(1, POT_MIN[SPEED] >> 8);
+  EEPROM.write(2, POT_MAX[SPEED] & 0xFF);
+  EEPROM.write(3, POT_MAX[SPEED] >> 8);
+  EEPROM.write(4, POT_MIN[TURN] & 0xFF);
+  EEPROM.write(5, POT_MIN[TURN] >> 8);
+  EEPROM.write(6, POT_MAX[TURN] & 0xFF);
+  EEPROM.write(7, POT_MAX[TURN] >> 8);
+}
+
+
 const uint8_t commandData[Menu::MENU_COUNT][5][2] = {
   { { 16, 21}, {21, 26}, {26, 31}, {12, 15}, {32, 32} },
   { { 16, 19}, {32, 32}, {32, 32}, {32, 32}, {32, 32} },
@@ -142,7 +155,10 @@ void Menu::setExecute()
       break;
     case CUSTOM_TRIM2:
       if (actual == 0)
+      {
+	writePotToEEPROM();
 	activate (CUSTOM_TRIM);
+      }
       else
       {
 	max_pot(trim_poti) = max_pot_backup;
