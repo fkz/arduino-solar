@@ -90,7 +90,7 @@ void Solarboot::readData(uint8_t* data, uint8_t length)
     case Message::ToSolarboat::POTI_DATA:
     {
       mppt->updateSpeed (data[1]);
-      servoTurn.write ((unsigned int)data[2]*180/256);
+      servoTurn.write ((unsigned int)((uint8_t)(data[2])*180)/256);
       break;
     }
     case Message::ToSolarboat::CHANGE_MPPT_TYPE:
