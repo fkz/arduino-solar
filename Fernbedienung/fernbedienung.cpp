@@ -147,9 +147,9 @@ void Fernbedienung::controlButtons()
   {
     steuerungX.control();
     if (steuerungX.isUp())
-      menu.setAction(1);
-    else if (steuerungX.isDown())
       menu.setAction(-1);
+    else if (steuerungX.isDown())
+      menu.setAction(+1);
     
     steuerungY.control();
     if (steuerungY.isUp())
