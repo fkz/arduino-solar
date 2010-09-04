@@ -40,7 +40,7 @@ void MPPT::receiveData(MyXBee& xbee, uint8_t* data, uint8_t size)
 
 int NoMPPT::loop(int strom, int spannung)
 {
-  return speed * 180 / 256;
+  return speed * 45 / 64;
 }
 
 PerturbAndObserve::PerturbAndObserve()
@@ -76,7 +76,7 @@ int PerturbAndObserve::loop(int strom, int spannung)
   }
   else
   {
-    lastServo = speed * 180 / 256;
+    lastServo = speed * 45 / 64;
   }
   lastStrom = strom;
   lastSpannung = spannung;
@@ -118,7 +118,7 @@ int PerturbEstimate::loop(int strom, int sp)
   
   if (speed <= 200)
   {
-    vRef = speed * 180 / 256;
+    vRef = speed * 45 / 64;
   }
   else if (mode == 0)
   {
@@ -171,7 +171,7 @@ int PerturbEstimateEstimate::loop(int strom, int sp)
   spannung[0] = sp;
   
   if (speed <= 200)
-    vRef = speed * 180 / 256;
+    vRef = speed * 45 / 64;
   else
   {
     switch (mode)
