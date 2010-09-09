@@ -53,8 +53,10 @@ class MyXBee: public Dispatcheable
     void readPackages();
     bool isConnected ();
     
+    /// @deprecated use writePackage instead
     void writeData (uint8_t *data, uint8_t length);
-    void writeEscaped(uint8_t arg1);
+    
+    void writePackage (uint8_t type, uint8_t *data, uint8_t length);
     
     long getReadCount () { return read_count; }
     
@@ -65,6 +67,7 @@ class MyXBee: public Dispatcheable
     
   private:
     void readData (const uint8_t *data, uint8_t length);
+    void writeEscaped(uint8_t arg1);
     
     void error(uint8_t arg1)
     {

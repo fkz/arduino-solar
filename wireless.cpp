@@ -89,6 +89,16 @@ void MyXBee::writeData(uint8_t* data, uint8_t length)
   
 }
 
+void MyXBee::writePackage(uint8_t type, uint8_t* data, uint8_t length)
+{
+  Serial.write (START_BYTE);
+  writeEscaped (length+1);
+  writeEscaped (type);
+  for (uint8_t *it = data; it != data + length; ++it)
+    writeEscaped (*it);
+}
+
+
 void MyXBee::writeEscaped(uint8_t arg1)
 {
   if (arg1 == START_BYTE || arg1 == ESCAPE)
