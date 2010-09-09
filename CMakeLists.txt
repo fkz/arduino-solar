@@ -34,7 +34,7 @@ ELSE(NO_REALLY_WORLD)
  MESSAGE("Compiling for human readable Standard input")
  MESSAGE("this program should not be used together with the XBee")
 # MESSAGE("if you want to use that, please add parameter -DREALLY_WORLD=true")
-ENDIF(NO_REALLY_WORLD)
+ENDIF(NOT NO_REALLY_WORLD)
 
 if(CMAKE_GENERATOR STREQUAL "MinGW Makefiles")
 FILE (TO_NATIVE_PATH C:/Programme/arduino-0018 arduinoDirectory)
