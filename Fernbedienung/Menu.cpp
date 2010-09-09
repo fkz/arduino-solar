@@ -462,6 +462,6 @@ uint8_t Menu::getPotiValue(Menu::Poti poti)
     else if (value < min_pot(poti))
       return 0;
     else
-      return (value-min_pot(poti))*256/(max_pot(poti)-min_pot(poti));
+      return (long)(value-min_pot(poti))*256/(max_pot(poti)-min_pot(poti));
   }
 }
