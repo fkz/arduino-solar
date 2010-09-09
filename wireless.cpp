@@ -19,7 +19,7 @@
 #include "wireless.h"
 
 MyXBee::MyXBee()
-: alredyRead(0), _isConnected(false), read_count(0)
+: alredyRead(0), _isConnected(false), read_count(0), registrantsCount(0)
 {
   Serial.begin(9600);
 }
@@ -197,3 +197,25 @@ void MyXBee::writeData (unsigned char *data, unsigned char length)
 
 
 #endif
+
+void MyXBee::registerMethod(uint8_t type, MyXBee::ReadPackage package)
+{
+  registrants[registrantsCount].type = type;
+  registrants[registrantsCount].delegate = package;
+  
+  ++registrantsCount;
+}
+
+
+void MyXBee::readData(const uint8_t* data, uint8_t length)
+{
+  for (int i = 0; i != registrantsCount; ++i)
+    if (registrants[i].type == data[0])
+    {
+      registrants[i].delegate (data+1, length-1);
+      return;
+    }
+  //if the error message is not registered, this would lead to a stack overflow i. e. CRASH, so
+  //it is greatly apprecated, that the error message is registred
+  error (MESSAGE_NOT_REGISTERED);
+}
