@@ -363,12 +363,24 @@ void Menu::interval()
     xbee.writeData(data, 2);
     lcd.setCursor (14, 0);
     if (mppt_diff == 255)
+    {
       lcd.write ('-');
+      uint8_t data[2];
+      data[0] = Message::ToSolarboat::REQUEST_MPPT;
+      data[1] = 'r';
+      xbee.writeData(data, 2);
+    }
     else
       lcd.write (mppt_diff + '0');
     lcd.setCursor (11, 1);
-    if (mppt_interval == 65536)
+    if (mppt_interval == 65535)
+    {
       lcd.print ("--");
+    
+      uint8_t data[1];
+      data[0] = Message::ToSolarboat::REQUEST_MPPT_INTERVAL;
+      xbee.writeData(data, 1);
+    }
     else
       lcd.print (mppt_interval);
   }
