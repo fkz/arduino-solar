@@ -32,7 +32,7 @@ class MPPT: public Dispatcheable
     */
     virtual int loop (int strom, int spannung) = 0;
     virtual void receiveData (MyXBee &xbee, uint8_t *data, uint8_t size);
-    void updateSpeed(uint8_t arg1)
+    static void updateSpeed(uint8_t arg1)
     {
       speed = arg1;
     }
@@ -40,7 +40,7 @@ class MPPT: public Dispatcheable
     static int diff;
     static int interval;
   protected:
-    uint8_t speed;
+    static uint8_t speed;
 };
 
 /// @short kein MPPT-Tracking

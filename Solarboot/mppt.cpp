@@ -20,6 +20,7 @@
 #include <wireless.h>
 
 int MPPT::diff = 5;
+uint8_t MPPT::speed = 128;
 
 void MPPT::receiveData(MyXBee& xbee, uint8_t* data, uint8_t size)
 {
