@@ -27,19 +27,19 @@ class Menu: public Dispatcheable
   public:
     Menu (LiquidCrystal &lcd, MyXBee &xbee) : lcd (lcd), xbee (xbee), mode (RUNNING), flags (NONE), mppt (Message::MPPT::UNKNOWN), interval_page(1)
     { 
-      POT_MIN[SPEED] = EEPROM.read(0) | (EEPROM.read(1) << 8);
+      /*POT_MIN[SPEED] = EEPROM.read(0) | (EEPROM.read(1) << 8);
       POT_MAX[SPEED] = EEPROM.read(2) | (EEPROM.read(3) << 8);
       POT_MIN[TURN] = EEPROM.read(4) | (EEPROM.read(5) << 8);
       POT_MAX[SPEED] = EEPROM.read(6) | (EEPROM.read(7) << 8);
       
       if (POT_MIN[SPEED] == 65535)
-      {
-	POT_MIN[SPEED] = 379;
-	POT_MAX[SPEED] = 648;
-	POT_MIN[TURN] = 450;
-	POT_MAX[TURN] = 649;
+      {*/
+	POT_MIN[SPEED] = 397;
+	POT_MAX[SPEED] = 617;
+	POT_MIN[TURN] = 307;
+	POT_MAX[TURN] = 731;
 	writePotToEEPROM ();
-      }
+      //}
     }
     
     
