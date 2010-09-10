@@ -45,7 +45,7 @@ Solarboot::Solarboot()
   
   addMethod(this, &Solarboot::readPackages, 0);
   addMethod(this, &Solarboot::sendData, 500);
-  mpptRythm = addMethod(this, &Solarboot::iterateMPPT, 300);
+  mpptRythm = addMethod(this, &Solarboot::iterateMPPT, 20);
   addMethod(this, &Solarboot::checkBattery, 60000);
 }
 
@@ -74,6 +74,7 @@ void Solarboot::connectionInterrupted()
 {
   servoMotor.write(90);
   servoTurn.write (90);
+  mppt->updateSpeed(128);
 }
 
 
