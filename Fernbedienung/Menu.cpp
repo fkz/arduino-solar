@@ -33,8 +33,8 @@ void Menu::writePotToEEPROM()
 
 
 const uint8_t commandData[Menu::MENU_COUNT][5][2] = {
-  { { 16, 21}, {21, 26}, {26, 31}, {12, 15}, {32, 32} },
-  { { 16, 19}, {32, 32}, {32, 32}, {32, 32}, {32, 32} },
+  { { 16, 21}, {21, 26}, {26, 31}, {32, 32}, {32, 32} },
+  { { 32, 32}, {32, 32}, {32, 32}, {32, 32}, {32, 32} },
   { { 16, 21}, {22, 27}, {28, 31}, {32, 32}, {32, 32} },
   { {  13,  15}, {26, 29}, {32, 32}, {32, 32}, {32, 32} },
   { { 16, 19}, {19, 22}, {29, 31}, {32, 32}, {32, 32} },
@@ -44,8 +44,8 @@ const uint8_t commandData[Menu::MENU_COUNT][5][2] = {
 };
 
 const char *commandStrings[Menu::MENU_COUNT][2] = {
-  {"Hauptmen\xF5    up ", " MPPT Akku Trim "},
-  {"Akku Fer.       "   , " up Sola.       "},
+  {"Hauptmen\xF5       ", " MPPT Akku Trim "},
+  {"Akku Fer.       "   , "Solarboot       "},
   {"   ---Trim---   "   , " Pot1  Pot2  up "},
   {"--MPPT--diff:   "   , "Intervall:      "},
   {"-inter.-akt.:   "   , " up ok einst.   "},
