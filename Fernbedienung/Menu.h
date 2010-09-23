@@ -209,6 +209,11 @@ class Menu: public Dispatcheable
     }
     void writePotToEEPROM();
     
+    void startRecord ();
+    void endRecord ();
+    void writeRawStromAndSpannung(int spannung, int strom);
+    void startStopRecord();
+    
   private:
     
     enum Flags
@@ -217,7 +222,8 @@ class Menu: public Dispatcheable
       BATTERY_SOLARBOOT = 1,
       BATTERY_FERNBEDIENUNG = 2,
       CONNECTION = 4,
-      FLAGS_ALL = 7
+      RECORDING = 8,
+      FLAGS_ALL = 15
     };
     
     Flags flags;

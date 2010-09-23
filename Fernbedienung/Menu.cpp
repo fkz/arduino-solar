@@ -275,6 +275,13 @@ void Menu::writeStromAndSpannung(unsigned long spannung, unsigned long strom)
   }
 }
 
+void Menu::writeRawStromAndSpannung(int spannung, int strom)
+{
+  if (flags & RECORDING)
+    files.newData(spannung, strom);
+}
+
+
 void Menu::writeCommaNumber(unsigned long int arg1, const char *str)
 {
   //Runden
@@ -325,9 +332,10 @@ void Menu::interval()
 	  break;
       }
       
-      lcd.write (flags & CONNECTION ? ' ' : 'x');
+      lcd.write (flags & CONNECTION ? flags & RECORDING ? 'R' : ' ' : 'x');
       lcd.write (flags & BATTERY_FERNBEDIENUNG ? '!' : ' ');
       lcd.write (flags & BATTERY_SOLARBOOT ? '!' : ' ');
+      
     }
     else
     {
@@ -503,3 +511,25 @@ uint8_t Menu::getPotiValue(Menu::Poti poti)
       return (long)(value-min_pot(poti))*256/(max_pot(poti)-min_pot(poti));
   }
 }
+
+void Menu::endRecord()
+{
+  files.endRecord();
+  flags = (Flags)(flags & ~RECORDING);
+}
+
+void Menu::startRecord()
+{
+  files.startRecord();
+  flags = (Flags)(flags | RECORDING);
+}
+
+void Menu::startStopRecord()
+{
+  if (flags | RECORDING)
+    endRecord();
+  else
+    startRecord();
+  interval();
+}
+

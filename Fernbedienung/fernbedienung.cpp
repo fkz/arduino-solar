@@ -53,16 +53,21 @@ void Fernbedienung::readData(uint8_t* data, uint8_t length)
       strom = 512 - strom;
     else
       strom -= 512;
+    unsigned long spannung = data[3] | (data[4] << 8);
+    
+    menu.writeRawStromAndSpannung (strom, spannung);
+    
     //FIXME: set correct factor
     strom *= 26394;
     strom /= 1000;
-    unsigned long spannung = data[3] | (data[4] << 8);
+    
     // 0 = 0V, 1024=(5V*(14,7)/4,7)=3.127*5=15,635
     // ==> 0,015267V pro Stelle
     spannung *= 15271;
     spannung /= 1000; // spannung in mV
     menu.setActualMPPTType (data[5]);
     menu.writeStromAndSpannung(spannung, strom);
+    
   }
   else if (data[0] == Message::FromSolarboat::BATTERY)
   {
@@ -184,13 +189,14 @@ void Fernbedienung::controlButtons()
       }
       else if (steuerungY.isDown())
       {
-	unsigned int inte = menu.getMPPTInterval();
+	/*unsigned int inte = menu.getMPPTInterval();
 	inte += 50;
 	if (inte > 1000)
 	  inte = 100;
 	sendMPPTInterval (inte);
 	menu.setMPPTInterval(65535);
-	menu.setPage(1);
+	menu.setPage(1);*/
+	menu.startStopRecord();
 	
       }
     }

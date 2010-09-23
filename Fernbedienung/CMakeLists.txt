@@ -1,6 +1,6 @@
 PROJECT(fernbedienung)
 
-add_executable (fernbedienung main.cpp ../wireless.cpp fernbedienung.cpp Menu.cpp)
+add_executable (fernbedienung main.cpp ../wireless.cpp fernbedienung.cpp Menu.cpp MemoryManagement.cpp serialize.cpp)
 target_link_libraries(fernbedienung -Wl,--gc-sections arduinoLib Lcd EEPROM)
 
 ADD_CUSTOM_COMMAND(
@@ -9,8 +9,8 @@ ADD_CUSTOM_COMMAND(
   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/fernbedienung)
 
 add_custom_target(generate-fernbedienung
-  
- DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/upload.hex)
+
+DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/upload.hex)
 
 if (avrdudePort)
 add_custom_target(upload-fernbedienung

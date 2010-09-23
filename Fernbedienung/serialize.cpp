@@ -26,6 +26,9 @@ void FileManagement::newData(int spannung, int strom)
 
 void FileManagement::endRecord(uint8_t size, uint8_t* filename)
 {
+  if (actual == 0)
+    return;
+  
   for (int i = 0; i != size; ++i, ++filename, ++pointer)
   {
     actual->write (pointer, i);
