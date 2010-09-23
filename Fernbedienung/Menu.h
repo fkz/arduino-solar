@@ -21,6 +21,7 @@
 #include <EEPROM/EEPROM.h>
 #include <wireless.h>
 #include <MessageTypes.h>
+#include "serialize.h"
 
 class Menu: public Dispatcheable
 {
@@ -139,6 +140,7 @@ class Menu: public Dispatcheable
       CUSTOM_TRIM,
       CUSTOM_TRIM2,
       MPPT_SET_DIFF,
+      SAVE_DATA,
       MENU_COUNT
     };
     
@@ -184,6 +186,8 @@ class Menu: public Dispatcheable
     MyXBee &xbee;
     Mode mode;
     uint8_t actual;
+    FileManagement files;
+
     
     void highlight(char value);
     void activate (Mode m);

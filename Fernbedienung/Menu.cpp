@@ -33,25 +33,27 @@ void Menu::writePotToEEPROM()
 
 
 const uint8_t commandData[Menu::MENU_COUNT][5][2] = {
-  { { 16, 21}, {21, 26}, {26, 31}, {32, 32}, {32, 32} },
+  { { 16, 21}, {21, 26}, {26, 31}, {10, 15}, {32, 32} },
   { { 32, 32}, {32, 32}, {32, 32}, {32, 32}, {32, 32} },
   { { 16, 21}, {22, 27}, {28, 31}, {32, 32}, {32, 32} },
   { {  13,  15}, {26, 29}, {32, 32}, {32, 32}, {32, 32} },
   { { 16, 19}, {19, 22}, {29, 31}, {32, 32}, {32, 32} },
   { { 19, 26}, {27, 30}, {32, 32}, {32, 32}, {32, 32} },
   { { 25, 28}, {28, 31}, {32, 32}, {32, 32}, {32, 32} },
-  { { 16, 19}, {19, 22}, {29, 31}, {32, 32}, {32, 32} }
+  { { 16, 19}, {19, 22}, {29, 31}, {32, 32}, {32, 32} },
+  { { 16, 25}, {25, 31}, {32, 32}, {32, 32}, {32, 32} }
 };
 
 const char *commandStrings[Menu::MENU_COUNT][2] = {
-  {"Hauptmen\xF5       ", " MPPT Akku Trim "},
+  {"Hauptmen\xF5  Data ", " MPPT Akku Trim "},
   {"Akku Fer.       "   , "Solarboot       "},
   {"   ---Trim---   "   , " Pot1  Pot2  up "},
   {"--MPPT--diff:   "   , "Intervall:      "},
   {"-inter.-akt.:   "   , " up ok einst.   "},
   {"Pot        -    "   , "    einst.  up  "},
   {"einst.     -    "   , "Wert:     ok up "},
-  {"-diff-    akt.: "   , " up ok einst.   "}
+  {"-diff-    akt.: "   , " up ok einst.   "},
+  {" Daten auslesen "   , " auslesen forma "}
 };
 
 void Menu::setAction(int8_t richtung)
@@ -128,6 +130,8 @@ void Menu::setExecute()
 	activate (TRIM);
       else if (actual == 3)
 	activate (RUNNING);
+      else if (actual == 4)
+	activate (SAVE_DATA);
       break;
     case AKKU:
       activate (MAINMENU);
@@ -211,6 +215,17 @@ void Menu::setExecute()
 	highlight ('_');
       }
       break;
+    case SAVE_DATA:
+      if (actual == 0)
+      {
+	files.readAllCvs();
+	activate (MAINMENU);
+      }
+      else if (actual == 1)
+      {
+	EEPROM.write (0, 0);
+	activate (MAINMENU);
+      }
     default:;
   }
 }
@@ -234,6 +249,9 @@ void Menu::goUp()
       break;
     case CUSTOM_TRIM2:
       activate (CUSTOM_TRIM);
+      break;
+    case SAVE_DATA:
+      activate (MAINMENU);
       break;
     case MENU_COUNT:;
   }
