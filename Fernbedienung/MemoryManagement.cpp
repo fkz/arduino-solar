@@ -65,7 +65,7 @@ MemorySegment* Memory::startSegment()
     size = EEPROM.read (index);
     startAddress += size;
   }
-  actual.reset (index-1, startAddress, 0, true);
+  actual.reset (index-2, startAddress, 0, true);
   return &actual;
 }
 
