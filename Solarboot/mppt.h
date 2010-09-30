@@ -51,7 +51,16 @@ class NoMPPT: public MPPT
     virtual int loop(int strom, int spannung);
 };
 
-class PerturbAndObserve: public MPPT
+class OptimizingMPPT: public MPPT
+{
+protected:
+  bool isMPPT ();
+  
+private:
+  bool isInMPPTMode;
+};
+
+class PerturbAndObserve: public OptimizingMPPT
 {
   public:
     PerturbAndObserve ();
@@ -63,7 +72,7 @@ class PerturbAndObserve: public MPPT
     int lastServo;
 };
 
-class PerturbEstimate: public MPPT
+class PerturbEstimate: public OptimizingMPPT
 {
   public:
     PerturbEstimate();
@@ -77,7 +86,7 @@ class PerturbEstimate: public MPPT
     int vRef;
 };
 
-class PerturbEstimateEstimate: public MPPT
+class PerturbEstimateEstimate: public OptimizingMPPT
 {
   public:
     PerturbEstimateEstimate();

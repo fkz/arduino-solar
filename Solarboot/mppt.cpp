@@ -44,6 +44,18 @@ int NoMPPT::loop(int strom, int spannung)
   return speed * 45 / 64;
 }
 
+bool OptimizingMPPT::isMPPT()
+{
+  bool mpptMode = speed < 100;
+  if (mpptMode != isInMPPTMode)
+  {
+    isInMPPTMode = mpptMode;
+    //TODO: sendData ()
+  }
+  return isInMPPTMode;
+}
+
+
 PerturbAndObserve::PerturbAndObserve()
 :  lastSpannung(0), lastStrom(0), lastServo(110)
 {
@@ -51,7 +63,7 @@ PerturbAndObserve::PerturbAndObserve()
 
 int PerturbAndObserve::loop(int strom, int spannung)
 {
-  if (speed > 200)
+  if (isMPPT())
   {
     int power = strom * spannung;
     int lastPower = lastStrom * lastSpannung;
@@ -117,7 +129,7 @@ int PerturbEstimate::loop(int strom, int sp)
   spannung[1] = spannung[0];
   spannung[0] = sp;
   
-  if (speed <= 200)
+  if (!isMPPT ())
   {
     vRef = speed * 45 / 64;
   }
@@ -171,7 +183,7 @@ int PerturbEstimateEstimate::loop(int strom, int sp)
   spannung[1] = spannung[0];
   spannung[0] = sp;
   
-  if (speed <= 200)
+  if (!isMPPT ())
     vRef = speed * 45 / 64;
   else
   {
