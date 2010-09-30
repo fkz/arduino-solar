@@ -27,6 +27,7 @@ PerturbEstimate perturbEstimate;
 PerturbEstimateEstimate perturbEstimateEstimate;
 
 Solarboot::Solarboot()
+: mpptInterval (5)
 {
   static NoMPPT noMPPT;
   mppt = &noMPPT;
@@ -116,15 +117,14 @@ void Solarboot::readData(uint8_t* data, uint8_t length)
     {
       uint8_t d_data[3];
       d_data[0] = Message::FromSolarboat::RESPONSE_MPPT_INTERVAL;
-      long unsigned int mpptInterval = 0;//getInterval(mpptRythm);
-      d_data[1] = mpptInterval & 0xFF;
-      d_data[2] = mpptInterval >> 8;
+      d_data[1] = mpptInterval;
+      d_data[2] = 0;
       writeData (d_data, 3);
       break;
     }
     case Message::ToSolarboat::SET_MPPT_INTERVAL:
     {
-      //TODO:  setInterval(mpptRythm, data[1] | (data[2] << 8));
+      mpptInterval = data[1];
       break;
     }
   }
@@ -156,6 +156,9 @@ void Solarboot::changeMPPT()
 
 void Solarboot::iterateMPPT()
 {
+  if ((mpptIntervalIndex = (mpptIntervalIndex + 1) % mpptInterval))
+    return;
+  
   long int strom = 0;
   for (int i = 0; i != readStromCount; ++i)
   {

@@ -49,6 +49,9 @@ class Solarboot: public MyXBee, public NDispatcher
     
     
   private:
+    // number of 20ms-states until MPPT is used
+    int mpptInterval, mpptIntervalIndex;
+    
     void sendData ();
     void iterateMPPT ();
     MPPT *mppt;
