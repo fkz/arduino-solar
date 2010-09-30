@@ -45,7 +45,7 @@ Solarboot::Solarboot()
   
   addMethod(this, &Solarboot::readPackages, 0);
   addMethod(this, &Solarboot::sendData, 500);
-  mpptRythm = addMethod(this, &Solarboot::iterateMPPT, 20);
+  addMethod(this, &Solarboot::iterateMPPT, 20);
   addMethod(this, &Solarboot::checkBattery, 60000);
 }
 
@@ -56,7 +56,10 @@ void Solarboot::error(uint8_t arg1)
 
 void Solarboot::sendData()
 {
-  int strom = analogRead (stromId);
+  long int strom = 0;
+  for (int i = 0; i != readStromCount; ++i)
+    strom += analogRead (stromId);
+  strom /= readStromCount;
   int spannung = analogRead (spannungId);
   
   uint8_t data[6];
@@ -79,13 +82,7 @@ void Solarboot::connectionInterrupted()
 
 
 void Solarboot::readData(uint8_t* data, uint8_t length)
-{
-  /*if (length < 3)
-  {
-    error (100);
-    return;
-  }*/
-  
+{  
   switch (data[0])
   {
     case Message::ToSolarboat::POTI_DATA:
@@ -119,7 +116,7 @@ void Solarboot::readData(uint8_t* data, uint8_t length)
     {
       uint8_t d_data[3];
       d_data[0] = Message::FromSolarboat::RESPONSE_MPPT_INTERVAL;
-      long unsigned int mpptInterval = getInterval(mpptRythm);
+      long unsigned int mpptInterval = 0;//getInterval(mpptRythm);
       d_data[1] = mpptInterval & 0xFF;
       d_data[2] = mpptInterval >> 8;
       writeData (d_data, 3);
@@ -127,7 +124,7 @@ void Solarboot::readData(uint8_t* data, uint8_t length)
     }
     case Message::ToSolarboat::SET_MPPT_INTERVAL:
     {
-      setInterval(mpptRythm, data[1] | (data[2] << 8));
+      //TODO:  setInterval(mpptRythm, data[1] | (data[2] << 8));
       break;
     }
   }
@@ -159,7 +156,12 @@ void Solarboot::changeMPPT()
 
 void Solarboot::iterateMPPT()
 {
-  int strom = analogRead (stromId);
+  long int strom = 0;
+  for (int i = 0; i != readStromCount; ++i)
+  {
+    strom += analogRead (stromId);
+  }
+  strom /= readStromCount;
   int spannung = analogRead (spannungId);
   int motor = mppt->loop(strom, spannung);
   servoMotor.write (motor);

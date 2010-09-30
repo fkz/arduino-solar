@@ -34,6 +34,8 @@ class Solarboot: public MyXBee, public NDispatcher
 
     static const int BATTERY = 2;
     
+    static const int readStromCount = 32;
+    
      /// initialize pin modes and XBee connection
     Solarboot();
     void changeMPPT();
@@ -47,8 +49,6 @@ class Solarboot: public MyXBee, public NDispatcher
     
     
   private:
-    int mpptRythm;
-    
     void sendData ();
     void iterateMPPT ();
     MPPT *mppt;
