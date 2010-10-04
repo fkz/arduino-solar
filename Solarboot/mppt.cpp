@@ -70,16 +70,16 @@ int PerturbAndObserve::loop(int strom, int spannung)
     if (power > lastPower)
     {
       if (spannung > lastSpannung)
-	lastServo += diff;
-      else
 	lastServo -= diff;
+      else
+	lastServo += diff;
     }
     else
     {
       if (spannung > lastSpannung)
-	lastServo -= diff;
-      else
 	lastServo += diff;
+      else
+	lastServo -= diff;
     }
     
     if (lastServo < 100)
