@@ -1,9 +1,12 @@
 #pragma once
 #include "../wireless.h"
 #include "Menu.h"
+#include "Poti.h"
 
 namespace Fernbedienung{
 
+void initialize ();
+  
 extern MyXBee xbee;
 extern Dispatcher dispatcher;
 extern Menu menu;
@@ -26,5 +29,19 @@ const uint8_t POT_STEUERUNG_X = 4;
 const uint8_t POT_STEUERUNG_Y = 2;
 const uint8_t STEUERUNG_PRESS = 10;
 
+
+void sendData ();
+
+
+namespace Buttons{
+
+Poti< POT_STEUERUNG_X, 400, 640 > steuerungX;
+Poti< POT_STEUERUNG_Y, 400, 640 > steuerungY;
+PushButton< STEUERUNG_PRESS > steuerungPress;
+
+void controlButtons();
+};
+
+void checkBatteryState();
 
 };
