@@ -83,8 +83,13 @@ class MyXBee: public Dispatcheable
     
     typedef void (*ReadPackage) (const uint8_t *data, uint8_t length);
     
-    void registerMethod (uint8_t type, ReadPackage package);
+    void _registerMethod (uint8_t type, ReadPackage package);
     
+    template< const char type >
+    void registerMethod (void (*p) (Message::MessageData< type > *data, uint8_t length))
+    {
+      _registerMethod (type, static_cast< ReadPackage > (p));
+    }
     
   private:
     void readData (const uint8_t *data, uint8_t length);

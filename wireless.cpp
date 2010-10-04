@@ -208,7 +208,7 @@ void MyXBee::writeData (unsigned char *data, unsigned char length)
 
 #endif
 
-void MyXBee::registerMethod(uint8_t type, MyXBee::ReadPackage package)
+void MyXBee::_registerMethod(uint8_t type, MyXBee::ReadPackage package)
 {
   registrants[registrantsCount].type = type;
   registrants[registrantsCount].delegate = package;

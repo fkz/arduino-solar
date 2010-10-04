@@ -17,35 +17,10 @@
 */
 
 #pragma once
+#include "MessageData.h"
 
 namespace Message
 {
-  
-template<const char type>
-struct MessageData
-{
-  //static_assert (false, "The type is not defined as format");
-  
-  static const int ParamCount = -1;
-};
-
-#define MESSAGE_DATA_1(type,param) template<> \
-template<> \
-struct MessageData< type > \
-{ \
-  const int ParamCount = 1; \
-  typedef param Param1; \
-};
-
-#define MESSAGE_DATA_2(type,param1,param2) template<> \
-template<> \
-struct MessageData< type > \
-{ \
-  const int ParamCount = 2; \
-  typedef param1 Param1; \
-  typedef param2 Param2; \
-};
-
 
 namespace FromSolarboat {
 
@@ -53,8 +28,9 @@ const char DATA_FROM_SOLARBOAT = 'd';
 const char BATTERY = 'b';
 const char SEND_MPPT = '1';
 const char RESPONSE_MPPT_INTERVAL = 'I';
-  
 };
+
+MESSAGE_DATA_3(FromSolarboat::DATA_FROM_SOLARBOAT, unsigned int, strom, unsigned int, spannung, char, mpptType);
 
 namespace ToSolarboat {
 
