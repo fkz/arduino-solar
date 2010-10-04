@@ -81,7 +81,7 @@ void FileManagement::readAllCvs()
       Serial.println();
     }
     
-    for (int index = 5; index < filenamelength-segsize; index+=3)
+    for (int index = 5; index < segsize-filenamelength; index+=3)
     {
       uint8_t i1 = segment->read (index+1);
       int spannung = segment->read(index) | ((i1 & 0x0F) << 8);
