@@ -8,7 +8,7 @@ namespace Fernbedienung{
 void initialize ();
   
 extern MyXBee xbee;
-extern Dispatcher dispatcher;
+extern NDispatcher dispatcher;
 extern Menu menu;
 
 // Konstanten

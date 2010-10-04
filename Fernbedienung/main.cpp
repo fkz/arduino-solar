@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-#include "fernbedienung.h"
+#include "fernbedienung2.h"
 
 extern "C" void __cxa_pure_virtual () { for (;;); }
 
@@ -23,8 +23,8 @@ int main ()
 {
   init();
   
-  Fernbedienung fernbedienung;
+  Fernbedienung::initialize();
   
   while (true)
-    fernbedienung.call();
+    Fernbedienung::xbee.readPackages();
 }
