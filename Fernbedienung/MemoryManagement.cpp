@@ -93,7 +93,7 @@ void MemorySegment::reset(uint8_t id, int startAddress, uint8_t size, bool resiz
 
 uint8_t MemorySegment::read(int index)
 {
-  EEPROM.read (index+startAddress);
+  return EEPROM.read (index+startAddress);
 }
 
 void MemorySegment::write(int index, uint8_t data)
