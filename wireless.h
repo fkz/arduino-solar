@@ -33,10 +33,17 @@ class MyXBee: public Dispatcheable
       #endif
     };
     
+    enum SpecialPackageTypes
+    {
+      ERROR = 254,
+      CONNECTION_INTERRUPTED = 255
+    };
+    
     enum ErrorMessages
     {
-      NO_START_BYTE = 100,
-      START_BYTE_INSIDE_MESSAGE = 101
+      NO_START_BYTE = 1,
+      START_BYTE_INSIDE_MESSAGE = 2,
+      MESSAGE_NOT_REGISTERED = 3
     };
     
     const static int MAX_TIME_BETWEEN_TWO_REQUESTS = 2000; // 2 seconds
@@ -46,15 +53,35 @@ class MyXBee: public Dispatcheable
     void readPackages();
     bool isConnected ();
     
+    /// @deprecated use writePackage instead
     void writeData (uint8_t *data, uint8_t length);
-    void writeEscaped(uint8_t arg1);
+    
+    void writePackage (uint8_t type, uint8_t *data, uint8_t length);
     
     long getReadCount () { return read_count; }
     
-  protected:
-    virtual void error(uint8_t arg1) = 0;
-    virtual void readData (uint8_t *data, uint8_t length) = 0;
-    virtual void connectionInterrupted () = 0;
+    typedef void (*ReadPackage) (const uint8_t *data, uint8_t length);
+    
+    void registerMethod (uint8_t type, ReadPackage package);
+    
+    
+  private:
+    void readData (const uint8_t *data, uint8_t length);
+    void writeEscaped(uint8_t arg1);
+    
+    void error(uint8_t arg1)
+    {
+      uint8_t data[2];
+      data[0] = CONNECTION_INTERRUPTED;
+      data[1] = arg1;
+      return readData (data, 2);
+    }
+    
+    void connectionInterrupted ()
+    {
+      static const uint8_t connectionInterrupted = CONNECTION_INTERRUPTED;
+      readData (&connectionInterrupted, 1);
+    }
     
   private:
     
@@ -64,4 +91,13 @@ class MyXBee: public Dispatcheable
     
     bool _isConnected;
     long read_count;
+    
+    struct RegisterPair
+    {
+      uint8_t type;
+      ReadPackage delegate;
+    };
+    
+    RegisterPair registrants[16];
+    int registrantsCount;
 };
