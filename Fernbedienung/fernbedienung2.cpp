@@ -5,10 +5,17 @@ void Fernbedienung::initialize()
   dispatcher.addMethod(&sendData, 20);
   dispatcher.addMethod(&checkBatteryState, 60000);
   dispatcher.addMethod(&Menu::interval, 2000);
-  dispatcher.addMethod(&controlButtons, 0);
+  dispatcher.addMethod(&Buttons::controlButtons, 0);
   
   menu.initialize ();
 }
+
+void Fernbedienung::sendData ()
+{
+  xbee.writePackage< Message::ToSolarboat::POTI_DATA > 
+    (menu.getPotiValue(Menu::SPEED), menu.getPotiValue(Menu::TURN) );
+}
+
 
 void Fernbedienung::Buttons::controlButtons()
 {
@@ -65,4 +72,12 @@ void Fernbedienung::Buttons::controlButtons()
       }
     }
   }
+}
+
+void Fernbedienung::checkBatteryState ()
+{
+  int value = analogRead (BATTERY);
+  if (value < MIN_BATTERY_VALUE)
+    menu.setFernBattery();
+
 }

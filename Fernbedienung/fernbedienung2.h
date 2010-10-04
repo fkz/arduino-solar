@@ -11,7 +11,6 @@ extern MyXBee xbee;
 extern Dispatcher dispatcher;
 extern Menu menu;
 
-
 // Konstanten
 const uint8_t LCD_RS = 12;
 const uint8_t LCD_ENABLE = 11;
