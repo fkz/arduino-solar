@@ -20,6 +20,32 @@
 
 namespace Message
 {
+  
+template<const char type>
+struct MessageData
+{
+  //static_assert (false, "The type is not defined as format");
+  
+  static const int ParamCount = -1;
+};
+
+#define MESSAGE_DATA_1(type,param) template<> \
+template<> \
+struct MessageData< type > \
+{ \
+  const int ParamCount = 1; \
+  typedef param Param1; \
+};
+
+#define MESSAGE_DATA_2(type,param1,param2) template<> \
+template<> \
+struct MessageData< type > \
+{ \
+  const int ParamCount = 2; \
+  typedef param1 Param1; \
+  typedef param2 Param2; \
+};
+
 
 namespace FromSolarboat {
 

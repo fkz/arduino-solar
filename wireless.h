@@ -18,6 +18,7 @@
 
 #pragma once
 #include "Dispatcher.h"
+#include "MessageTypes.h"
 
 class MyXBee: public Dispatcheable
 {
@@ -56,7 +57,27 @@ class MyXBee: public Dispatcheable
     /// @deprecated use writePackage instead
     void writeData (uint8_t *data, uint8_t length);
     
-    void writePackage (uint8_t type, uint8_t *data, uint8_t length);
+    template< const char type >
+    void writePackage (typename Message::MessageData< type >::Param1 param1)
+    {
+      static_assert (Message::MessageData< type >::ParamCount == 1, "wrong param count");
+      Serial.write (START_BYTE);
+      writeEscaped (sizeof (typename Message::MessageData< type >::Param1));
+      for (uint8_t* it = &param1; it != &param1 + 1; ++it)
+	writeEscaped (*it);
+    }
+    
+    template< const char type >
+    void writePackage (typename Message::MessageData< type >::Param1 param1, typename Message::MessageData< type >::Param2 param2)
+    {
+      static_assert (Message::MessageData< type >::ParamCount == 2, "wrong param count");
+      Serial.write (START_BYTE);
+      writeEscaped (sizeof (typename Message::MessageData< type >::Param1)+sizeof (typename Message::MessageData< type >::Param2));
+      for (uint8_t* it = static_cast< uint8_t * > (&param1); it != static_cast< uint8_t * > (&param1 + 1); ++it)
+	writeEscaped (*it);
+      for (uint8_t* it = &param2; it != &param2 + 1; ++it)
+	writeEscaped (*it);
+    }
     
     long getReadCount () { return read_count; }
     
