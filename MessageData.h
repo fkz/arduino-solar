@@ -11,7 +11,7 @@ struct MessageData
 
 };
 
-#define MESSAGE_DATA_1(type,param,name) template<> \
+#define MESSAGE_DATA_1(type,param,name) \
 template<> \
 struct MessageData< type > \
 { \
@@ -20,7 +20,7 @@ struct MessageData< type > \
   param name; \
 };
 
-#define MESSAGE_DATA_2(type,param1,name1,param2,name2) template<> \
+#define MESSAGE_DATA_2(type,param1,name1,param2,name2) \
 template<> \
 struct MessageData< type > \
 { \
@@ -31,7 +31,7 @@ struct MessageData< type > \
   param2 name2; \
 };
 
-#define MESSAGE_DATA_3(type,param1,name1,param2,name2,param3,name3) template<> \
+#define MESSAGE_DATA_3(type,param1,name1,param2,name2,param3,name3) \
 template<> \
 struct MessageData< type > \
 { \

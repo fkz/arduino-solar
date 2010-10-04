@@ -31,6 +31,8 @@ const char RESPONSE_MPPT_INTERVAL = 'I';
 };
 
 MESSAGE_DATA_3(FromSolarboat::DATA_FROM_SOLARBOAT, unsigned int, strom, unsigned int, spannung, char, mpptType);
+MESSAGE_DATA_1(FromSolarboat::BATTERY, unsigned int, data);
+MESSAGE_DATA_2(FromSolarboat::SEND_MPPT, const char, subtype, char, data);
 
 namespace ToSolarboat {
 
