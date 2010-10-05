@@ -20,7 +20,11 @@
 #include "Dispatcher.h"
 #include "MessageTypes.h"
 
+#ifdef OLD_CASE
 class MyXBee: public Dispatcheable
+#else
+class MyXBee
+#endif
 {
   public:
     enum SpecialCharacters
