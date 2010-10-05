@@ -26,7 +26,7 @@
 class Menu//: public Dispatcheable
 {
   public:
-    Menu (LiquidCrystal &lcd, MyXBee &xbee) : lcd (lcd), xbee (xbee), mode (RUNNING), flags (NONE), mppt (Message::MPPT::UNKNOWN), interval_page(1)
+    Menu (LiquidCrystal &lcd) : lcd (lcd), mode (RUNNING), flags (NONE), mppt (Message::MPPT::UNKNOWN), interval_page(1)
     { 
       /*POT_MIN[SPEED] = EEPROM.read(0) | (EEPROM.read(1) << 8);
       POT_MAX[SPEED] = EEPROM.read(2) | (EEPROM.read(3) << 8);
@@ -183,7 +183,6 @@ class Menu//: public Dispatcheable
     
   private:    
     LiquidCrystal &lcd;
-    MyXBee &xbee;
     Mode mode;
     uint8_t actual;
     FileManagement files;

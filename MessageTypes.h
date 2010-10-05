@@ -33,6 +33,7 @@ const char RESPONSE_MPPT_INTERVAL = 'I';
 MESSAGE_DATA_3(FromSolarboat::DATA_FROM_SOLARBOAT, unsigned int, strom, unsigned int, spannung, char, mpptType);
 MESSAGE_DATA_1(FromSolarboat::BATTERY, unsigned int, data);
 MESSAGE_DATA_2(FromSolarboat::SEND_MPPT, const char, subtype, char, data);
+MESSAGE_DATA_1(FromSolarboat::RESPONSE_MPPT_INTERVAL, unsigned int, interval);
 
 namespace ToSolarboat {
 
@@ -49,6 +50,7 @@ const char SET_MPPT_DIFF = '_'; ///@TODO read specific information
 MESSAGE_DATA_2 (ToSolarboat::POTI_DATA, uint8_t, speed, uint8_t, turn);
 MESSAGE_DATA_1 (ToSolarboat::CHANGE_MPPT_TYPE, uint8_t, mpptType);
 MESSAGE_DATA_1 (ToSolarboat::SET_MPPT_DIFF, uint8_t, diff);
+MESSAGE_DATA_2 (ToSolarboat::REQUEST_MPPT, uint8_t, type, uint8_t, data);
 
 // MPPT types
 

@@ -31,16 +31,16 @@ const uint8_t STEUERUNG_PRESS = 10;
 
 void sendData ();
 
-
 namespace Buttons{
 
-Poti< POT_STEUERUNG_X, 400, 640 > steuerungX;
-Poti< POT_STEUERUNG_Y, 400, 640 > steuerungY;
-PushButton< STEUERUNG_PRESS > steuerungPress;
+extern Poti< POT_STEUERUNG_X, 400, 640 > steuerungX;
+extern Poti< POT_STEUERUNG_Y, 400, 640 > steuerungY;
+extern PushButton< STEUERUNG_PRESS > steuerungPress;
 
 void controlButtons();
 };
 
 void checkBatteryState();
+void menuInterval();
 
 };

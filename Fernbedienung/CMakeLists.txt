@@ -1,6 +1,6 @@
 PROJECT(fernbedienung)
 
-add_executable (fernbedienung main.cpp ../wireless.cpp fernbedienung.cpp Menu.cpp MemoryManagement.cpp serialize.cpp)
+add_executable (fernbedienung main.cpp ../wireless.cpp fernbedienung2.cpp Menu.cpp MemoryManagement.cpp serialize.cpp)
 target_link_libraries(fernbedienung -Wl,--gc-sections arduinoLib Lcd EEPROM)
 
 ADD_CUSTOM_COMMAND(

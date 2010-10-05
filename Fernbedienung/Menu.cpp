@@ -17,7 +17,7 @@
 */
 #include "Menu.h"
 #include <MessageTypes.h>
-#include "fernbedienung.h"
+#include "fernbedienung2.h"
 
 void Menu::writePotToEEPROM()
 {
@@ -109,6 +109,7 @@ void Menu::activate(Menu::Mode m)
 
 void Menu::setExecute()
 {
+  using Fernbedienung::xbee;
   switch (mode)
   {
     case RUNNING:
@@ -305,6 +306,8 @@ void Menu::writeSpannung15(int arg1)
 
 void Menu::interval()
 {
+  using Fernbedienung::xbee;
+  
   if (mode == RUNNING)
   {
     lcd.setCursor (8,1);
