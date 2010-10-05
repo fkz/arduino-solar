@@ -85,14 +85,18 @@ class MyXBee
     
     long getReadCount () { return read_count; }
     
+#ifdef OLD_CASE
     typedef void (*ReadPackage) (const uint8_t *data, uint8_t length);
+#else
+    typedef void (*ReadPackage) (const void *data, uint8_t length);
+#endif
     
     void _registerMethod (uint8_t type, ReadPackage package);
     
     template< const char type >
-    void registerMethod (void (*p) (Message::MessageData< type > *data, uint8_t length))
+    void registerMethod (void (*p) (const Message::MessageData< type > *data, uint8_t length))
     {
-      _registerMethod (type, static_cast< ReadPackage > (p));
+      _registerMethod (type, reinterpret_cast< ReadPackage > (p));
     }
     
   private:
@@ -109,8 +113,14 @@ class MyXBee
     
     void connectionInterrupted ()
     {
-      static const uint8_t connectionInterrupted = CONNECTION_INTERRUPTED;
-      readData (&connectionInterrupted, 1);
+      static const uint8_t connectionInterrupted[2] = { CONNECTION_INTERRUPTED, false };
+      readData (connectionInterrupted, 2);
+    }
+    
+    void connectionRestored()
+    {
+      static const uint8_t connectionRestored[2] = { CONNECTION_INTERRUPTED, true };
+      readData (connectionRestored, 2);
     }
     
   private:

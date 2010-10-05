@@ -72,6 +72,10 @@ void MyXBee::readPackages()
       readData(package+1, package[0]);
       alredyRead = 0;
       lastPackageRead = now;
+      if (_isConnected)
+      {
+	connectionRestored();
+      }
       _isConnected = true;
     }
     
