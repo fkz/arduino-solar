@@ -141,3 +141,7 @@ class MyXBee
     RegisterPair registrants[16];
     int registrantsCount;
 };
+
+namespace Message{
+  MESSAGE_DATA_1 (MyXBee::CONNECTION_INTERRUPTED, bool, connected);
+};

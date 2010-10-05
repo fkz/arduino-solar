@@ -19,6 +19,7 @@ void dataFromSolarboat (const MessageData< DATA_FROM_SOLARBOAT > *data, uint8_t 
 void battery (const MessageData< Message::FromSolarboat::BATTERY > *data, uint8_t length);
 void sendMPPT (const MessageData< SEND_MPPT > *data, uint8_t length);
 void responseMPPTInterval (const MessageData< RESPONSE_MPPT_INTERVAL > *data, uint8_t length);
+void connection (const MessageData< MyXBee::CONNECTION_INTERRUPTED > *data, uint8_t length);
 
 };
 };
@@ -42,7 +43,7 @@ void Fernbedienung::initialize()
   xbee.registerMethod< Message::FromSolarboat::BATTERY >(battery);
   xbee.registerMethod< SEND_MPPT >(sendMPPT);
   xbee.registerMethod< RESPONSE_MPPT_INTERVAL >(responseMPPTInterval);
-  
+  xbee.registerMethod< MyXBee::CONNECTION_INTERRUPTED > (connection);
   
   
 //  menu.initialize ();
@@ -53,6 +54,10 @@ void Fernbedienung::menuInterval()
   menu.interval();
 }
 
+void Fernbedienung::Callback::connection(const Message::MessageData< MyXBee::CONNECTION_INTERRUPTED >* data, uint8_t length)
+{
+  menu.setConnection(data->connected);
+}
 
 void Fernbedienung::Callback::dataFromSolarboat(const Message::MessageData< Message::FromSolarboat::DATA_FROM_SOLARBOAT >* data, uint8_t length)
 {
