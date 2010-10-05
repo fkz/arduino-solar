@@ -43,7 +43,7 @@ void Fernbedienung::Buttons::controlButtons()
       steuerungX.control();
       if (steuerungX.isUp())
       {
-	setMPPT ((menu.getActualMPPTType() + 1) % Message::MPPT::COUNT);
+	xbee.writePackage< Message::ToSolarboat::CHANGE_MPPT_TYPE > ((menu.getActualMPPTType() + 1) % Message::MPPT::COUNT);
 	menu.setActualMPPTType(Message::MPPT::UNKNOWN);
       }
       else if (steuerungX.isDown())
@@ -54,7 +54,7 @@ void Fernbedienung::Buttons::controlButtons()
       if (steuerungY.isUp())
       {
 	uint8_t diff = menu.getMPPTDiff();
-	sendMPPTDiff ((diff+1)%10);
+	xbee.writePackage< Message::ToSolarboat::SET_MPPT_DIFF > ((diff+1)%10);
 	menu.setMPPTDiff(255);
 	menu.setPage (1);
       }

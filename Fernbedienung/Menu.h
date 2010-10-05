@@ -23,7 +23,7 @@
 #include <MessageTypes.h>
 #include "serialize.h"
 
-class Menu: public Dispatcheable
+class Menu//: public Dispatcheable
 {
   public:
     Menu (LiquidCrystal &lcd, MyXBee &xbee) : lcd (lcd), xbee (xbee), mode (RUNNING), flags (NONE), mppt (Message::MPPT::UNKNOWN), interval_page(1)
