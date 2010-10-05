@@ -18,7 +18,7 @@ struct MessageData< type > \
   static const int ParamCount = 1; \
   typedef param Param1; \
   param name; \
-};
+} __attribute__((__packed__));
 
 #define MESSAGE_DATA_2(type,param1,name1,param2,name2) \
 template<> \
@@ -29,7 +29,7 @@ struct MessageData< type > \
   typedef param2 Param2; \
   param1 name1; \
   param2 name2; \
-};
+} __attribute__((__packed__));
 
 #define MESSAGE_DATA_3(type,param1,name1,param2,name2,param3,name3) \
 template<> \
@@ -42,4 +42,4 @@ struct MessageData< type > \
   param1 name1; \
   param2 name2; \
   param3 name3; \
-};
+} __attribute__((__packed__));

@@ -42,9 +42,13 @@ const char CHANGE_MPPT_TYPE = 'M';
 const char REQUEST_MPPT = 'm';
 const char REQUEST_MPPT_INTERVAL = 'i';
 const char SET_MPPT_INTERVAL = '8';
+const char SET_MPPT_DIFF = '_'; ///@TODO read specific information
 
 };
 
+MESSAGE_DATA_2 (ToSolarboat::POTI_DATA, uint8_t, speed, uint8_t, turn);
+MESSAGE_DATA_1 (ToSolarboat::CHANGE_MPPT_TYPE, uint8_t, mpptType);
+MESSAGE_DATA_1 (ToSolarboat::SET_MPPT_DIFF, uint8_t, diff);
 
 // MPPT types
 
