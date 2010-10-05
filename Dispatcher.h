@@ -18,6 +18,8 @@
 
 #pragma once
 
+#ifdef OLD_CASE
+
 /**
  @short Hilfsklasse, von der alle Klassen, die Timer-Methoden anbieten, abgeleitet werden müssen
 */
@@ -26,6 +28,8 @@ class Dispatcheable
   protected:
     virtual void __makeVirtual () {};
 };
+
+#endif
 
 /**
  @short Diese Klasse handelt wiederkehrende Aufgaben
@@ -43,7 +47,11 @@ class Dispatcher
     void call ();
     /// setze eine Methode an Stelle @p id. @p id muss zwischen 0 und count liegen. Möglicherweise bereits dort
     /// befindliche Methoden werden überschrieben
+#ifdef OLD_CASE
     void setMethod (int id, Dispatcheable *object, void (Dispatcheable::*) (), unsigned long interval);
+#else
+    void setMethod (int id, void (*) (), unsigned long interval);
+#endif
     
     /**
      fügt eine Methode hinzu. Es dürfen maximal @p count Methoden hinzugefügt werden, weitere werden nicht erkannt, bzw.
@@ -53,10 +61,18 @@ class Dispatcher
      @param interval Intervall in ms, in dem die Methode aufgerufen werden soll
      @note die Methode wird beim nächsten @ref call Aufruf ausfeführt
     */
+#ifdef OLD_CASE
     template< class T >
     int addMethod (Dispatcheable *object, void (T::*method) (), unsigned long interval)
+#else
+    int addMethod (void (*method) (), unsigned long interval)
+#endif
     {
+#ifdef OLD_CASE
       setMethod (actualId, object, static_cast< void (Dispatcheable::*) () > (method), interval);
+#else
+      setMethod (actualId, method, interval);
+#endif
       return actualId++;
     }
     
@@ -71,10 +87,16 @@ class Dispatcher
     }
     
   private:
+#ifdef OLD_CASE
     void (Dispatcheable::*exec[count])();
+#else
+    void (*exec[count])();
+#endif
     unsigned long int lastCall[count];
     unsigned long int interval[count];
+#ifdef OLD_CASE
     Dispatcheable *objects[count];
+#endif
     int actualId;
 };
 
