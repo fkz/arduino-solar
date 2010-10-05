@@ -1,152 +1,111 @@
-/*
-    Copyright (C) 2010 Fabian Schmitthenner
+#include "fernbedienung2.h"
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+MyXBee Fernbedienung::xbee;
+NDispatcher Fernbedienung::dispatcher;
+LiquidCrystal lcd (Fernbedienung::LCD_RS, Fernbedienung::LCD_ENABLE, Fernbedienung::LCD_D0, Fernbedienung::LCD_D1, Fernbedienung::LCD_D2, Fernbedienung::LCD_D3);
+Menu Fernbedienung::menu (lcd);
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+Poti< Fernbedienung::POT_STEUERUNG_X, 400, 640 > Fernbedienung::Buttons::steuerungX;
+Poti< Fernbedienung::POT_STEUERUNG_Y, 400, 640 > Fernbedienung::Buttons::steuerungY;
+PushButton< Fernbedienung::STEUERUNG_PRESS > Fernbedienung::Buttons::steuerungPress;
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-*/
-#include "fernbedienung.h"
-#include <pins_arduino.h>
-#include <MessageTypes.h>
-
-Fernbedienung::Fernbedienung()
-: lcd (LCD_RS, LCD_ENABLE, LCD_D0, LCD_D1, LCD_D2, LCD_D3), menu(lcd, *this)
-{
-  addMethod(this, &Fernbedienung::readPackages, 0);
-  addMethod(this, &Fernbedienung::sendData, 20);
-  addMethod(this, &Fernbedienung::checkBatteryState, 60000);
-  addMethod(&menu, &Menu::interval, 2000);
-  addMethod(this, &Fernbedienung::controlButtons, 0);
-  lcd.begin(16, 2);
-  lcd.print ("Initialisiere");
-}
-
-void Fernbedienung::error(uint8_t arg1)
-{
-  lcd.clear();
-  lcd.setCursor(0,0);
-  lcd.print ("Fehler XBee Nr.");
-  lcd.setCursor(0,1);
-  lcd.print (arg1, DEC);
-}
-
-
-
-void Fernbedienung::readData(uint8_t* data, uint8_t length)
-{
-  menu.setConnection(true);
-  if (data[0] == Message::FromSolarboat::DATA_FROM_SOLARBOAT && length == 6)
-  {
-    // show data
-    unsigned long strom = data[1] | (data[2] << 8);
-    if (strom < 512)
-      strom = 512 - strom;
-    else
-      strom -= 512;
-    unsigned long spannung = data[3] | (data[4] << 8);
-    
-    menu.writeRawStromAndSpannung (strom, spannung);
-    
-    //FIXME: set correct factor
-    strom *= 26394;
-    strom /= 1000;
-    
-    // 0 = 0V, 1024=(5V*(14,7)/4,7)=3.127*5=15,635
-    // ==> 0,015267V pro Stelle
-    spannung *= 15271;
-    spannung /= 1000; // spannung in mV
-    menu.setActualMPPTType (data[5]);
-    menu.writeStromAndSpannung(spannung, strom);
-    
-  }
-  else if (data[0] == Message::FromSolarboat::BATTERY)
-  {
-    int value = data[1] | (data[2] << 8);
-    menu.setSolarBattery(value);
-  }
-  else if (data[0] == Message::FromSolarboat::SEND_MPPT) // NOWLOOK
-  {
-    if (data[1] == 'r')
-      menu.setMPPTDiff (data[2]);
-  }
-  else if (data[0] == Message::FromSolarboat::RESPONSE_MPPT_INTERVAL)
-  {
-    unsigned int interval = data[1] | (data[2] << 8);
-    menu.setMPPTInterval (interval);
-  }
-#ifndef REALLY_WORLD
-  else if (data[0] == '-')
-    menu.setAction(-1);
-  else if (data[0] == '+')
-    menu.setAction(+1);
-  else if (data[0] == 'R')
-    menu.setExecute();
-#endif
-}
-
-void Fernbedienung::connectionInterrupted()
-{
-  menu.setConnection(false);
-}
-
-void Fernbedienung::sendData()
-{
-  uint8_t data[3];
+namespace Fernbedienung{
+namespace Callback{
   
-  data[0] = Message::ToSolarboat::POTI_DATA;
-  data[1] = menu.getPotiValue(Menu::SPEED);
-  data[2] = menu.getPotiValue(Menu::TURN);
-  writeData(data, sizeof(data));
-}
+using Message::MessageData;
+using namespace Message::FromSolarboat;
+  
+void dataFromSolarboat (const MessageData< DATA_FROM_SOLARBOAT > *data, uint8_t length);
+void battery (const MessageData< Message::FromSolarboat::BATTERY > *data, uint8_t length);
+void sendMPPT (const MessageData< SEND_MPPT > *data, uint8_t length);
+void responseMPPTInterval (const MessageData< RESPONSE_MPPT_INTERVAL > *data, uint8_t length);
+void connection (const MessageData< MyXBee::CONNECTION_INTERRUPTED > *data, uint8_t length);
 
-void Fernbedienung::checkBatteryState()
+};
+};
+
+
+void Fernbedienung::initialize()
 {
-  int value = analogRead (BATTERY);
-  if (value < MIN_BATTERY_VALUE)
-    menu.setFernBattery();
+  dispatcher.addMethod(&sendData, 20);
+  dispatcher.addMethod(&checkBatteryState, 60000);
+  dispatcher.addMethod(menuInterval, 2000);
+  dispatcher.addMethod(&Buttons::controlButtons, 0);
+  
+  lcd.begin(16,2);
+  lcd.print ("Initialisiere2");
+  
+  using namespace Fernbedienung::Callback;
+  using Message::MessageData;
+  using namespace Message::FromSolarboat;
+  
+  xbee.registerMethod< DATA_FROM_SOLARBOAT >(dataFromSolarboat);
+  xbee.registerMethod< Message::FromSolarboat::BATTERY >(battery);
+  xbee.registerMethod< SEND_MPPT >(sendMPPT);
+  xbee.registerMethod< RESPONSE_MPPT_INTERVAL >(responseMPPTInterval);
+  xbee.registerMethod< MyXBee::CONNECTION_INTERRUPTED > (connection);
+  
+  
+//  menu.initialize ();
 }
 
-void Fernbedienung::setMPPT(char mpptType)
+void Fernbedienung::menuInterval()
 {
-  uint8_t data[2];
-  data[0] = Message::ToSolarboat::CHANGE_MPPT_TYPE;
-  data[1] = mpptType;
-  writeData (data, 2);
+  menu.interval();
 }
 
-void Fernbedienung::sendMPPTDiff(uint8_t arg1)
+void Fernbedienung::Callback::connection(const Message::MessageData< MyXBee::CONNECTION_INTERRUPTED >* data, uint8_t length)
 {
-  uint8_t data[3];
-  data[0] = Message::ToSolarboat::REQUEST_MPPT;
-  data[1] = 's';
-  data[2] = arg1;
-  writeData (data, 3);
+  menu.setConnection(data->connected);
 }
 
-void Fernbedienung::sendMPPTInterval(unsigned int arg1)
+void Fernbedienung::Callback::dataFromSolarboat(const Message::MessageData< Message::FromSolarboat::DATA_FROM_SOLARBOAT >* data, uint8_t length)
 {
-  uint8_t data[3];
-  data[0] = Message::ToSolarboat::SET_MPPT_INTERVAL;
-  data[1] = arg1 & 0xFF;
-  data[2] = arg1 >> 8;
-  writeData(data, 3);
+  unsigned long strom = data->strom;
+  if (strom < 512)
+    strom = 512 - strom;
+  else
+    strom -= 512;
+  unsigned long spannung = data->spannung;
+
+  menu.writeRawStromAndSpannung (strom, spannung);
+
+  //FIXME: set correct factor
+  strom *= 26394;
+  strom /= 1000;
+
+  // 0 = 0V, 1024=(5V*(14,7)/4,7)=3.127*5=15,635
+  // ==> 0,015267V pro Stelle
+  spannung *= 15271;
+  spannung /= 1000; // spannung in mV
+  menu.setActualMPPTType (data->mpptType);
+  menu.writeStromAndSpannung(spannung, strom);
+}
+
+void Fernbedienung::Callback::battery(const Message::MessageData< Message::FromSolarboat::BATTERY >* data, uint8_t length)
+{
+  menu.setSolarBattery(data->data);
+}
+
+void Fernbedienung::Callback::sendMPPT(const Message::MessageData< Message::FromSolarboat::SEND_MPPT >* data, uint8_t length)
+{
+  if (data->subtype == 'r')
+    menu.setMPPTDiff (data->data);
+}
+
+void Fernbedienung::Callback::responseMPPTInterval(const Message::MessageData< Message::FromSolarboat::RESPONSE_MPPT_INTERVAL >* data, uint8_t length)
+{
+  menu.setMPPTInterval(data->interval);
+}
+
+void Fernbedienung::sendData ()
+{
+  xbee.writePackage< Message::ToSolarboat::POTI_DATA > 
+    (menu.getPotiValue(Menu::SPEED), menu.getPotiValue(Menu::TURN) );
 }
 
 
-
-
-
-void Fernbedienung::controlButtons()
+void Fernbedienung::Buttons::controlButtons()
 {
   if (menu.isStarted())
   {
@@ -172,7 +131,7 @@ void Fernbedienung::controlButtons()
       steuerungX.control();
       if (steuerungX.isUp())
       {
-	setMPPT ((menu.getActualMPPTType() + 1) % Message::MPPT::COUNT);
+	xbee.writePackage< Message::ToSolarboat::CHANGE_MPPT_TYPE > ((menu.getActualMPPTType() + 1) % Message::MPPT::COUNT);
 	menu.setActualMPPTType(Message::MPPT::UNKNOWN);
       }
       else if (steuerungX.isDown())
@@ -183,7 +142,7 @@ void Fernbedienung::controlButtons()
       if (steuerungY.isUp())
       {
 	uint8_t diff = menu.getMPPTDiff();
-	sendMPPTDiff ((diff+1)%10);
+	xbee.writePackage< Message::ToSolarboat::REQUEST_MPPT > ('s', (diff+1)%10);
 	menu.setMPPTDiff(255);
 	menu.setPage (1);
       }
@@ -201,4 +160,12 @@ void Fernbedienung::controlButtons()
       }
     }
   }
+}
+
+void Fernbedienung::checkBatteryState ()
+{
+  int value = analogRead (BATTERY);
+  if (value < MIN_BATTERY_VALUE)
+    menu.setFernBattery();
+
 }
