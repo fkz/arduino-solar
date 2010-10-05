@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-#pragma once
+/*#pragma once
 #include <wireless.h>
 #include <LiquidCrystal/LiquidCrystal.h>
 #include "Menu.h"
@@ -24,7 +24,7 @@
 
 /**
 @short Basisklasse für die Fernbedienung
-*/
+/*
 class Fernbedienung: public MyXBee, public NDispatcher
 {
   public:
@@ -58,7 +58,7 @@ class Fernbedienung: public MyXBee, public NDispatcher
     /**
      sends MPPT type to solar boat
      @p mpptType type as listed in MessageTypes.h
-    */
+    * /
     void setMPPT (char mpptType);
     
     
@@ -67,7 +67,7 @@ class Fernbedienung: public MyXBee, public NDispatcher
     
     /**
      sends data of speed and turn to solar boat 
-    */
+    * /
     void sendData ();
     void checkBatteryState();
     
@@ -77,4 +77,4 @@ class Fernbedienung: public MyXBee, public NDispatcher
     PushButton< STEUERUNG_PRESS > steuerungPress;
     
     void controlButtons();    
-};
+};*/
