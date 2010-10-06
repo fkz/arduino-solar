@@ -17,7 +17,7 @@
 */
 #include "Menu.h"
 #include <MessageTypes.h>
-#include "fernbedienung2.h"
+#include "fernbedienung.h"
 
 void Menu::writePotToEEPROM()
 {

@@ -1,4 +1,4 @@
-#include "fernbedienung2.h"
+#include "fernbedienung.h"
 
 MyXBee Fernbedienung::xbee;
 NDispatcher Fernbedienung::dispatcher;

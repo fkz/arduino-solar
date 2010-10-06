@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-#include "fernbedienung2.h"
+#include "fernbedienung.h"
 
 extern "C" void __cxa_pure_virtual () { for (;;); }
 
