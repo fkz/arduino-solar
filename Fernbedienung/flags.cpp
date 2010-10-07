@@ -1,13 +1,14 @@
 #include "flags.h"
 
-namespace Fernbedienung::Flags{
-Flags flag = NONE;
-};
+namespace Fernbedienung{ 
+namespace Flags{
+Flags flags = NONE;
+};};
 
 void Fernbedienung::Flags::setFlag(Fernbedienung::Flags::Flags flag, bool set)
 {
   if (set)
-    flags |= flag;
+    flags = (Flags)(flags | flag);
   else
-    flags = (~flag) & flags;
+    flags = (Flags)((~flag) & flags);
 }
