@@ -22,6 +22,7 @@ extern "C" void __cxa_pure_virtual () { for (;;); }
 int main ()
 {
   init();
+  Serial.begin(9600);
   
   Fernbedienung::initialize();
   
