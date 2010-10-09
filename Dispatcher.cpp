@@ -47,7 +47,8 @@ void Dispatcher<count>::call()
       if (exec[i] != 0)
 	(objects[i]->*exec[i])();
 #else
-      exec[i]();
+      if (exec[i] != 0)
+	exec[i]();
 #endif
     }
   }
