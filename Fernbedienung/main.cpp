@@ -26,5 +26,8 @@ int main ()
   Fernbedienung::initialize();
   
   while (true)
+  {
+    Fernbedienung::dispatcher.call();
     Fernbedienung::xbee.readPackages();
+  }
 }
