@@ -75,12 +75,28 @@ class MyXBee
     void writePackage (typename Message::MessageData< type >::Param1 param1, typename Message::MessageData< type >::Param2 param2)
     {
       static_assert (Message::MessageData< type >::ParamCount == 2, "wrong param count");
+      
+#ifdef REALLY_WORLD
       Serial.write (START_BYTE);
       writeEscaped (sizeof (typename Message::MessageData< type >::Param1)+sizeof (typename Message::MessageData< type >::Param2));
       for (uint8_t* it = static_cast< uint8_t * > (&param1); it != static_cast< uint8_t * > (&param1 + 1); ++it)
 	writeEscaped (*it);
       for (uint8_t* it = &param2; it != &param2 + 1; ++it)
 	writeEscaped (*it);
+#else
+      Serial.print ("Paket emfangen(Länge:");
+      Serial.print (sizeof (typename Message::MessageData< type >::Param1));
+      Serial.write (',');
+      Serial.print (sizeof (typename Message::MessageData< type >::Param2));
+  Serial.print ("): ");
+      Serial.write (START_BYTE);
+      writeEscaped (sizeof (typename Message::MessageData< type >::Param1)+sizeof (typename Message::MessageData< type >::Param2));
+      for (uint8_t* it = static_cast< uint8_t * > (&param1); it != static_cast< uint8_t * > (&param1 + 1); ++it)
+	writeEscaped (*it);
+      for (uint8_t* it = &param2; it != &param2 + 1; ++it)
+	writeEscaped (*it);
+      Serial.println();
+#endif
     }
     
     long getReadCount () { return read_count; }
@@ -134,6 +150,7 @@ class MyXBee
     
     struct RegisterPair
     {
+      RegisterPair () : type (0), delegate (0) { }
       uint8_t type;
       ReadPackage delegate;
     };

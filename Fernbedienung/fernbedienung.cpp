@@ -50,8 +50,7 @@ void Fernbedienung::initialize()
   xbee.registerMethod< RESPONSE_MPPT_INTERVAL >(responseMPPTInterval);
   xbee.registerMethod< MyXBee::CONNECTION_INTERRUPTED > (connection);
   
-  
-//  menu.initialize ();
+  Pot::initialize();
 }
 
 void Fernbedienung::menuInterval()

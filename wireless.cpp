@@ -209,6 +209,11 @@ void MyXBee::writeData (unsigned char *data, unsigned char length)
   Serial.println ();
 }
 
+void MyXBee::writeEscaped(uint8_t arg1)
+{
+  Serial.write (arg1-32);
+}
+
 
 #endif
 
