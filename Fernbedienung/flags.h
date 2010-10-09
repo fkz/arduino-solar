@@ -15,6 +15,8 @@ enum Flags
 
 
 void setFlag (Flags flag, bool set);
-  
+bool getFlag (Flags flag);  
+
+
 };
 };

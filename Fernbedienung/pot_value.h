@@ -1,5 +1,5 @@
 #pragma once
-#include <WConstants.h>
+#include <WProgram.h>
 #include "fernbedienung.h"
 
 namespace Fernbedienung{
@@ -14,7 +14,7 @@ enum Poti
 
 void initialize ();
 
-int pot_value(Poti poti)
+inline int pot_value(Poti poti)
 {
   return analogRead (poti == SPEED ? POT_SPEED : POT_TURN);
 }
@@ -24,8 +24,20 @@ int pot_value(Poti poti)
  */
 uint8_t getMappedPotValue (Poti poti);
 
+extern int POT_MIN[2];
+extern int POT_MAX[2];
 
-uint8_t trim_poti;
+inline int &min_pot (Poti p)
+{
+  return POT_MIN[p];
+}
+
+inline int &max_pot (Poti p)
+{
+  return POT_MAX[p];
+}
+
+extern uint8_t trim_poti;
 
 };  
 };

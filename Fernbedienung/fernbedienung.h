@@ -9,7 +9,8 @@ void initialize ();
   
 extern MyXBee xbee;
 extern NDispatcher dispatcher;
-extern Menu menu;
+extern FileManagement files;
+//extern Menu menu;
 
 // Konstanten
 const uint8_t LCD_RS = 12;

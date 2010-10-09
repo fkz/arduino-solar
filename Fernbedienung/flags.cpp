@@ -12,3 +12,8 @@ void Fernbedienung::Flags::setFlag(Fernbedienung::Flags::Flags flag, bool set)
   else
     flags = (Flags)((~flag) & flags);
 }
+
+bool Fernbedienung::Flags::getFlag(Fernbedienung::Flags::Flags flag)
+{
+  return flags & flag;
+}

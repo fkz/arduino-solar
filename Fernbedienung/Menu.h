@@ -23,41 +23,58 @@
 #include <MessageTypes.h>
 #include "serialize.h"
 
-class Menu//: public Dispatcheable
-{
-  public:
-    Menu (LiquidCrystal &lcd) : lcd (lcd), mode (RUNNING), flags (NONE), mppt (Message::MPPT::UNKNOWN), interval_page(1)
-    { 
-      /*POT_MIN[SPEED] = EEPROM.read(0) | (EEPROM.read(1) << 8);
-      POT_MAX[SPEED] = EEPROM.read(2) | (EEPROM.read(3) << 8);
-      POT_MIN[TURN] = EEPROM.read(4) | (EEPROM.read(5) << 8);
-      POT_MAX[SPEED] = EEPROM.read(6) | (EEPROM.read(7) << 8);
-      
-      if (POT_MIN[SPEED] == 65535)
-      {*/
-	POT_MIN[SPEED] = 397;
-	POT_MAX[SPEED] = 617;
-	POT_MIN[TURN] = 307;
-	POT_MAX[TURN] = 731;
-	writePotToEEPROM ();
-      //}
-    }
+namespace Menu
+{       
+  enum Mode
+  {
+    RUNNING = 255,
+    MAINMENU = 0,
+    AKKU,
+    TRIM,
+    MPPT,
+    MPPT_SET_INTERVAL,
+    CUSTOM_TRIM,
+    CUSTOM_TRIM2,
+    MPPT_SET_DIFF,
+    SAVE_DATA,
+    MENU_COUNT
+  };
+  
+  void highlight(char value);
+  void activate (Mode m);
+  
+  /** 
+    navigation in the menu, go left or right
+    @param richtung should be -1 or 1 to go left/right
+  */
+  void setAction (int8_t richtung);
+  /**
+    "ok" clicked
+  */
+  void setExecute ();
+  /**
+    go down
+  */
+  void goUp ();
+  
+  inline void start()
+  {
+    activate (MAINMENU);
+  }
+  inline void end ()
+  {
+    activate (RUNNING);
+  }
+  bool isStarted();
+  
+  void interval();
+  
+  void writeStromAndSpannung(unsigned long spannung, unsigned long strom);
+
+};
     
-    
-    
-    /** 
-     navigation in the menu, go left or right
-     @param richtung should be -1 or 1 to go left/right
-    */
-    void setAction (int8_t richtung);
-    /**
-     "ok" clicked
-    */
-    void setExecute ();
-    /**
-     go down
-    */
-    void goUp ();
+
+#if false
     /**
      updates strom, spannung and power
      @param spannung spannung in mV
@@ -72,34 +89,6 @@ class Menu//: public Dispatcheable
     */
     void writeSpannung15(int arg1);
     
-    /**
-     sets the solar battery intensity. (only used if one is build in)
-     @param value either 0, stands for "LOW BATTERY" or between 1 and 1023 which
-        is the value returned by analogRead().
-    */
-    void setSolarBattery (int value = 0)
-    {
-      if (value == 0)
-	flags = (Flags)(flags | BATTERY_SOLARBOOT);
-      else
-	battery_solarboot = value;
-    }
-    
-    /**
-     sets the flag of the battery. Should be called, if the battery is low
-    */
-    void setFernBattery ()
-    {
-      flags = (Flags)(flags | BATTERY_FERNBEDIENUNG);
-    }
-    
-    /**
-     sets the connection flag
-    */
-    void setConnection (bool connection)
-    {
-      flags = (Flags)((flags & 3) | (connection << 2));      
-    }
     
     void flipPage ()
     {
@@ -120,57 +109,7 @@ class Menu//: public Dispatcheable
     */
     void interval ();
     
-    /**
-     sets the actual mppt type as returned by the boat
-    */
-    void setActualMPPTType(char arg1);
-    char getActualMPPTType ()
-    {
-      return mppt;
-    }
-    
-    enum Mode 
-    {
-      RUNNING = 255,
-      MAINMENU = 0,
-      AKKU,
-      TRIM,
-      MPPT,
-      MPPT_SET_INTERVAL,
-      CUSTOM_TRIM,
-      CUSTOM_TRIM2,
-      MPPT_SET_DIFF,
-      SAVE_DATA,
-      MENU_COUNT
-    };
-    
-    enum Poti
-    {
-      SPEED,
-      TURN
-    };
-    
-    
-    uint8_t getPotiValue (Poti poti);
-    void setMPPTDiff(uint8_t arg1)
-    {
-      mppt_diff = arg1;
-    }
-    uint8_t getMPPTDiff ()
-    {
-      return mppt_diff;
-    }
-    
-    
-    void setMPPTInterval(unsigned int arg1)
-    {
-      mppt_interval = arg1;
-    }
-    
-    unsigned int getMPPTInterval()
-    {
-      return mppt_interval;
-    }
+   
     
     
     /**
@@ -181,51 +120,19 @@ class Menu//: public Dispatcheable
     void writeCommaNumber(long unsigned int arg1, const char* str);
     
     
-  private:    
     LiquidCrystal &lcd;
-    Mode mode;
     uint8_t actual;
-    FileManagement files;
+    FileManagement files;    
 
     
-    void highlight(char value);
-    void activate (Mode m);
-    
-  public:
-
-    
-    void start()
-    {
-      activate (MAINMENU);
-    }
-    void end ()
-    {
-      activate (RUNNING);
-    }
-    bool isStarted()
-    {
-      return mode != RUNNING;
-    }
-    void writePotToEEPROM();
+   void writePotToEEPROM();
     
     void startRecord ();
     void endRecord ();
     void writeRawStromAndSpannung(int spannung, int strom);
     void startStopRecord();
     
-  private:
-    
-    enum Flags
-    {
-      NONE = 0,
-      BATTERY_SOLARBOOT = 1,
-      BATTERY_FERNBEDIENUNG = 2,
-      CONNECTION = 4,
-      RECORDING = 8,
-      FLAGS_ALL = 15
-    };
-    
-    Flags flags;
+        
     char mppt;
     int battery_solarboot;
     
@@ -245,3 +152,5 @@ class Menu//: public Dispatcheable
     
     int interval_page;
 };
+
+#endif

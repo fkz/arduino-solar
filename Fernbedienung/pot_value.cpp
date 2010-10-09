@@ -6,16 +6,6 @@ namespace Pot{
 int POT_MIN[2];
 int POT_MAX[2];
 
-inline int min_pot (Poti p)
-{
-  return POT_MIN[p];
-}
-
-inline int max_pot (Poti p)
-{
-  return POT_MAX[p];
-}
-
 };
 };
 

@@ -18,18 +18,10 @@
 #include "Menu.h"
 #include <MessageTypes.h>
 #include "fernbedienung.h"
-
-void Menu::writePotToEEPROM()
-{
-  EEPROM.write(0, POT_MIN[SPEED] & 0xFF);
-  EEPROM.write(1, POT_MIN[SPEED] >> 8);
-  EEPROM.write(2, POT_MAX[SPEED] & 0xFF);
-  EEPROM.write(3, POT_MAX[SPEED] >> 8);
-  EEPROM.write(4, POT_MIN[TURN] & 0xFF);
-  EEPROM.write(5, POT_MIN[TURN] >> 8);
-  EEPROM.write(6, POT_MAX[TURN] & 0xFF);
-  EEPROM.write(7, POT_MAX[TURN] >> 8);
-}
+#include "solarboot_data.h"
+#include "pot_value.h"
+#include "flags.h"
+#include "lcd_helper.h"
 
 
 const uint8_t commandData[Menu::MENU_COUNT][5][2] = {
@@ -54,6 +46,20 @@ const char *commandStrings[Menu::MENU_COUNT][2] = {
   {"einst.     -    "   , "Wert:     ok up "},
   {"-diff-    akt.: "   , " up ok einst.   "},
   {" Daten auslesen "   , " auslesen forma "}
+};
+
+namespace Menu{
+Mode mode = RUNNING;
+uint8_t actual;
+
+//BEGIN TODO: REARRANGE!!
+
+uint8_t mppt_act;
+Fernbedienung::Pot::Poti trim_poti;
+int max_pot_backup;
+int min_pot_backup;
+
+//END TODO
 };
 
 void Menu::setAction(int8_t richtung)
@@ -85,14 +91,22 @@ void Menu::setAction(int8_t richtung)
 
 void Menu::highlight(char value)
 {
+  using Fernbedienung::LcdHelper::lcd;
   lcd.setCursor (commandData[mode][actual][0] & 0xF, (commandData[mode][actual][0] & 0x10) >> 4);
   lcd.write (value);
   lcd.setCursor (commandData[mode][actual][1] & 0xF, (commandData[mode][actual][1] & 0x10) >> 4);
   lcd.write (value);
 }
 
+bool Menu::isStarted()
+{
+  return mode != RUNNING;
+}
+
+
 void Menu::activate(Menu::Mode m)
 {
+  using Fernbedienung::LcdHelper::lcd;
   mode = m;
   actual = 0;
   if (m != RUNNING)
@@ -118,14 +132,14 @@ void Menu::setExecute()
     case MAINMENU:
       if (actual == 0)
       {
-	mppt_diff = 255;
-	mppt_interval = 65535;
+	Fernbedienung::SolData::requestMPPTDiff ();
+	Fernbedienung::SolData::requestMPPTInterval ();
 	activate (MPPT);
       }
       else if (actual == 1)
       {
 	activate (AKKU);
-	battery_solarboot = 0;
+	Fernbedienung::SolData::requestSolarBattery ();
       }
       else if (actual == 2)
 	activate (TRIM);
@@ -140,7 +154,7 @@ void Menu::setExecute()
     case TRIM:
       if (actual == 0 || actual == 1)
       {
-	trim_poti = actual;
+	trim_poti = (Fernbedienung::Pot::Poti)actual;
 	activate (CUSTOM_TRIM);
       }
       else
@@ -150,10 +164,10 @@ void Menu::setExecute()
       if (actual == 0)
       {
 	activate (CUSTOM_TRIM2);
-	max_pot_backup = max_pot (trim_poti);
-	min_pot_backup = min_pot (trim_poti);
-	max_pot (trim_poti) = min_pot (trim_poti) = pot_value (trim_poti);
-	++max_pot (trim_poti);
+	max_pot_backup = Fernbedienung::Pot::max_pot (trim_poti);
+	min_pot_backup = Fernbedienung::Pot::min_pot (trim_poti);
+	Fernbedienung::Pot::max_pot (trim_poti) = Fernbedienung::Pot::min_pot (trim_poti) = Fernbedienung::Pot::pot_value (trim_poti);
+	++Fernbedienung::Pot::max_pot (trim_poti);
       }
       else
 	activate (MAINMENU);
@@ -161,7 +175,6 @@ void Menu::setExecute()
     case CUSTOM_TRIM2:
       if (actual == 0)
       {
-	writePotToEEPROM();
 	activate (CUSTOM_TRIM);
       }
       else
@@ -174,12 +187,12 @@ void Menu::setExecute()
     case MPPT:
       if (actual == 0)
       {
-	mppt_act = mppt_diff;
+	mppt_act = Fernbedienung::SolData::getMPPTDiff();
 	activate (MPPT_SET_DIFF);
       }
       else
       {
-	mppt_act = mppt_interval;
+	mppt_act = Fernbedienung::SolData::getMPPTInterval();
 	activate (MPPT_SET_INTERVAL);
       }
       break;
@@ -205,8 +218,8 @@ void Menu::setExecute()
 	  data[2] = mppt_act >> 8;
 	  xbee.writeData(data, 3);
 	}
-	mppt_diff = 255;
-	mppt_interval = 65535;
+	Fernbedienung::SolData::requestMPPTDiff();
+	Fernbedienung::SolData::requestMPPTInterval();
 	activate (MPPT);
       }
       else if (actual == 2)
@@ -219,7 +232,7 @@ void Menu::setExecute()
     case SAVE_DATA:
       if (actual == 0)
       {
-	files.readAllCvs();
+	Fernbedienung::files.readAllCvs();
 	activate (MAINMENU);
       }
       else if (actual == 1)
@@ -258,6 +271,205 @@ void Menu::goUp()
   }
 }
 
+//TODO: rework interval function
+void Menu::interval()
+{
+  using Fernbedienung::xbee;
+  using Fernbedienung::LcdHelper::lcd;
+  
+  if (mode == RUNNING)
+  {
+    lcd.setCursor (8,1);
+    //if (interval_page)
+    //{   
+      switch (Fernbedienung::SolData::getActualMPPTType())
+      {
+	case Message::MPPT::UNKNOWN:
+	  lcd.print ("??  ");
+	  break;
+	case Message::MPPT::NOMPPT:
+	  lcd.print ("No  ");
+	  break;
+	case Message::MPPT::PERTURBEANDOBSERVE:
+	  lcd.print ("P&O ");
+	  break;
+	case Message::MPPT::ESTIMATEPERTURB:
+	  lcd.print ("PE  ");
+	  break;
+	case Message::MPPT::ESTIMATEESTIMATEPERTURB:
+	  lcd.print ("PEE ");
+	  break;
+	default:
+	  lcd.print ("ERR ");
+	  break;
+      }
+      
+      lcd.write (Fernbedienung::Flags::getFlag (Fernbedienung::Flags::CONNECTION) ? Fernbedienung::Flags::getFlag (Fernbedienung::Flags::RECORDING) ? 'R' : ' ' : 'x');
+      lcd.write (Fernbedienung::Flags::getFlag (Fernbedienung::Flags::BATTERY_FERNBEDIENUNG) ? '!' : ' ');
+      lcd.write (Fernbedienung::Flags::getFlag (Fernbedienung::Flags::BATTERY_SOLARBOOT) ? '!' : ' ');
+      
+    //}
+    //else
+    /*{
+      if (mppt_interval == 65535)
+      {
+	lcd.print ("????");
+      }
+      else
+	lcd.print (mppt_interval);
+      lcd.setCursor (14, 1);
+      if (mppt_diff == 255)
+      {
+	lcd.print ("??");
+      }
+      else
+	lcd.print (mppt_diff);
+      {
+	uint8_t data[1];
+	data[0] = Message::ToSolarboat::REQUEST_MPPT_INTERVAL;
+	xbee.writeData(data, 1);
+      }
+      {
+	uint8_t data[2];
+	data[0] = Message::ToSolarboat::REQUEST_MPPT;
+	data[1] = 'r';
+	xbee.writeData(data, 2);
+      }
+    }*/
+  }
+  else if (mode == AKKU)
+  {
+    int value = analogRead (Fernbedienung::BATTERY);
+    lcd.setCursor(10, 0);
+    Fernbedienung::LcdHelper::writeSpannung15 (value);
+    lcd.print ("  ");
+    uint8_t data[1];
+    data[0] = Message::ToSolarboat::REQUEST_BATTERY;
+    xbee.writeData(data, 1);
+    
+    lcd.setCursor (10, 1);
+    if (Fernbedienung::SolData::getSolarBattery() == 0)
+      lcd.print ("----");
+    else
+    {
+      Fernbedienung::LcdHelper::writeSpannung15 (Fernbedienung::SolData::getSolarBattery());
+      lcd.print ("  ");
+    }
+  }
+  else if (mode == MPPT)
+  {
+    uint8_t data[2];
+    data[0] = Message::ToSolarboat::REQUEST_MPPT;
+    data[1] = 'r';
+    xbee.writeData(data, 2);
+    lcd.setCursor (14, 0);
+    if (Fernbedienung::SolData::getMPPTDiff() == 255)
+    {
+      lcd.write ('-');
+    }
+    else
+      lcd.write (Fernbedienung::SolData::getMPPTDiff() + '0');
+    lcd.setCursor (11, 1);
+    if (Fernbedienung::SolData::getMPPTInterval() == 65535)
+    {
+      lcd.print ("--");
+    }
+    else
+      lcd.print (Fernbedienung::SolData::getMPPTInterval());
+    
+    {
+      uint8_t data[2];
+      data[0] = Message::ToSolarboat::REQUEST_MPPT;
+      data[1] = 'r';
+      xbee.writeData(data, 2);
+    }
+    
+    { 
+      uint8_t data[1];
+      data[0] = Message::ToSolarboat::REQUEST_MPPT_INTERVAL;
+      xbee.writeData(data, 1);
+    }
+  }
+  else if (mode == CUSTOM_TRIM || mode == CUSTOM_TRIM2)
+  {
+    int max = Fernbedienung::Pot::max_pot (trim_poti);
+    int min = Fernbedienung::Pot::min_pot (trim_poti);
+    
+    if (mode == CUSTOM_TRIM)
+      lcd.setCursor (0, 1);
+    else
+      lcd.setCursor (6, 1);
+    int value = Fernbedienung::Pot::pot_value (trim_poti);
+    if (value > max)
+    {
+      if (mode == CUSTOM_TRIM2)
+	Fernbedienung::Pot::max_pot (trim_poti) = value;
+      value = 255;
+    }
+    else if (value < min)
+    {
+      if (mode == CUSTOM_TRIM2)
+	Fernbedienung::Pot::min_pot(trim_poti) = value;
+      value = 0;
+    }
+    else
+    {
+      value -= min;
+      value = (long)value * 256 / (max - min);
+    }
+    lcd.print (value);
+    lcd.write (' ');
+    
+    lcd.setCursor (7, 0);
+    lcd.print (min);
+    lcd.setCursor (12, 0);
+    lcd.print (max);
+    
+  }
+  else if (mode == MPPT_SET_DIFF)
+  {
+    lcd.setCursor (15, 0);
+    if (Fernbedienung::SolData::getMPPTDiff() == 255)
+      lcd.write ('-');
+    else
+      lcd.write (Fernbedienung::SolData::getMPPTDiff() + '0');
+    lcd.setCursor (14, 1);
+    lcd.write (mppt_act + '0');
+  }
+  else if (mode == MPPT_SET_INTERVAL)
+  {
+    lcd.setCursor (13, 0);
+    if (Fernbedienung::SolData::getMPPTInterval() == 65535)
+      lcd.write ('-');
+    else
+      lcd.print (Fernbedienung::SolData::getMPPTInterval());
+    lcd.setCursor (14, 1);
+    lcd.print (mppt_act);
+  }
+}
+
+void Menu::writeStromAndSpannung(unsigned long spannung, unsigned long strom)
+{
+  using Fernbedienung::LcdHelper::lcd;
+  using Fernbedienung::LcdHelper::writeCommaNumber;
+  if (mode == RUNNING)
+  {
+    lcd.clear();
+    lcd.setCursor (0, 0);
+    writeCommaNumber (spannung, "V");
+    lcd.setCursor (8, 0);
+    writeCommaNumber (strom, "A");
+    lcd.setCursor (0, 1);
+    writeCommaNumber (spannung * strom / 1000, "W");
+    interval();
+  }
+}
+
+
+
+////////////////////////////////////////
+
+#if false
 
 
 
@@ -484,20 +696,6 @@ void Menu::setActualMPPTType(char arg1)
   mppt = arg1;
 }
 
-int& Menu::max_pot(uint8_t poti)
-{
-  return POT_MAX[poti];
-}
-
-int& Menu::min_pot(uint8_t poti)
-{
-  return POT_MIN[poti];
-}
-
-int Menu::pot_value(uint8_t poti)
-{
-  return analogRead (poti == SPEED ? Fernbedienung::POT_SPEED : Fernbedienung::POT_TURN);
-}
 
 uint8_t Menu::getPotiValue(Menu::Poti poti)
 {
@@ -536,3 +734,4 @@ void Menu::startStopRecord()
   interval();
 }
 
+#endif
