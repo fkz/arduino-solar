@@ -11,7 +11,8 @@ LiquidCrystal lcd (Fernbedienung::LCD_RS, Fernbedienung::LCD_ENABLE, Fernbedienu
 Poti< Fernbedienung::POT_STEUERUNG_X, 400, 640 > Fernbedienung::Buttons::steuerungX;
 Poti< Fernbedienung::POT_STEUERUNG_Y, 400, 640 > Fernbedienung::Buttons::steuerungY;
 PushButton< Fernbedienung::STEUERUNG_PRESS > Fernbedienung::Buttons::steuerungPress;
-FileManagement Fernbedienung::files;    
+FileManagement Fernbedienung::files; 
+int Fernbedienung::recordId;
 
 
 namespace Fernbedienung{
@@ -25,14 +26,14 @@ void battery (const MessageData< Message::FromSolarboat::BATTERY > *data, uint8_
 void sendMPPT (const MessageData< SEND_MPPT > *data, uint8_t length);
 void responseMPPTInterval (const MessageData< RESPONSE_MPPT_INTERVAL > *data, uint8_t length);
 void connection (const MessageData< MyXBee::CONNECTION_INTERRUPTED > *data, uint8_t length);
+void error (const MessageData< MyXBee::ERROR > *data, uint8_t length);
 
 };
 };
-
 
 void Fernbedienung::initialize()
 {
-  dispatcher.addMethod(&sendData, 20);
+  dispatcher.addMethod(&sendData, 2000);
   dispatcher.addMethod(&checkBatteryState, 60000);
   dispatcher.addMethod(menuInterval, 2000);
   dispatcher.addMethod(&Buttons::controlButtons, 0);
@@ -49,6 +50,7 @@ void Fernbedienung::initialize()
   xbee.registerMethod< SEND_MPPT >(sendMPPT);
   xbee.registerMethod< RESPONSE_MPPT_INTERVAL >(responseMPPTInterval);
   xbee.registerMethod< MyXBee::CONNECTION_INTERRUPTED > (connection);
+  xbee.registerMethod< MyXBee::ERROR > (error);
   
   Pot::initialize();
 }
@@ -57,6 +59,14 @@ void Fernbedienung::menuInterval()
 {
   Menu::interval();
 }
+
+void Fernbedienung::Callback::error(const Message::MessageData< MyXBee::ERROR >* data, uint8_t length)
+{
+  lcd.setCursor(0,0);
+  lcd.print ("ERROR");
+  lcd.print (data->errorNumber, 10);
+}
+
 
 void Fernbedienung::Callback::connection(const Message::MessageData< MyXBee::CONNECTION_INTERRUPTED >* data, uint8_t length)
 {
@@ -73,7 +83,7 @@ void Fernbedienung::Callback::dataFromSolarboat(const Message::MessageData< Mess
   unsigned long spannung = data->spannung;
 
   if (Flags::getFlag(Flags::RECORDING))
-    files.newData(spannung, strom);
+    files.newData(spannung, strom, 0);
   
   //FIXME: set correct factor
   strom *= 26394;
@@ -172,7 +182,7 @@ void Fernbedienung::Buttons::controlButtons()
 	}
 	else
 	{
-	  files.startRecord();
+	  recordId = files.startRecord();
 	  Flags::setFlag (Flags::RECORDING, true);
 	}
 	

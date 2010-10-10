@@ -44,4 +44,5 @@ void controlButtons();
 void checkBatteryState();
 void menuInterval();
 
+extern int recordId;
 };

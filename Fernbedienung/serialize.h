@@ -30,10 +30,10 @@ class FileManagement
 public:
   FileManagement () : actual (0) {}
   
-  void startRecord ();
+  int startRecord ();
   void endRecord (uint8_t size = 0, uint8_t *filename = 0);
   
-  void newData (int spannung, int strom);
+  void newData (int spannung, int strom, int drehzahl);
   
   void readAllCvs ();
   
@@ -46,4 +46,5 @@ private:
   MemorySegment* actual;
   Memory memory;
   int pointer;
+  long int lastTime;
 };

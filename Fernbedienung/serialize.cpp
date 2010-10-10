@@ -19,7 +19,7 @@
 #include <WConstants.h>
 #include <HardwareSerial.h>
 
-void FileManagement::startRecord()
+int FileManagement::startRecord()
 {
   if (actual != 0)
     endRecord();
@@ -32,13 +32,25 @@ void FileManagement::startRecord()
   actual->write(3, (act >> 24) & 0xFF);
   actual->write(4, 0);
   pointer = 5;
+  lastTime = millis();
+  return actual->getId();
 }
 
-void FileManagement::newData(int spannung, int strom)
+void FileManagement::newData(int spannung, int strom, int drehzahl)
 {
   actual->write (pointer++, spannung & 0xFF);
   actual->write (pointer++, ((spannung >> 8) & 0x0F) | ((strom >> 4) & 0xF0));
   actual->write (pointer++, strom & 0xFF);
+  
+  long unsigned int now = millis();
+  int diff = now - lastTime;
+  lastTime = now;
+  if (diff > 4095)
+    diff = 1;
+  
+  actual->write (pointer++, drehzahl & 0xFF);
+  actual->write (pointer++, ((drehzahl >> 8) & 0x0F) | ((diff >> 4) & 0xF0));
+  actual->write (pointer++, diff & 0xFF);
 }
 
 void FileManagement::endRecord(uint8_t size, uint8_t* filename)
@@ -80,19 +92,31 @@ void FileManagement::readAllCvs()
       }
       Serial.println();
     }
-    
-    for (int index = 5; index < segsize-filenamelength; index+=3)
+    Serial.println ("Zeit[ms],Drehzahl,Spannung[mV],Strom[mA]");
+    for (int index = 5; index < segsize-filenamelength; index+=6)
     {
       uint8_t i1 = segment->read (index+1);
       int spannung = segment->read(index) | ((i1 & 0x0F) << 8);
-      int strom = segment->read (index) | ((i1 & 0xF0) << 4);
+      int strom = segment->read (index+2) | ((i1 & 0xF0) << 4);
+      
+      uint8_t i2 = segment->read (index+4);
+      int drehzahl = segment->read(index+3) | ((i1 & 0x0F) << 8);
+      int timediff = segment->read (index+5) | ((i1 & 0xF0) << 4);
+      
+      date += timediff;
+      
+      if (timediff == 1)
+	Serial.println ("Error Wrong Time");
       
       unsigned long sp = (unsigned long)spannung * 15271 / 1000;
-      unsigned long st = (unsigned long)strom * 15271 / 1000;
+      unsigned long st = (unsigned long)strom * 26394 / 1000;
+      Serial.print (date);
+      Serial.write (',');
+      Serial.print (drehzahl);
+      Serial.write (',');
       Serial.print (sp);
       Serial.write (',');
       Serial.println (st);
-      Serial.println ();
     }
   }
 }

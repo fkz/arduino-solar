@@ -45,7 +45,7 @@ const char *commandStrings[Menu::MENU_COUNT][2] = {
   {"Pot        -    "   , "    einst.  up  "},
   {"einst.     -    "   , "Wert:     ok up "},
   {"-diff-    akt.: "   , " up ok einst.   "},
-  {" Daten auslesen "   , " auslesen forma "}
+  {" Daten          "   , " auslesen forma "}
 };
 
 namespace Menu{
@@ -144,8 +144,6 @@ void Menu::setExecute()
       else if (actual == 2)
 	activate (TRIM);
       else if (actual == 3)
-	activate (RUNNING);
-      else if (actual == 4)
 	activate (SAVE_DATA);
       break;
     case AKKU:
@@ -304,10 +302,20 @@ void Menu::interval()
 	  break;
       }
       
-      lcd.write (Fernbedienung::Flags::getFlag (Fernbedienung::Flags::CONNECTION) ? Fernbedienung::Flags::getFlag (Fernbedienung::Flags::RECORDING) ? 'R' : ' ' : 'x');
-      lcd.write (Fernbedienung::Flags::getFlag (Fernbedienung::Flags::BATTERY_FERNBEDIENUNG) ? '!' : ' ');
-      lcd.write (Fernbedienung::Flags::getFlag (Fernbedienung::Flags::BATTERY_SOLARBOOT) ? '!' : ' ');
-      
+      if (Fernbedienung::Flags::getFlag (Fernbedienung::Flags::RECORDING))
+      {
+	if (Fernbedienung::Flags::getFlag (Fernbedienung::Flags::CONNECTION))
+	  lcd.print ("REC");
+	else
+	  lcd.print ("_R_");
+	lcd.print (Fernbedienung::recordId, 10);
+      }
+      else
+      {
+	lcd.write (Fernbedienung::Flags::getFlag (Fernbedienung::Flags::CONNECTION) ? ' ' : 'x');
+	lcd.write (Fernbedienung::Flags::getFlag (Fernbedienung::Flags::BATTERY_FERNBEDIENUNG) ? '!' : ' ');
+	lcd.write (Fernbedienung::Flags::getFlag (Fernbedienung::Flags::BATTERY_SOLARBOOT) ? '!' : ' ');
+      }
     //}
     //else
     /*{
@@ -445,6 +453,11 @@ void Menu::interval()
       lcd.print (Fernbedienung::SolData::getMPPTInterval());
     lcd.setCursor (14, 1);
     lcd.print (mppt_act);
+  }
+  else if (mode == SAVE_DATA)
+  {
+    lcd.setCursor (11, 0);
+    lcd.print (Fernbedienung::files.diskSpace());
   }
 }
 

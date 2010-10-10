@@ -29,6 +29,11 @@ public:
   void reset(uint8_t id, int startAddress, uint8_t size, bool resize);
   void resize (int newSize);
   
+  int getId ()
+  {
+    return id;
+  }
+  
 private:
   int startAddress;
   int _size;

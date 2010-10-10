@@ -122,7 +122,7 @@ class MyXBee
     void error(uint8_t arg1)
     {
       uint8_t data[2];
-      data[0] = CONNECTION_INTERRUPTED;
+      data[0] = ERROR;
       data[1] = arg1;
       return readData (data, 2);
     }
@@ -161,4 +161,5 @@ class MyXBee
 
 namespace Message{
   MESSAGE_DATA_1 (MyXBee::CONNECTION_INTERRUPTED, bool, connected);
+  MESSAGE_DATA_1 (MyXBee::ERROR, uint8_t, errorNumber);
 };
