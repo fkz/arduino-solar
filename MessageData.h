@@ -6,6 +6,7 @@ namespace Message
 template<const char type>
 struct MessageData
 {
+  static_assert (type != type, "intantiation of not specialized MessageTypes is not allowed");
   static const int ParamCount = -1;
 };
 
