@@ -308,6 +308,8 @@ void Menu::interval()
 	  lcd.print ("REC");
 	else
 	  lcd.print ("_R_");
+	if (Fernbedienung::recordId >= 10)
+	  lcd.setCursor (14,1);
 	lcd.print (Fernbedienung::recordId, 10);
       }
       else
@@ -315,6 +317,7 @@ void Menu::interval()
 	lcd.write (Fernbedienung::Flags::getFlag (Fernbedienung::Flags::CONNECTION) ? ' ' : 'x');
 	lcd.write (Fernbedienung::Flags::getFlag (Fernbedienung::Flags::BATTERY_FERNBEDIENUNG) ? '!' : ' ');
 	lcd.write (Fernbedienung::Flags::getFlag (Fernbedienung::Flags::BATTERY_SOLARBOOT) ? '!' : ' ');
+	lcd.write (' ');
       }
     //}
     //else
@@ -456,8 +459,9 @@ void Menu::interval()
   }
   else if (mode == SAVE_DATA)
   {
-    lcd.setCursor (11, 0);
+    lcd.setCursor (7, 0);
     lcd.print (Fernbedienung::files.diskSpace());
+    lcd.print ("/992");
   }
 }
 
