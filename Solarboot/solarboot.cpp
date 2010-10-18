@@ -155,6 +155,8 @@ void Solarboot::changeMPPT()
     case Message::MPPT::ESTIMATEESTIMATEPERTURB:
       mppt = &perturbEstimateEstimate;
       break;
+    case Message::MPPT::CONSTMPPT:
+      mppt = &constMppt;
     default:
       mpptType = Message::MPPT::NOMPPT;
       mppt = &noMPPT;

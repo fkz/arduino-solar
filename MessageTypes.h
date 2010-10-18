@@ -61,7 +61,8 @@ const char NOMPPT = 0;
 const char PERTURBEANDOBSERVE = 1;
 const char ESTIMATEPERTURB = 2;
 const char ESTIMATEESTIMATEPERTURB = 3;
-const char COUNT = 4;
+const char CONSTMPPT = 4;
+const char COUNT = 5;
 const char UNKNOWN = 255;
 
 };

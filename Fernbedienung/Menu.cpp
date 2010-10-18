@@ -297,6 +297,9 @@ void Menu::interval()
 	case Message::MPPT::ESTIMATEESTIMATEPERTURB:
 	  lcd.print ("PEE ");
 	  break;
+	case Message::MPPT::CONSTMPPT:
+	  lcd.print ("coV ");
+	  break;
 	default:
 	  lcd.print ("ERR ");
 	  break;
