@@ -33,7 +33,7 @@ void error (const MessageData< MyXBee::ERROR > *data, uint8_t length);
 
 void Fernbedienung::initialize()
 {
-  dispatcher.addMethod(&sendData, 2000);
+  dispatcher.addMethod(&sendData, 20);
   dispatcher.addMethod(&checkBatteryState, 60000);
   dispatcher.addMethod(menuInterval, 2000);
   dispatcher.addMethod(&Buttons::controlButtons, 0);
