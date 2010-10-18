@@ -44,3 +44,18 @@ struct MessageData< type > \
   param2 name2; \
   param3 name3; \
 } __attribute__((__packed__));
+
+#define MESSAGE_DATA_4(type,param1,name1,param2,name2,param3,name3,param4,name4) \
+template<> \
+struct MessageData< type > \
+{ \
+  static const int ParamCount = 4; \
+  typedef param1 Param1; \
+  typedef param2 Param2; \
+  typedef param3 Param3; \
+  typedef param4 Param4; \
+  param1 name1; \
+  param2 name2; \
+  param3 name3; \
+  param4 name4; \
+} __attribute__((__packed__));
