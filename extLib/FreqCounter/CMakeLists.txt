@@ -1,0 +1,1 @@
+add_library (FreqCounter STATIC counter.cpp)
