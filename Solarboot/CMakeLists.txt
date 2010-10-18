@@ -3,7 +3,7 @@ PROJECT(project)
 add_definitions(-DOLD_CASE)
 
 add_executable (solarboot main.cpp solarboot.cpp mppt.cpp ../wireless.cpp)
-target_link_libraries(solarboot -Wl,--gc-sections arduinoLib Servo)
+target_link_libraries(solarboot -Wl,--gc-sections arduinoLib Servo FreqCounter)
 
 ADD_CUSTOM_COMMAND(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/upload.hex

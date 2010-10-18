@@ -30,7 +30,7 @@ const char SEND_MPPT = '1';
 const char RESPONSE_MPPT_INTERVAL = 'I';
 };
 
-MESSAGE_DATA_3(FromSolarboat::DATA_FROM_SOLARBOAT, unsigned int, strom, unsigned int, spannung, char, mpptType);
+MESSAGE_DATA_4(FromSolarboat::DATA_FROM_SOLARBOAT, unsigned int, strom, unsigned int, spannung, char, mpptType, unsigned long int, freqCount);
 MESSAGE_DATA_1(FromSolarboat::BATTERY, unsigned int, data);
 MESSAGE_DATA_2(FromSolarboat::SEND_MPPT, const char, subtype, char, data);
 MESSAGE_DATA_1(FromSolarboat::RESPONSE_MPPT_INTERVAL, unsigned int, interval);

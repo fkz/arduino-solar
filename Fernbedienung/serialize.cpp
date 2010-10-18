@@ -33,14 +33,18 @@ int FileManagement::startRecord()
   actual->write(4, 0);
   pointer = 5;
   lastTime = millis();
+  lastDrehzahl = 0;
   return actual->getId();
 }
 
-void FileManagement::newData(int spannung, int strom, int drehzahl)
+void FileManagement::newData(int spannung, int strom, unsigned int long completeDrehzahl)
 {
   actual->write (pointer++, spannung & 0xFF);
   actual->write (pointer++, ((spannung >> 8) & 0x0F) | ((strom >> 4) & 0xF0));
   actual->write (pointer++, strom & 0xFF);
+  
+  unsigned int drehzahl = completeDrehzahl - lastDrehzahl;
+  lastDrehzahl = completeDrehzahl;
   
   long unsigned int now = millis();
   int diff = now - lastTime;

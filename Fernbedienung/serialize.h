@@ -33,7 +33,7 @@ public:
   int startRecord ();
   void endRecord (uint8_t size = 0, uint8_t *filename = 0);
   
-  void newData (int spannung, int strom, int drehzahl);
+  void newData (int spannung, int strom, long unsigned int completeDrehzahl);
   
   void readAllCvs ();
   
@@ -47,4 +47,5 @@ private:
   Memory memory;
   int pointer;
   long int lastTime;
+  long unsigned int lastDrehzahl; 
 };

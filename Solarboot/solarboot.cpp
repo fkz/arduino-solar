@@ -20,6 +20,7 @@
 #include <Servo/Servo.h>
 #include "mppt.h"
 #include <MessageTypes.h>
+#include <FreqCounter/counter.h>
 
 NoMPPT noMPPT;
 PerturbAndObserve perturbAndObserve;
@@ -48,6 +49,8 @@ Solarboot::Solarboot()
   addMethod(this, &Solarboot::sendData, 500);
   addMethod(this, &Solarboot::iterateMPPT, 20);
   addMethod(this, &Solarboot::checkBattery, 60000);
+  
+  Counter::initialize();
 }
 
 void Solarboot::error(uint8_t arg1)
@@ -63,13 +66,18 @@ void Solarboot::sendData()
   strom /= readStromCount;
   int spannung = analogRead (spannungId);
   
-  uint8_t data[6];
+  uint8_t data[10];
   data[0] = Message::FromSolarboat::DATA_FROM_SOLARBOAT;
   data[1] = strom & 0xFF;
   data[2] = strom >> 8;
   data[3] = spannung & 0xFF;
   data[4] = spannung >> 8;
   data[5] = mpptType;
+  unsigned long int freqCount = Counter::getCount();
+  data[6] = freqCount & 0xFF;
+  data[7] = (freqCount & 0xFF00) >> 8;
+  data[8] = (freqCount & 0xFF0000) >> 16;
+  data[9] = freqCount >> 24;
   
   writeData(data, sizeof(data));
 }

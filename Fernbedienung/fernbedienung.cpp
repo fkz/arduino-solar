@@ -83,7 +83,7 @@ void Fernbedienung::Callback::dataFromSolarboat(const Message::MessageData< Mess
   unsigned long spannung = data->spannung;
 
   if (Flags::getFlag(Flags::RECORDING))
-    files.newData(spannung, strom, 0);
+    files.newData(spannung, strom, data->freqCount);
   
   //FIXME: set correct factor
   strom *= 26394;
