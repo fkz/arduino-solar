@@ -26,6 +26,7 @@ NoMPPT noMPPT;
 PerturbAndObserve perturbAndObserve;
 PerturbEstimate perturbEstimate;
 PerturbEstimateEstimate perturbEstimateEstimate;
+ConstMPPT constMppt;
 
 Solarboot::Solarboot()
 : mpptInterval (5)

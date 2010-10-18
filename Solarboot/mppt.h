@@ -51,6 +51,18 @@ class NoMPPT: public MPPT
     virtual int loop(int strom, int spannung);
 };
 
+class ConstMPPT: public MPPT
+{
+public:
+  ConstMPPT () : MPPT(), lastSpeed(0), actualValue(128), refSpannung(0) {}
+  virtual int loop (int strom, int spannung);
+private:
+  uint8_t refSpannungN;
+  int actualValue;
+  int refSpannung;
+  int lastSpeed;
+};
+
 class OptimizingMPPT: public MPPT
 {
 protected:
