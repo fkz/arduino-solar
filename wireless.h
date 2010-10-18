@@ -91,12 +91,42 @@ class MyXBee
   Serial.print ("): ");
       Serial.write (START_BYTE);
       writeEscaped (sizeof (typename Message::MessageData< type >::Param1)+sizeof (typename Message::MessageData< type >::Param2));
-      for (uint8_t* it = static_cast< uint8_t * > (&param1); it != static_cast< uint8_t * > (&param1 + 1); ++it)
+      for (uint8_t* it = reinterpret_cast< uint8_t * > (&param1); it != reinterpret_cast< uint8_t * > (&param1 + 1); ++it)
 	writeEscaped (*it);
       for (uint8_t* it = &param2; it != &param2 + 1; ++it)
 	writeEscaped (*it);
       Serial.println();
 #endif
+    }
+    
+    template< const char type >
+    void writePackage (typename Message::MessageData< type >::Param1 param1, typename Message::MessageData< type >::Param2 param2, typename Message::MessageData< type >::Param3 param3)
+    {
+      static_assert (Message::MessageData< type >::ParamCount == 3, "wrong param count");
+      Serial.write (START_BYTE);
+      writeEscaped (sizeof (typename Message::MessageData< type >::Param1) + sizeof (typename Message::MessageData< type >::Param2) + sizeof (typename Message::MessageData< type >::Param3));
+      for (uint8_t* it = reinterpret_cast< uint8_t * > (&param1); it != reinterpret_cast< uint8_t * > (&param1 + 1); ++it)
+	writeEscaped (*it);
+      for (uint8_t* it = reinterpret_cast< uint8_t * > (&param2); it != reinterpret_cast< uint8_t * > (&param2 + 1); ++it)
+	writeEscaped (*it);
+      for (uint8_t* it = reinterpret_cast< uint8_t * > (&param3); it != reinterpret_cast< uint8_t * > (&param3 + 1); ++it)
+	writeEscaped (*it);
+    }
+    
+    template< const char type >
+    void writePackage (typename Message::MessageData< type >::Param1 param1, typename Message::MessageData< type >::Param2 param2, typename Message::MessageData< type >::Param3 param3, typename Message::MessageData< type >::Param4 param4)
+    {
+      static_assert (Message::MessageData< type >::ParamCount == 4, "wrong param count");
+      Serial.write (START_BYTE);
+      writeEscaped (sizeof (typename Message::MessageData< type >::Param1) + sizeof (typename Message::MessageData< type >::Param2) + sizeof (typename Message::MessageData< type >::Param3) + sizeof (typename Message::MessageData< type >::Param4));
+      for (uint8_t* it = reinterpret_cast< uint8_t * > (&param1); it != reinterpret_cast< uint8_t * > (&param1 + 1); ++it)
+	writeEscaped (*it);
+      for (uint8_t* it = reinterpret_cast< uint8_t * > (&param2); it != reinterpret_cast< uint8_t * > (&param2 + 1); ++it)
+	writeEscaped (*it);
+      for (uint8_t* it = reinterpret_cast< uint8_t * > (&param3); it != reinterpret_cast< uint8_t * > (&param3 + 1); ++it)
+	writeEscaped (*it);
+      for (uint8_t* it = reinterpret_cast< uint8_t * > (&param4); it != reinterpret_cast< uint8_t * > (&param4 + 1); ++it)
+	writeEscaped (*it);
     }
     
     long getReadCount () { return read_count; }
