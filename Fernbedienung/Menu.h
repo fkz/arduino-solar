@@ -37,6 +37,7 @@ namespace Menu
     CUSTOM_TRIM2,
     MPPT_SET_DIFF,
     SAVE_DATA,
+    DREHZAHL,
     MENU_COUNT
   };
   
@@ -70,7 +71,7 @@ namespace Menu
   void interval();
   
   void writeStromAndSpannung(unsigned long spannung, unsigned long strom);
-
+  void writeDrehzahl (unsigned long drehzahl);
 };
     
 

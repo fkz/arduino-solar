@@ -95,6 +95,7 @@ void Fernbedienung::Callback::dataFromSolarboat(const Message::MessageData< Mess
   spannung /= 1000; // spannung in mV
   SolData::setActualMPPTType(data->mpptType);
   Menu::writeStromAndSpannung(spannung, strom);
+  Menu::writeDrehzahl (data->freqCount);
 }
 
 void Fernbedienung::Callback::battery(const Message::MessageData< Message::FromSolarboat::BATTERY >* data, uint8_t length)
