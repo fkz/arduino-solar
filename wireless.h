@@ -66,7 +66,8 @@ class MyXBee
     {
       static_assert (Message::MessageData< type >::ParamCount == 1, "wrong param count");
       Serial.write (START_BYTE);
-      writeEscaped (sizeof (typename Message::MessageData< type >::Param1));
+      writeEscaped (1+sizeof (typename Message::MessageData< type >::Param1));
+      writeEscaped (type);
       for (uint8_t* it = &param1; it != &param1 + 1; ++it)
 	writeEscaped (*it);
     }
@@ -76,27 +77,13 @@ class MyXBee
     {
       static_assert (Message::MessageData< type >::ParamCount == 2, "wrong param count");
       
-#ifdef REALLY_WORLD
       Serial.write (START_BYTE);
-      writeEscaped (sizeof (typename Message::MessageData< type >::Param1)+sizeof (typename Message::MessageData< type >::Param2));
+      writeEscaped (1+sizeof (typename Message::MessageData< type >::Param1)+sizeof (typename Message::MessageData< type >::Param2));
+      writeEscaped (type);
       for (uint8_t* it = static_cast< uint8_t * > (&param1); it != static_cast< uint8_t * > (&param1 + 1); ++it)
 	writeEscaped (*it);
       for (uint8_t* it = &param2; it != &param2 + 1; ++it)
 	writeEscaped (*it);
-#else
-      Serial.print ("Paket emfangen(Länge:");
-      Serial.print (sizeof (typename Message::MessageData< type >::Param1));
-      Serial.write (',');
-      Serial.print (sizeof (typename Message::MessageData< type >::Param2));
-  Serial.print ("): ");
-      Serial.write (START_BYTE);
-      writeEscaped (sizeof (typename Message::MessageData< type >::Param1)+sizeof (typename Message::MessageData< type >::Param2));
-      for (uint8_t* it = reinterpret_cast< uint8_t * > (&param1); it != reinterpret_cast< uint8_t * > (&param1 + 1); ++it)
-	writeEscaped (*it);
-      for (uint8_t* it = &param2; it != &param2 + 1; ++it)
-	writeEscaped (*it);
-      Serial.println();
-#endif
     }
     
     template< const char type >
@@ -104,7 +91,8 @@ class MyXBee
     {
       static_assert (Message::MessageData< type >::ParamCount == 3, "wrong param count");
       Serial.write (START_BYTE);
-      writeEscaped (sizeof (typename Message::MessageData< type >::Param1) + sizeof (typename Message::MessageData< type >::Param2) + sizeof (typename Message::MessageData< type >::Param3));
+      writeEscaped (1+sizeof (typename Message::MessageData< type >::Param1) + sizeof (typename Message::MessageData< type >::Param2) + sizeof (typename Message::MessageData< type >::Param3));
+      writeEscaped (type);
       for (uint8_t* it = reinterpret_cast< uint8_t * > (&param1); it != reinterpret_cast< uint8_t * > (&param1 + 1); ++it)
 	writeEscaped (*it);
       for (uint8_t* it = reinterpret_cast< uint8_t * > (&param2); it != reinterpret_cast< uint8_t * > (&param2 + 1); ++it)
@@ -118,7 +106,8 @@ class MyXBee
     {
       static_assert (Message::MessageData< type >::ParamCount == 4, "wrong param count");
       Serial.write (START_BYTE);
-      writeEscaped (sizeof (typename Message::MessageData< type >::Param1) + sizeof (typename Message::MessageData< type >::Param2) + sizeof (typename Message::MessageData< type >::Param3) + sizeof (typename Message::MessageData< type >::Param4));
+      writeEscaped (1+sizeof (typename Message::MessageData< type >::Param1) + sizeof (typename Message::MessageData< type >::Param2) + sizeof (typename Message::MessageData< type >::Param3) + sizeof (typename Message::MessageData< type >::Param4));
+      writeEscaped (type);
       for (uint8_t* it = reinterpret_cast< uint8_t * > (&param1); it != reinterpret_cast< uint8_t * > (&param1 + 1); ++it)
 	writeEscaped (*it);
       for (uint8_t* it = reinterpret_cast< uint8_t * > (&param2); it != reinterpret_cast< uint8_t * > (&param2 + 1); ++it)
