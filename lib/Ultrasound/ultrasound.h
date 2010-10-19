@@ -14,12 +14,19 @@ public:
   static const unsigned int endless = 65535;
   static const uint8_t max = ULTRASOUND_MAX;
   
+  unsigned int getRawDistance()
+  {
+    return distance[index];
+  }
+  
+  
   /**
    * gets the distance in mm or @ref endless, if it is more than 3m (=3000mm) away 
    */
-  unsigned int getDistance()
+  unsigned int getDistanceMm ()
   {
-    return distance[index];
+    //TODO: update these values to the right ones
+    return (distance[index] - 4000) / 5;
   }
   
   /**

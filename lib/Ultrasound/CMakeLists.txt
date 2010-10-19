@@ -1,1 +1,1 @@
-
+add_library (UltraSound STATIC ultrasound.cpp)
