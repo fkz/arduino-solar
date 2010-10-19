@@ -4,9 +4,9 @@ uint8_t UltraSound::pin[max];
 unsigned int UltraSound::distance[max];
 uint8_t UltraSound::numberOfUltraSound = 0;
 
-UltraSound::UltraSound(int pin)
+UltraSound::UltraSound(int tpin)
 {
-  pin[numberOfUltraSound] = pin;
+  pin[numberOfUltraSound] = tpin;
   distance[numberOfUltraSound] = endless;
   index = numberOfUltraSound++;
 }
