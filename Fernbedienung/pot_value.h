@@ -7,8 +7,8 @@ namespace Pot{
 
 enum Poti
 {
-  SPEED,
-  TURN
+  SPEED = 0,
+  TURN = 1
 };
 
 
