@@ -18,6 +18,10 @@
 #include "MemoryManagement.h"
 #include <EEPROM/EEPROM.h>
 
+#ifdef SD
+#include <sd-reader_source_20101010/sd_raw.h>
+#endif
+
 // Memory management:
 
 // Hex   Size    Data
@@ -25,56 +29,84 @@
 // 0x01  0x1F    Länge der einzelnen Segmente, oder 0 falls leer
 // 0x20  Rest    Beginn of Data
 
+inline uint8_t read (Memory::size_type index)
+{
+#ifndef SD
+  return EEPROM.read(index);
+#else
+  uint8_t buffer;
+  sd_raw_read (index, &buffer, 1);
+  return buffer;
+#endif
+}
+
+inline void write (Memory::size_type index, uint8_t data)
+{
+#ifndef SD
+  EEPROM.write (index, data);
+#else
+  sd_raw_write (index, &data, 1);
+#endif
+}
 
 Memory::Memory()
 {
-  bool formatiert = EEPROM.read(0) == 0x27;
+#ifdef SD
+  sd_raw_init();
+  sd_raw_info info;
+  sd_raw_get_info(&info);
+  capacity = info.capacity() - 32;
+#else
+  capacity = 1024-32;
+#endif
+  
+  bool formatiert = read(0) == 0x27;
   if (!formatiert)
   {
     for (int i = 1; i != 0x20; ++i)
-      EEPROM.write (i, 0);
-    EEPROM.write (0, 0x27);
+      write (i, 0);
+    write (0, 0x27);
   }
 }
 
 int Memory::getCount()
 {
-  int result = 0;
-  while (EEPROM.read (++result) != 0);
+  size_type result = 0;
+  while (read (++result) != 0);
   return result-1;
 }
 
 MemorySegment* Memory::getSegement(int index)
 {
-  int startAddress = 0x20;
+  size_type startAddress = 0x20;
   for (int i = 1; i != index+1; ++i)
   {
-    startAddress += EEPROM.read (i);
+    startAddress += read (i);
   }
-  actual.reset (index, startAddress, EEPROM.read (index+1), false);
+  actual.reset (index, startAddress, read (index+1), false);
   return &actual;
 }
 
 MemorySegment* Memory::startSegment()
 {
-  int startAddress = 0x20;
+  size_type startAddress = 0x20;
   uint8_t size = 1;
   int index;
   for (index = 1; size!=0; ++index)
   {
-    size = EEPROM.read (index);
+    size = read (index);
     startAddress += size;
   }
   actual.reset (index-2, startAddress, 0, true);
   return &actual;
 }
 
-int Memory::diskSpace()
+Memory::size_type Memory::diskSpace()
 {
-  int result = 0;
+  size_type result = 0;
   for (int i = 1; i != 20; ++i)
   {
-    uint8_t data = EEPROM.read (i);
+    uint8_t data = read (i);
     result += data;
     if (data == 0)
       break;
@@ -93,19 +125,19 @@ void MemorySegment::reset(uint8_t id, int startAddress, uint8_t size, bool resiz
 
 uint8_t MemorySegment::read(int index)
 {
-  return EEPROM.read (index+startAddress);
+  return read (index+startAddress);
 }
 
 void MemorySegment::write(int index, uint8_t data)
 {
-  EEPROM.write (index+startAddress, data);
+  write (index+startAddress, data);
 }
 
-void MemorySegment::resize(int newSize)
+void MemorySegment::resize(size_type newSize)
 {
   if (resizeable)
   {
     _size = newSize;
-    EEPROM.write (id+1, newSize);
+    write (id+1, newSize);
   }
 }

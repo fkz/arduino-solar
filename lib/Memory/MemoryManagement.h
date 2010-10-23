@@ -22,12 +22,13 @@
 class MemorySegment
 {
 public:
+  typedef unsigned long int size_type;
   int size () { return _size; }
   uint8_t read (int index);
   void write (int index, uint8_t data);  
   
   void reset(uint8_t id, int startAddress, uint8_t size, bool resize);
-  void resize (int newSize);
+  void resize (size_type newSize);
   
   int getId ()
   {
@@ -50,14 +51,21 @@ private:
 class Memory
 {
 public:
+  typedef unsigned long int size_type;
+  
   Memory ();
   
   int getCount ();
   MemorySegment *getSegement (int index);
   MemorySegment *startSegment ();
   
-  int diskSpace ();
+  size_type diskSpace ();
+  size_type getCapacity ()
+  {
+    return capacity;
+  }
   
 private:
   MemorySegment actual;
+  size_type capacity;
 };
