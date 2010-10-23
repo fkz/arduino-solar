@@ -18,4 +18,6 @@ add_library (SoftSerial STATIC ${libraries}/SoftwareSerial/SoftwareSerial.cpp)
 add_library (Lcd STATIC ${libraries}/LiquidCrystal/LiquidCrystal.cpp)
 add_library (Servo STATIC ${libraries}/Servo/Servo.cpp)
 target_link_libraries (Servo arduinoLib)
+
 add_subdirectory (Ultrasound)
+add_subdirectory (FreqCounter)

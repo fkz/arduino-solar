@@ -52,6 +52,7 @@ endif(CMAKE_GENERATOR STREQUAL "MinGW Makefiles")
 
 include_directories (${arduinoDirectory}/libraries)
 include_directories (${arduinoDirectory}/hardware/arduino/cores/arduino)
+include_directories (${CMAKE_CURRENT_SOURCE_DIR}/lib)
 include_directories (extLib)
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 
