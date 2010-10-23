@@ -80,9 +80,9 @@ class MyXBee
       Serial.write (START_BYTE);
       writeEscaped (1+sizeof (typename Message::MessageData< type >::Param1)+sizeof (typename Message::MessageData< type >::Param2));
       writeEscaped (type);
-      for (uint8_t* it = reinterpret_cast< uint8_t * > (&param1); it != static_cast< uint8_t * > (&param1 + 1); ++it)
+      for (uint8_t* it = reinterpret_cast< uint8_t * > (&param1); it != reinterpret_cast< uint8_t * > (&param1 + 1); ++it)
 	writeEscaped (*it);
-      for (uint8_t* it = &param2; it != &param2 + 1; ++it)
+      for (uint8_t* it = reinterpret_cast< uint8_t * > (&param2); it != reinterpret_cast< uint8_t * > (&param2 + 1); ++it)
 	writeEscaped (*it);
     }
     
