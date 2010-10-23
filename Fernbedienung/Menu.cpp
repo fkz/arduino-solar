@@ -295,6 +295,9 @@ void Menu::interval()
   
   if (mode == RUNNING)
   {
+    if (haltUntil < millis())
+    {
+    
     lcd.setCursor (8,1);
     //if (interval_page)
     //{   
@@ -340,6 +343,7 @@ void Menu::interval()
 	lcd.write (Fernbedienung::Flags::getFlag (Fernbedienung::Flags::BATTERY_SOLARBOOT) ? '!' : ' ');
 	lcd.write (' ');
       }
+    }
     //}
     //else
     /*{
