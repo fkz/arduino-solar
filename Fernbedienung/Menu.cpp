@@ -60,6 +60,7 @@ uint8_t mppt_act;
 Fernbedienung::Pot::Poti trim_poti;
 int max_pot_backup;
 int min_pot_backup;
+unsigned long int haltUntil = 0;
 
 //END TODO
 };
@@ -104,6 +105,16 @@ bool Menu::isStarted()
 {
   return mode != RUNNING;
 }
+
+bool Menu::halt(long unsigned int until)
+{
+  if (mode != RUNNING)
+    return false;
+  
+  haltUntil = until;
+  return true;
+}
+
 
 
 void Menu::activate(Menu::Mode m)

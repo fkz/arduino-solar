@@ -68,6 +68,8 @@ namespace Menu
   }
   bool isStarted();
   
+  bool halt (unsigned long int until);
+  
   void interval();
   
   void writeStromAndSpannung(unsigned long spannung, unsigned long strom);

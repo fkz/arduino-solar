@@ -27,6 +27,7 @@ void sendMPPT (const MessageData< SEND_MPPT > *data, uint8_t length);
 void responseMPPTInterval (const MessageData< RESPONSE_MPPT_INTERVAL > *data, uint8_t length);
 void connection (const MessageData< MyXBee::CONNECTION_INTERRUPTED > *data, uint8_t length);
 void error (const MessageData< MyXBee::ERROR > *data, uint8_t length);
+void distance (const MessageData< DISTANCE > *data, uint8_t length);
 
 };
 };
@@ -51,9 +52,28 @@ void Fernbedienung::initialize()
   xbee.registerMethod< RESPONSE_MPPT_INTERVAL >(responseMPPTInterval);
   xbee.registerMethod< MyXBee::CONNECTION_INTERRUPTED > (connection);
   xbee.registerMethod< MyXBee::ERROR > (error);
+  xbee.registerMethod< DISTANCE >(distance);
   
   Pot::initialize();
 }
+
+void Fernbedienung::Callback::distance(const Message::MessageData< DISTANCE >* data, uint8_t length)
+{
+  if (Menu::halt (millis() + 1100))
+  {
+    lcd.setCursor (0, 0);
+    for (uint8_t i = 0; i != 8; ++i)
+      lcd.write (' ');
+    
+    lcd.setCursor (1, 0);
+    lcd.print (data->leftDistance);
+    lcd.write (' ');
+    lcd.write (' ');
+    lcd.print (data->rightDistance);
+    lcd.write (' ');
+  }
+}
+
 
 void Fernbedienung::menuInterval()
 {
