@@ -1,0 +1,1 @@
+add_library(sd STATIC sd_raw.c)
