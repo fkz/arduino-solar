@@ -29,7 +29,7 @@ PerturbEstimateEstimate perturbEstimateEstimate;
 ConstMPPT constMppt;
 
 Solarboot::Solarboot()
-: mpptInterval (5)
+: mpptInterval (5), left (3), right (4)
 {
   static NoMPPT noMPPT;
   mppt = &noMPPT;
@@ -50,6 +50,7 @@ Solarboot::Solarboot()
   addMethod(this, &Solarboot::sendData, 500);
   addMethod(this, &Solarboot::iterateMPPT, 20);
   addMethod(this, &Solarboot::checkBattery, 60000);
+  addMethod(this, &Solarboot::messureDistance, 1000);
   
   Counter::initialize();
 }
@@ -195,3 +196,11 @@ void Solarboot::checkBattery()
 }
 
 
+void Solarboot::messureDistance()
+{
+  UltraSound::messure();
+  if (left.getDistanceMm() < 1000 || right.getDistanceMm() < 1000)
+  {
+    writePackage< Message::FromSolarboat::DISTANCE > (left.getDistanceMm(), right.getDistanceMm());
+  }
+}

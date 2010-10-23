@@ -28,12 +28,14 @@ const char DATA_FROM_SOLARBOAT = 'd';
 const char BATTERY = 'b';
 const char SEND_MPPT = '1';
 const char RESPONSE_MPPT_INTERVAL = 'I';
+const char DISTANCE = 'v';
 };
 
 MESSAGE_DATA_4(FromSolarboat::DATA_FROM_SOLARBOAT, unsigned int, strom, unsigned int, spannung, char, mpptType, unsigned long int, freqCount);
 MESSAGE_DATA_1(FromSolarboat::BATTERY, unsigned int, data);
 MESSAGE_DATA_2(FromSolarboat::SEND_MPPT, const char, subtype, char, data);
 MESSAGE_DATA_1(FromSolarboat::RESPONSE_MPPT_INTERVAL, unsigned int, interval);
+MESSAGE_DATA_2(FromSolarboat::DISTANCE, unsigned int, leftDistance, unsigned int, rightDistance);
 
 namespace ToSolarboat {
 

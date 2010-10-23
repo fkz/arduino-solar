@@ -20,6 +20,8 @@
 #include <LiquidCrystal/LiquidCrystal.h>
 #include <Dispatcher.h>
 #include <Servo/Servo.h>
+#include <Ultrasound/ultrasound.h>
+
 
 class MPPT;
 
@@ -49,6 +51,8 @@ class Solarboot: public MyXBee, public NDispatcher
     
     
   private:
+    void messureDistance();
+    
     // number of 20ms-states until MPPT is used
     int mpptInterval, mpptIntervalIndex;
     
@@ -57,4 +61,6 @@ class Solarboot: public MyXBee, public NDispatcher
     MPPT *mppt;
     char mpptType;
     Servo servoMotor, servoTurn;
+    
+    UltraSound left, right;
 };
