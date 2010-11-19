@@ -135,7 +135,13 @@ class MyXBee
     }
     
   private:
+#ifndef OLD_CASE
     void readData (const uint8_t *data, uint8_t length);
+#else
+protected:
+    virtual void readData (const uint8_t *data, uint8_t length) = 0;    
+#endif
+private:
     void writeEscaped(uint8_t arg1);
     
     void error(uint8_t arg1)

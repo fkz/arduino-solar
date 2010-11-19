@@ -44,7 +44,7 @@ class Solarboot: public MyXBee, public NDispatcher
     
   protected:
     virtual void error(uint8_t arg1);
-    virtual void readData(uint8_t* data, uint8_t length);
+    virtual void readData(const uint8_t* data, uint8_t length);
     virtual void connectionInterrupted();
     
     
