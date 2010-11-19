@@ -34,7 +34,7 @@ class Solarboot: public MyXBee, public NDispatcher
 
     static const int BATTERY = 2;
     
-    static const int readStromCount = 32;
+    static const int readStromCount = 8;
     
      /// initialize pin modes and XBee connection
     Solarboot();

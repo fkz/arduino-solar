@@ -175,6 +175,7 @@ void Solarboot::iterateMPPT()
   for (int i = 0; i != readStromCount; ++i)
   {
     strom += analogRead (stromId);
+    delayMicroseconds(50);
   }
   strom /= readStromCount;
   int spannung = analogRead (spannungId);
