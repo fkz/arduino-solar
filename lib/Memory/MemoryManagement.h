@@ -65,6 +65,8 @@ public:
     return capacity;
   }
   
+  void sync();
+  
 private:
   MemorySegment actual;
   size_type capacity;

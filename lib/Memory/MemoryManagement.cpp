@@ -29,7 +29,7 @@
 // 0x01  0x1F    Länge der einzelnen Segmente, oder 0 falls leer
 // 0x20  Rest    Beginn of Data
 
-inline uint8_t read (Memory::size_type index)
+inline uint8_t _read (Memory::size_type index)
 {
 #ifndef SD
   return EEPROM.read(index);
@@ -40,7 +40,7 @@ inline uint8_t read (Memory::size_type index)
 #endif
 }
 
-inline void write (Memory::size_type index, uint8_t data)
+inline void _write (Memory::size_type index, uint8_t data)
 {
 #ifndef SD
   EEPROM.write (index, data);
@@ -60,19 +60,19 @@ Memory::Memory()
   capacity = 1024-32;
 #endif
   
-  bool formatiert = read(0) == 0x27;
+  bool formatiert = _read(0) == 0x27;
   if (!formatiert)
   {
     for (int i = 1; i != 0x20; ++i)
-      write (i, 0);
-    write (0, 0x27);
+      _write (i, 0);
+    _write (0, 0x27);
   }
 }
 
 int Memory::getCount()
 {
   size_type result = 0;
-  while (read (++result) != 0);
+  while (_read (++result) != 0);
   return result-1;
 }
 
@@ -81,9 +81,9 @@ MemorySegment* Memory::getSegement(int index)
   size_type startAddress = 0x20;
   for (int i = 1; i != index+1; ++i)
   {
-    startAddress += read (i);
+    startAddress += _read (i);
   }
-  actual.reset (index, startAddress, read (index+1), false);
+  actual.reset (index, startAddress, _read (index+1), false);
   return &actual;
 }
 
@@ -94,7 +94,7 @@ MemorySegment* Memory::startSegment()
   int index;
   for (index = 1; size!=0; ++index)
   {
-    size = read (index);
+    size = _read (index);
     startAddress += size;
   }
   actual.reset (index-2, startAddress, 0, true);
@@ -106,7 +106,7 @@ Memory::size_type Memory::diskSpace()
   size_type result = 0;
   for (int i = 1; i != 20; ++i)
   {
-    uint8_t data = read (i);
+    uint8_t data = _read (i);
     result += data;
     if (data == 0)
       break;
@@ -125,12 +125,12 @@ void MemorySegment::reset(uint8_t id, int startAddress, uint8_t size, bool resiz
 
 uint8_t MemorySegment::read(int index)
 {
-  return read (index+startAddress);
+  return _read (index+startAddress);
 }
 
 void MemorySegment::write(int index, uint8_t data)
 {
-  write (index+startAddress, data);
+  _write (index+startAddress, data);
 }
 
 void MemorySegment::resize(size_type newSize)
@@ -138,6 +138,13 @@ void MemorySegment::resize(size_type newSize)
   if (resizeable)
   {
     _size = newSize;
-    write (id+1, newSize);
+    _write (id+1, newSize);
   }
+}
+
+void Memory::sync()
+{
+#ifdef SD
+  sd_raw_sync();
+#endif
 }
