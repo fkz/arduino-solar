@@ -27,7 +27,7 @@ public:
   uint8_t read (int index);
   void write (int index, uint8_t data);  
   
-  void reset(uint8_t id, int startAddress, uint8_t size, bool resize);
+  void reset(uint8_t id, int startAddress, size_type size, bool resize);
   void resize (size_type newSize);
   
   int getId ()

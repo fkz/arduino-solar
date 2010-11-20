@@ -71,8 +71,8 @@ Memory::Memory()
 
 int Memory::getCount()
 {
-  size_type result = 0;
-  while (_read (++result) != 0);
+  size_type result = 1;
+  for(;result < 0x10 && (_read(2*(result))!=0 || _read(2*(result)+1)!=0);++result);
   return result-1;
 }
 
@@ -81,20 +81,20 @@ MemorySegment* Memory::getSegement(int index)
   size_type startAddress = 0x20;
   for (int i = 1; i != index+1; ++i)
   {
-    startAddress += _read (i);
+    startAddress += _read (2*i) | _read (2*i+1) << 8;
   }
-  actual.reset (index, startAddress, _read (index+1), false);
+  actual.reset (index, startAddress, _read (2*(index+1)) | _read (2*(index+1)+1) << 8, false);
   return &actual;
 }
 
 MemorySegment* Memory::startSegment()
 {
   size_type startAddress = 0x20;
-  uint8_t size = 1;
+  int size = 1;
   int index;
   for (index = 1; size!=0; ++index)
   {
-    size = _read (index);
+    size = _read (2*index) | _read (2*index+1) << 8;
     startAddress += size;
   }
   actual.reset (index-2, startAddress, 0, true);
@@ -106,7 +106,7 @@ Memory::size_type Memory::diskSpace()
   size_type result = 0;
   for (int i = 1; i != 20; ++i)
   {
-    uint8_t data = _read (i);
+    uint16_t data = _read (2*i) | _read (2*i+1) << 8;
     result += data;
     if (data == 0)
       break;
@@ -115,7 +115,7 @@ Memory::size_type Memory::diskSpace()
 }
 
 
-void MemorySegment::reset(uint8_t id, int startAddress, uint8_t size, bool resize)
+void MemorySegment::reset(uint8_t id, int startAddress, size_type size, bool resize)
 {
   this->id = id;
   _size = size;
@@ -138,7 +138,8 @@ void MemorySegment::resize(size_type newSize)
   if (resizeable)
   {
     _size = newSize;
-    _write (id+1, newSize);
+    _write (2*(id+1), newSize & 0xFF);
+    _write (2*(id+1)+1, newSize >> 8);
   }
 }
 
