@@ -21,7 +21,7 @@
 #include <EEPROM/EEPROM.h>
 #include <wireless.h>
 #include <MessageTypes.h>
-#include "serialize.h"
+#include <Memory/serialize.h>
 
 namespace Menu
 {       

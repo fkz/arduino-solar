@@ -104,8 +104,8 @@ void FileManagement::readAllCvs()
       int strom = segment->read (index+2) | ((i1 & 0xF0) << 4);
       
       uint8_t i2 = segment->read (index+4);
-      int drehzahl = segment->read(index+3) | ((i1 & 0x0F) << 8);
-      int timediff = segment->read (index+5) | ((i1 & 0xF0) << 4);
+      int drehzahl = segment->read(index+3) | ((i2 & 0x0F) << 8);
+      int timediff = segment->read (index+5) | ((i2 & 0xF0) << 4);
       
       date += timediff;
       

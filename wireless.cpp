@@ -115,7 +115,7 @@ void MyXBee::writeEscaped(uint8_t arg1)
 }
 
 #else
-
+j
 void MyXBee::readPackages ()
 {
   long unsigned int now = millis();
@@ -235,7 +235,8 @@ void MyXBee::readData(const uint8_t* data, uint8_t length)
   for (int i = 0; i != registrantsCount; ++i)
     if (registrants[i].type == data[0])
     {
-      registrants[i].delegate (data+1, length-1);
+      if (registrants[i].delegate)
+	registrants[i].delegate (data+1, length-1);
       return;
     }
   //if the error message is not registered, this would lead to a stack overflow i. e. CRASH, so

@@ -21,3 +21,5 @@ target_link_libraries (Servo arduinoLib)
 
 add_subdirectory (Ultrasound)
 add_subdirectory (FreqCounter)
+add_subdirectory (sd-reader_source_20101010)
+add_subdirectory(Memory)

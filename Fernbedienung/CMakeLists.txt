@@ -1,7 +1,7 @@
 PROJECT(fernbedienung)
 
-add_executable (fernbedienung flags.cpp main.cpp ../wireless.cpp fernbedienung.cpp Menu.cpp MemoryManagement.cpp serialize.cpp solarboot_data.cpp lcd_helper.cpp pot_value.cpp)
-target_link_libraries(fernbedienung -Wl,--gc-sections arduinoLib Lcd EEPROM)
+add_executable (fernbedienung flags.cpp main.cpp ../wireless.cpp fernbedienung.cpp Menu.cpp solarboot_data.cpp lcd_helper.cpp pot_value.cpp)
+target_link_libraries(fernbedienung -Wl,--gc-sections arduinoLib Lcd EEPROM MemoryManagement)
 
 ADD_CUSTOM_COMMAND(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/upload.hex

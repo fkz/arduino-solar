@@ -92,7 +92,7 @@ void Solarboot::connectionInterrupted()
 }
 
 
-void Solarboot::readData(uint8_t* data, uint8_t length)
+void Solarboot::readData(const uint8_t* data, uint8_t length)
 {  
   switch (data[0])
   {
@@ -120,7 +120,7 @@ void Solarboot::readData(uint8_t* data, uint8_t length)
     }
     case Message::ToSolarboat::REQUEST_MPPT:
     {
-      mppt->receiveData(*this, data+1, length-1);
+      mppt->receiveData(*this, const_cast< uint8_t * > (data+1), length-1); //TODO: remove const_cast, add const to receiveData method signature
       break;
     }
     case Message::ToSolarboat::REQUEST_MPPT_INTERVAL:
@@ -158,6 +158,7 @@ void Solarboot::changeMPPT()
       break;
     case Message::MPPT::CONSTMPPT:
       mppt = &constMppt;
+      break;
     default:
       mpptType = Message::MPPT::NOMPPT;
       mppt = &noMPPT;
@@ -175,6 +176,7 @@ void Solarboot::iterateMPPT()
   for (int i = 0; i != readStromCount; ++i)
   {
     strom += analogRead (stromId);
+    delayMicroseconds(50);
   }
   strom /= readStromCount;
   int spannung = analogRead (spannungId);
