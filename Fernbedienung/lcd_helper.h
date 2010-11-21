@@ -29,6 +29,12 @@ inline void writeSpannung15(int arg1)
   writeCommaNumber(spannung, "V");
 }
 
+inline void writeSpannung2(int arg1)
+{
+  unsigned long spannung = (unsigned long)arg1 * 5000 / 512;
+  writeCommaNumber(spannung, "V");
+}
+
 
   
 };

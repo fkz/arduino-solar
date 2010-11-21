@@ -373,7 +373,7 @@ void Menu::interval()
       lcd.print ("----");
     else
     {
-      Fernbedienung::LcdHelper::writeSpannung15 (Fernbedienung::SolData::getSolarBattery());
+      Fernbedienung::LcdHelper::writeSpannung2 (Fernbedienung::SolData::getSolarBattery());
       lcd.print ("  ");
     }
   }
