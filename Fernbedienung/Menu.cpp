@@ -432,7 +432,7 @@ void Menu::interval()
 	Fernbedienung::Pot::min_pot(trim_poti) = value;
     }
     
-    lcd.print (Fernbedienung::Pot::getMappedPotValue(value));
+    lcd.print (Fernbedienung::Pot::getMappedPotValueCalculated(trim_poti, value));
     lcd.write (' ');
     
     lcd.setCursor (7, 0);

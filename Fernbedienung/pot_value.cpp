@@ -26,10 +26,9 @@ int POT_MAX[2];
 };
 };
 
-uint8_t Fernbedienung::Pot::getMappedPotValue(Fernbedienung::Pot::Poti poti)
+uint8_t Fernbedienung::Pot::getMappedPotValueCalculated(Fernbedienung::Pot::Poti poti, int value)
 {
   uint8_t result;
-  int value = pot_value (poti);
   if (value > max_pot (poti))
     result = 255;
   else if (value < min_pot(poti))
