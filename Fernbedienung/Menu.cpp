@@ -282,6 +282,15 @@ void Menu::interval()
   using Fernbedienung::xbee;
   using Fernbedienung::LcdHelper::lcd;
   
+  if (Fernbedienung::Flags::getFlag (Fernbedienung::Flags::CONNECTION))
+  {
+    digitalWrite (Fernbedienung::LED_PIN, HIGH);
+  }
+  else
+  {
+    digitalWrite (Fernbedienung::LED_PIN, LOW);
+  }
+  
   if (mode == RUNNING)
   {
     lcd.setCursor (8,1);

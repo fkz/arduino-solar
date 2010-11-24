@@ -70,6 +70,7 @@ void Fernbedienung::initialize()
   xbee.registerMethod< MyXBee::ERROR > (error);
   
   Pot::initialize();
+  pinMode(LED_PIN, OUTPUT);
 }
 
 void Fernbedienung::menuInterval()

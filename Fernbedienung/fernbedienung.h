@@ -36,6 +36,7 @@ const uint8_t LCD_D0 = 5;
 const uint8_t LCD_D1 = 4;
 const uint8_t LCD_D2 = 3;
 const uint8_t LCD_D3 = 2;
+const uint8_t LED_PIN = 13;
 
 const uint8_t POT_SPEED = 0;
 const uint8_t POT_TURN = 1;
