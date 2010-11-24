@@ -469,7 +469,7 @@ void Menu::interval()
   }
 }
 
-void Menu::writeStromAndSpannung(unsigned long spannung, unsigned long strom)
+void Menu::writeStromAndSpannung(long unsigned int spannung, long signed int strom)
 {
   using Fernbedienung::LcdHelper::lcd;
   using Fernbedienung::LcdHelper::writeCommaNumber;

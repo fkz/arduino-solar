@@ -92,17 +92,13 @@ void Fernbedienung::Callback::connection(const Message::MessageData< MyXBee::CON
 
 void Fernbedienung::Callback::dataFromSolarboat(const Message::MessageData< Message::FromSolarboat::DATA_FROM_SOLARBOAT >* data, uint8_t length)
 {
-  unsigned long strom = data->strom;
-  if (strom < 512)
-    strom = 512 - strom;
-  else
-    strom -= 512;
+  signed long strom = data->strom;
   unsigned long spannung = data->spannung;
 
   if (Flags::getFlag(Flags::RECORDING))
     files.newData(spannung, strom, data->freqCount);
   
-  //FIXME: set correct factor
+  strom = 511 - strom;
   strom *= 26394;
   strom /= 1000;
 

@@ -70,7 +70,7 @@ namespace Menu
   
   void interval();
   
-  void writeStromAndSpannung(unsigned long spannung, unsigned long strom);
+  void writeStromAndSpannung(unsigned long spannung, signed long strom);
   void writeDrehzahl (unsigned long drehzahl);
 };
     

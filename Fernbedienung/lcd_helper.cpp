@@ -20,8 +20,13 @@
 
 LiquidCrystal Fernbedienung::LcdHelper::lcd (LCD_RS, LCD_ENABLE, LCD_D0, LCD_D1, LCD_D2, LCD_D3);
 
-void Fernbedienung::LcdHelper::writeCommaNumber(long unsigned int arg1, const char* str)
+void Fernbedienung::LcdHelper::writeCommaNumber(long signed int arg1, const char* str)
 {
+  if (arg1 < 0)
+  {
+    lcd.write ('-');
+    arg1 = -arg1;
+  }
   //Runden
   if (arg1 % 10 >= 5)
     arg1 += 10;
