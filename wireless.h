@@ -27,6 +27,8 @@ class MyXBee
 #endif
 {
   public:
+    static const unsigned int baudRate = 57600;
+    
     enum SpecialCharacters
     {
       #ifdef REALLY_WORLD

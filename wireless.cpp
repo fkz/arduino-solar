@@ -21,7 +21,7 @@
 MyXBee::MyXBee()
 : alredyRead(0), _isConnected(false), read_count(0), registrantsCount(0)
 {
-  Serial.begin(9600);
+  Serial.begin(MyXBee::baudRate);
 }
 
 
