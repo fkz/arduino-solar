@@ -241,30 +241,30 @@ int ConstMPPT::loop(int strom, int spannung)
 {
   if (lastSpeed != speed)
   {
-    int8_t lastSpeedV = lastSpeed < 100 ? 1 : lastSpeed > 200 ? -1 : 0;
-    int8_t speedV = speed < 100 ? 1 : speed > 200 ? -1 : 0;
-    if (lastSpeedV != speedV && speedV != 0 && ( refSpannungN != 0 || speedV == 1 ) && (refSpannungN != 12 || speedV == -1))
+    int8_t lastSpeedV = lastSpeed < 100 ? -1 : lastSpeed > 200 ? +1 : 0;
+    int8_t speedV = speed < 100 ? -1 : speed > 200 ? +1 : 0;
+    if (lastSpeedV != speedV && speedV != 0 && ( refSpannungN != 0 || speedV == 1 ) && (refSpannungN != 7 || speedV == -1))
     {
       refSpannungN += speedV;
-      refSpannung = refSpannungN * 1250 / 19;
+      refSpannung = 511 - (long)refSpannungN * 1000000 / 26394 ;
     }
     lastSpeed = speed;
   }
   
-  if (spannung < refSpannung - 20)
-    --actualValue;
-  else if (spannung > refSpannung + 20)
+  if (strom < refSpannung - 20)
     ++actualValue;
-  
-  if (spannung < refSpannung - 40)
+  else if (strom > refSpannung + 20)
     --actualValue;
-  else if (spannung > refSpannung + 40)
+  
+  if (strom < refSpannung - 40)
     ++actualValue;
-  
-  if (spannung < refSpannung)
+  else if (strom > refSpannung + 40)
     --actualValue;
+  
+  if (strom < refSpannung)
+    ++actualValue;
   else
-    ++actualValue;
+    --actualValue;
   return actualValue;
 }
 
