@@ -28,13 +28,17 @@ int POT_MAX[2];
 
 uint8_t Fernbedienung::Pot::getMappedPotValue(Fernbedienung::Pot::Poti poti)
 {
+  uint8_t result;
   int value = pot_value (poti);
   if (value > max_pot (poti))
-    return 255;
+    result = 255;
   else if (value < min_pot(poti))
-    return 0;
+    result = 0;
   else
-    return (long)(value-min_pot(poti))*256/(max_pot(poti)-min_pot(poti));
+    result = (long)(value-min_pot(poti))*256/(max_pot(poti)-min_pot(poti));
+  if (poti == SPEED)
+    result = 255 - result;
+  return result;
 }
 
 

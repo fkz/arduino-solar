@@ -425,20 +425,14 @@ void Menu::interval()
     {
       if (mode == CUSTOM_TRIM2)
 	Fernbedienung::Pot::max_pot (trim_poti) = value;
-      value = 255;
     }
     else if (value < min)
     {
       if (mode == CUSTOM_TRIM2)
 	Fernbedienung::Pot::min_pot(trim_poti) = value;
-      value = 0;
     }
-    else
-    {
-      value -= min;
-      value = (long)value * 256 / (max - min);
-    }
-    lcd.print (value);
+    
+    lcd.print (Fernbedienung::Pot::getMappedPotValue(value));
     lcd.write (' ');
     
     lcd.setCursor (7, 0);
