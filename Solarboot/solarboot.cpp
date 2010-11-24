@@ -173,10 +173,7 @@ void Solarboot::iterateMPPT()
   
   long int strom = 0;
   for (int i = 0; i != readStromCount; ++i)
-  {
     strom += analogRead (stromId);
-    delayMicroseconds(50);
-  }
   strom /= readStromCount;
   int spannung = analogRead (spannungId);
   int motor = mppt->loop(strom, spannung);
