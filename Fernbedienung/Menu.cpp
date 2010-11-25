@@ -22,33 +22,34 @@
 #include "pot_value.h"
 #include "flags.h"
 #include "lcd_helper.h"
+#include <avr/pgmspace.h>
 
 
-const uint8_t commandData[Menu::MENU_COUNT][5][2] = {
-  { { 16, 21}, {21, 26}, {26, 31}, {10, 15}, {0, 9} },
-  { { 32, 32}, {32, 32}, {32, 32}, {32, 32}, {32, 32} },
-  { { 16, 21}, {22, 27}, {28, 31}, {32, 32}, {32, 32} },
-  { {  13,  15}, {26, 29}, {32, 32}, {32, 32}, {32, 32} },
-  { { 16, 19}, {19, 22}, {29, 31}, {32, 32}, {32, 32} },
-  { { 19, 26}, {27, 30}, {32, 32}, {32, 32}, {32, 32} },
-  { { 25, 28}, {28, 31}, {32, 32}, {32, 32}, {32, 32} },
-  { { 16, 19}, {19, 22}, {29, 31}, {32, 32}, {32, 32} },
-  { { 16, 25}, {25, 31}, {32, 32}, {32, 32}, {32, 32} },
-  { { 32, 32}, {32, 32}, {32, 32}, {32, 32}, {32, 32} }
+const prog_uint8_t PROGMEM commandData[Menu::MENU_COUNT*5*2] = {
+    16, 21, 21, 26, 26, 31, 10, 15, 0, 9 ,
+      32, 32 ,  32, 32 ,  32, 32 ,  32, 32 ,  32, 32   ,
+      16, 21 ,  22, 27 ,  28, 31 ,  32, 32 ,  32, 32   ,
+       13,  15 ,  26, 29 ,  32, 32 ,  32, 32 ,  32, 32   ,
+      16, 19 ,  19, 22 ,  29, 31 ,  32, 32 ,  32, 32   ,
+      19, 26 ,  27, 30 ,  32, 32 ,  32, 32 ,  32, 32   ,
+      25, 28 ,  28, 31 ,  32, 32 ,  32, 32 ,  32, 32   ,
+      16, 19 ,  19, 22 ,  29, 31 ,  32, 32 ,  32, 32   ,
+      16, 25 ,  25, 31 ,  32, 32 ,  32, 32 ,  32, 32   ,
+      32, 32 ,  32, 32 ,  32, 32 ,  32, 32 ,  32, 32   
 };
 
-const char *commandStrings[Menu::MENU_COUNT][2] = {
-  {" Drehzahl  Data ",     " MPPT Akku Trim "},
-  {"Akku Fer.       "   , "Solarboot       "},
-  {"   ---Trim---   "   , " Pot1  Pot2  up "},
-  {"--MPPT--diff:   "   , "Intervall:      "},
-  {"-inter.-akt.:   "   , " up ok einst.   "},
-  {"Pot        -    "   , "    einst.  up  "},
-  {"einst.     -    "   , "Wert:     ok up "},
-  {"-diff-    akt.: "   , " up ok einst.   "},
-  {" Daten          "   , " auslesen forma "},
-  {"                ",    "                "}
-};
+const prog_char PROGMEM commandStrings[Menu::MENU_COUNT*2*16] = 
+  " Drehzahl  Data "     " MPPT Akku Trim" 
+  "Akku Fer.       "    "Solarboot       "
+  "   ---Trim---   "    " Pot1  Pot2  up "
+  "--MPPT--diff:   "    "Intervall:      "
+  "-inter.-akt.:   "    " up ok einst.   "
+  "Pot        -    "    "    einst.  up  "
+  "einst.     -    "    "Wert:     ok up "
+  "-diff-    akt.: "    " up ok einst.   "
+  " Daten          "    " auslesen forma "
+  "                "    "                "
+;
 
 namespace Menu{
 Mode mode = RUNNING;
@@ -72,7 +73,7 @@ void Menu::setAction(int8_t richtung)
     if (actual == 0 && richtung == -1)
     {
       for (actual = 1; actual != 5; ++actual)
-	if (commandData[mode][actual][0] == 32)
+	if (pgm_read_byte (commandData + mode*10 + actual*5) == 32)
 	  break;
       --actual;
     }
@@ -84,7 +85,7 @@ void Menu::setAction(int8_t richtung)
     else
     {
       actual += richtung;
-      if (actual == 5 || commandData[mode][actual][0] == 32)
+      if (actual == 5 || pgm_read_byte (commandData+10*mode+2*actual) == 32)
 	actual = 0;
     }
     highlight('_');
@@ -94,9 +95,11 @@ void Menu::setAction(int8_t richtung)
 void Menu::highlight(char value)
 {
   using Fernbedienung::LcdHelper::lcd;
-  lcd.setCursor (commandData[mode][actual][0] & 0xF, (commandData[mode][actual][0] & 0x10) >> 4);
+  uint8_t command1 = pgm_read_byte (commandData + 10*mode + 2*actual);
+  uint8_t command2 = pgm_read_byte (commandData + 10*mode + 2*actual + 1);
+  lcd.setCursor (command1 & 0xF, (command1 & 0x10) >> 4);
   lcd.write (value);
-  lcd.setCursor (commandData[mode][actual][1] & 0xF, (commandData[mode][actual][1] & 0x10) >> 4);
+  lcd.setCursor (command2 & 0xF, (command2 & 0x10) >> 4);
   lcd.write (value);
 }
 
@@ -114,9 +117,15 @@ void Menu::activate(Menu::Mode m)
   if (m != RUNNING)
   {
     lcd.setCursor (0,0);
-    lcd.print (commandStrings[m][0]);
+    for (int i = 0; i != 16; ++i)
+    {
+      lcd.write (pgm_read_byte (commandStrings + 32*m + i));
+    }
     lcd.setCursor(0,1);
-    lcd.print (commandStrings[m][1]);
+    for (int i = 0; i != 16; ++i)
+    {
+      lcd.write (pgm_read_byte (commandStrings + 32*m + 16 + i));
+    }
     highlight('_');
   }
   else
