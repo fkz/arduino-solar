@@ -42,7 +42,7 @@ uint8_t getMappedPotValueCalculated (Poti poti, int value);
  */
 inline uint8_t getMappedPotValue (Poti poti)
 {
-  getMappedPotValueCalculated (poti, pot_value (poti));
+  return getMappedPotValueCalculated (poti, pot_value (poti));
 }
 
 extern int POT_MIN[2];
