@@ -48,7 +48,7 @@ Solarboot::Solarboot()
   
   addMethod(this, &Solarboot::readPackages, 0);
   addMethod(this, &Solarboot::sendData, 500);
-  addMethod(this, &Solarboot::iterateMPPT, 20);
+  addMethod(this, &Solarboot::iterateMPPT, 300);
   addMethod(this, &Solarboot::checkBattery, 60000);
   
   Counter::initialize();
