@@ -25,7 +25,7 @@
 #include <avr/pgmspace.h>
 
 
-const prog_uint8_t PROGMEM commandData[Menu::MENU_COUNT*5*2] = {
+const prog_uint8_t commandData[Menu::MENU_COUNT*5*2] PROGMEM = {
     16, 21, 21, 26, 26, 31, 10, 15, 0, 9 ,
       32, 32 ,  32, 32 ,  32, 32 ,  32, 32 ,  32, 32   ,
       16, 21 ,  22, 27 ,  28, 31 ,  32, 32 ,  32, 32   ,
@@ -38,8 +38,8 @@ const prog_uint8_t PROGMEM commandData[Menu::MENU_COUNT*5*2] = {
       32, 32 ,  32, 32 ,  32, 32 ,  32, 32 ,  32, 32   
 };
 
-const prog_char PROGMEM commandStrings[Menu::MENU_COUNT*2*16] = 
-  " Drehzahl  Data "     " MPPT Akku Trim" 
+const prog_char commandStrings[Menu::MENU_COUNT*2*16+1] PROGMEM = 
+  " Drehzahl  Data "    "  MPPT Akku Trim" 
   "Akku Fer.       "    "Solarboot       "
   "   ---Trim---   "    " Pot1  Pot2  up "
   "--MPPT--diff:   "    "Intervall:      "
@@ -498,8 +498,8 @@ void Menu::writeStromAndSpannung(long unsigned int spannung, long signed int str
     writeCommaNumber (spannung, "V");
     lcd.setCursor (8, 0);
     writeCommaNumber (strom, "A");
-    lcd.setCursor (0, 1);
-    writeCommaNumber (spannung * strom / 1000, "W");
+    //lcd.setCursor (0, 1);
+    //writeCommaNumber (spannung * strom / 1000, "W");
     interval();
   }
 }
@@ -508,14 +508,20 @@ void Menu::writeDrehzahl(long unsigned int drehzahl)
 {
   static long unsigned int lastDrehzahl;
   static long unsigned int lastDrehzahlTime;
+  using Fernbedienung::LcdHelper::lcd;
   if (mode == DREHZAHL)
   {
-    using Fernbedienung::LcdHelper::lcd;
     lcd.clear();
     lcd.setCursor (0,0);
     lcd.print ("Dreh:");
     lcd.print (drehzahl);
     lcd.setCursor (0,1);
+    lcd.print((drehzahl-lastDrehzahl)*1000ul/(millis()-lastDrehzahlTime));
+    lcd.print("/s");
+  }
+  else if (mode == RUNNING)
+  {
+    lcd.setCursor (0, 1);
     lcd.print((drehzahl-lastDrehzahl)*1000ul/(millis()-lastDrehzahlTime));
     lcd.print("/s");
   }
