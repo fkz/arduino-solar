@@ -56,7 +56,7 @@ void Fernbedienung::initialize()
   dispatcher.addMethod(&Buttons::controlButtons, 0);
   
   lcd.begin(16,2);
-  lcd.print ("Initialisiere2");
+  lcd.print (":)");
   
   using namespace Fernbedienung::Callback;
   using Message::MessageData;
@@ -81,7 +81,7 @@ void Fernbedienung::menuInterval()
 void Fernbedienung::Callback::error(const Message::MessageData< MyXBee::ERROR >* data, uint8_t length)
 {
   lcd.setCursor(0,0);
-  lcd.print ("ERROR");
+  lcd.print ("ERR");
   lcd.print (data->errorNumber, 10);
 }
 
