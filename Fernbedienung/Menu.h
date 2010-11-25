@@ -72,6 +72,7 @@ namespace Menu
   
   void writeStromAndSpannung(unsigned long spannung, signed long strom);
   void writeDrehzahl (unsigned long drehzahl);
+  void writeMPPTData (char mpptData);
 };
     
 

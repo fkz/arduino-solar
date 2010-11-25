@@ -59,3 +59,20 @@ struct MessageData< type > \
   param3 name3; \
   param4 name4; \
 } __attribute__((__packed__));
+
+#define MESSAGE_DATA_5(type,param1,name1,param2,name2,param3,name3,param4,name4,param5,name5) \
+template<> \
+struct MessageData< type > \
+{ \
+  static const int ParamCount = 5; \
+  typedef param1 Param1; \
+  typedef param2 Param2; \
+  typedef param3 Param3; \
+  typedef param4 Param4; \
+  typedef param5 Param5; \
+  param1 name1; \
+  param2 name2; \
+  param3 name3; \
+  param4 name4; \
+  param5 name5; \
+} __attribute__((__packed__));

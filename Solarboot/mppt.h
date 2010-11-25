@@ -37,6 +37,9 @@ class MPPT: public Dispatcheable
       speed = arg1;
     }
     
+    virtual char getDisplayData () { return ' '; };
+    virtual void setData (char data) { }
+    
     static int diff;
     static int interval;
   protected:
@@ -54,12 +57,14 @@ class NoMPPT: public MPPT
 class ConstMPPT: public MPPT
 {
 public:
-  ConstMPPT () : MPPT(), lastSpeed(0), actualValue(128), refSpannung(0) {}
+  ConstMPPT () : MPPT(), lastSpeed(0), actualValue(128), refStrom(0) {}
   virtual int loop (int strom, int spannung);
+  virtual char getDisplayData();
+  virtual void setData(char data);
 private:
-  uint8_t refSpannungN;
+  uint8_t refStromN;
   int actualValue;
-  int refSpannung;
+  int refStrom;
   int lastSpeed;
 };
 

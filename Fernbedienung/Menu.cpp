@@ -528,3 +528,14 @@ void Menu::writeDrehzahl(long unsigned int drehzahl)
   lastDrehzahl = drehzahl;
   lastDrehzahlTime = millis();
 }
+
+void Menu::writeMPPTData(char mpptData)
+{
+  if (mode == RUNNING)
+  {
+    using Fernbedienung::LcdHelper::lcd;
+    lcd.setCursor (15, 0);
+    lcd.write (mpptData);
+  }
+}
+

@@ -67,7 +67,7 @@ void Solarboot::sendData()
   strom /= readStromCount;
   int spannung = analogRead (spannungId);
   
-  uint8_t data[10];
+  uint8_t data[11];
   data[0] = Message::FromSolarboat::DATA_FROM_SOLARBOAT;
   data[1] = strom & 0xFF;
   data[2] = strom >> 8;
@@ -79,6 +79,7 @@ void Solarboot::sendData()
   data[7] = (freqCount & 0xFF00) >> 8;
   data[8] = (freqCount & 0xFF0000) >> 16;
   data[9] = freqCount >> 24;
+  data[10] = mppt->getDisplayData ();
   
   writeData(data, sizeof(data));
 }
@@ -135,6 +136,10 @@ void Solarboot::readData(const uint8_t* data, uint8_t length)
     {
       mpptInterval = data[1];
       break;
+    }
+    case Message::ToSolarboat::DATA_TO_MPPT:
+    {
+      mppt->setData (data[1]);
     }
   }
 }

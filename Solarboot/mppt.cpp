@@ -46,7 +46,7 @@ int NoMPPT::loop(int strom, int spannung)
 
 bool OptimizingMPPT::isMPPT()
 {
-  bool mpptMode = speed < 100;
+  bool mpptMode = speed > 150;
   if (mpptMode != isInMPPTMode)
   {
     isInMPPTMode = mpptMode;
@@ -239,32 +239,46 @@ int PerturbEstimateEstimate::loop(int strom, int sp)
 
 int ConstMPPT::loop(int strom, int spannung)
 {
-  if (lastSpeed != speed)
+  if (speed < 160)
   {
-    int8_t lastSpeedV = lastSpeed < 100 ? -1 : lastSpeed > 200 ? +1 : 0;
-    int8_t speedV = speed < 100 ? -1 : speed > 200 ? +1 : 0;
-    if (lastSpeedV != speedV && speedV != 0 && ( refSpannungN != 0 || speedV == 1 ) && (refSpannungN != 7 || speedV == -1))
-    {
-      refSpannungN += speedV;
-      refSpannung = 511 - (long)refSpannungN * 1000000 / 26394 ;
-    }
-    lastSpeed = speed;
+    actualValue = speed * 45 / 64;
+    return actualValue;
   }
   
-  if (strom < refSpannung - 20)
+  if (strom < refStrom - 20)
     ++actualValue;
-  else if (strom > refSpannung + 20)
+  else if (strom > refStrom + 20)
     --actualValue;
   
-  if (strom < refSpannung - 40)
+  if (strom < refStrom - 40)
     ++actualValue;
-  else if (strom > refSpannung + 40)
+  else if (strom > refStrom + 40)
     --actualValue;
   
-  if (strom < refSpannung)
+  if (strom < refStrom)
     ++actualValue;
   else
     --actualValue;
+  
+  if (actualValue < 90)
+    actualValue = 90;
+  else if (actualValue > 180)
+    actualValue = 180;
+  
   return actualValue;
 }
+
+char ConstMPPT::getDisplayData()
+{
+  return refStromN + '0';  
+}
+
+void ConstMPPT::setData(char data)
+{
+  ++refStromN;
+  if (refStromN > 5)
+    refStromN = 0;
+  refStrom = 511 - (long)refStromN * 1000000 / 26394;
+}
+
 
