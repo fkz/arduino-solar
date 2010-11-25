@@ -53,7 +53,7 @@ class MyXBee
       MESSAGE_NOT_REGISTERED = 3
     };
     
-    const static int MAX_TIME_BETWEEN_TWO_REQUESTS = 2000; // 2 seconds
+    const static unsigned int MAX_TIME_BETWEEN_TWO_REQUESTS = 2000; // 2 seconds
     
     MyXBee ();
     
