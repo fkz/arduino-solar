@@ -67,6 +67,12 @@ void MyXBee::readPackages()
 	package[alredyRead++-1] = b;
     }
     
+    if (alredyRead >= 2 && package[0] > MAX_MESSAGE_LENGTH)
+    {
+      package[0] = MAX_MESSAGE_LENGTH;
+      error (ERROR_TO_LONG_MESSAGE);
+    }
+    
     if (alredyRead >= 2 && alredyRead-2 == package[0])
     {
       readData(package+1, package[0]);

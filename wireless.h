@@ -50,10 +50,12 @@ class MyXBee
     {
       NO_START_BYTE = 1,
       START_BYTE_INSIDE_MESSAGE = 2,
-      MESSAGE_NOT_REGISTERED = 3
+      MESSAGE_NOT_REGISTERED = 3,
+      ERROR_TO_LONG_MESSAGE = 4
     };
     
     const static unsigned int MAX_TIME_BETWEEN_TWO_REQUESTS = 2000; // 2 seconds
+    const static uint8_t MAX_MESSAGE_LENGTH = 50;
     
     MyXBee ();
     
@@ -161,7 +163,7 @@ private:
     }
 #else
 protected:
-  virtual void readData (const uint8_t *data, uint8_t length) = 0;
+  virtual void connectionInterrupted () = 0;
 #endif
     
     void connectionRestored()
@@ -172,7 +174,7 @@ protected:
     
   private:
     
-    uint8_t package[100];
+    uint8_t package[MAX_MESSAGE_LENGTH + 5];
     long unsigned int alredyRead;
     long unsigned int lastPackageRead;
     
