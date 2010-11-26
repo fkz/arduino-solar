@@ -153,12 +153,16 @@ private:
       data[1] = arg1;
       return readData (data, 2);
     }
-    
+#ifndef OLD_CASE
     void connectionInterrupted ()
     {
       static const uint8_t connectionInterrupted[2] = { CONNECTION_INTERRUPTED, false };
       readData (connectionInterrupted, 2);
     }
+#else
+protected:
+  virtual void readData (const uint8_t *data, uint8_t length) = 0;
+#endif
     
     void connectionRestored()
     {
