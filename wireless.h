@@ -20,11 +20,7 @@
 #include "Dispatcher.h"
 #include "MessageTypes.h"
 
-#ifdef OLD_CASE
-class MyXBee: public Dispatcheable
-#else
 class MyXBee
-#endif
 {
   public:
     static const unsigned int baudRate = 57600;
@@ -143,11 +139,7 @@ class MyXBee
     
     long getReadCount () { return read_count; }
     
-#ifdef OLD_CASE
-    typedef void (*ReadPackage) (const uint8_t *data, uint8_t length);
-#else
     typedef void (*ReadPackage) (const void *data, uint8_t length);
-#endif
     
     void _registerMethod (uint8_t type, ReadPackage package);
     
@@ -158,13 +150,7 @@ class MyXBee
     }
     
   private:
-#ifndef OLD_CASE
     void readData (const uint8_t *data, uint8_t length);
-#else
-protected:
-    virtual void readData (const uint8_t *data, uint8_t length) = 0;    
-#endif
-private:
     void writeEscaped(uint8_t arg1);
     
     void error(uint8_t arg1)
@@ -174,16 +160,11 @@ private:
       data[1] = arg1;
       return readData (data, 2);
     }
-#ifndef OLD_CASE
     void connectionInterrupted ()
     {
       static const uint8_t connectionInterrupted[2] = { CONNECTION_INTERRUPTED, false };
       readData (connectionInterrupted, 2);
     }
-#else
-protected:
-  virtual void connectionInterrupted () = 0;
-#endif
     
     void connectionRestored()
     {
