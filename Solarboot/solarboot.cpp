@@ -28,35 +28,80 @@ PerturbEstimate perturbEstimate;
 PerturbEstimateEstimate perturbEstimateEstimate;
 ConstMPPT constMppt;
 
-Solarboot::Solarboot()
-: mpptInterval (5)
+MyXBee Solarboot::xbee;
+NDispatcher Solarboot::dispatcher;
+
+namespace Solarboot{
+// number of 20ms-states until MPPT is used
+int mpptInterval, mpptIntervalIndex;
+
+void sendData ();
+void iterateMPPT ();
+MPPT *mppt;
+char mpptType;
+Servo servoMotor, servoTurn;
+
+namespace Callback{
+  
+using Message::MessageData;
+using namespace Message::ToSolarboat;
+
+void potiData (const MessageData< POTI_DATA > *data, uint8_t length);
+void changeMPPTType (const MessageData< CHANGE_MPPT_TYPE > *data, uint8_t length);
+void requestBattery (const MessageData< REQUEST_BATTERY > *data, uint8_t length);
+void requestMPPT (const MessageData< REQUEST_MPPT > *data, uint8_t length);
+void requestMPPTInterval (const MessageData< REQUEST_MPPT_INTERVAL > *data, uint8_t length);
+void setMPPTInterval(const MessageData< SET_MPPT_INTERVAL > *data, uint8_t length);
+void dataToMPPT(const MessageData< DATA_TO_MPPT > *data, uint8_t length);
+void error (const MessageData< MyXBee::ERROR > *data, uint8_t length);
+void connectionInterrupted (const MessageData< MyXBee::CONNECTION_INTERRUPTED > *data, uint8_t length);
+
+};
+};
+
+
+void Solarboot::initialize()
 {
-  static NoMPPT noMPPT;
+  mpptInterval = 5;
+  
   mppt = &noMPPT;
   mpptType = Message::MPPT::NOMPPT;
   
   servoMotor.attach(motorId);
   servoTurn.attach(turnId);
   
-  //FIXME: initialize motor
-  servoMotor.write (90);
-  delay (1000);
-
-  //bleibe zunächst stehen
   servoMotor.write (90);
   
+  dispatcher.addMethod(&Solarboot::sendData, 500);
+  dispatcher.addMethod(&Solarboot::iterateMPPT, 300);
+  dispatcher.addMethod(&Solarboot::checkBattery, 60000);
   
-  addMethod(this, &Solarboot::readPackages, 0);
-  addMethod(this, &Solarboot::sendData, 500);
-  addMethod(this, &Solarboot::iterateMPPT, 300);
-  addMethod(this, &Solarboot::checkBattery, 60000);
+  using namespace Message::ToSolarboat;
+  using namespace Callback;
+  
+  xbee.registerMethod< POTI_DATA >(&potiData);
+  xbee.registerMethod< CHANGE_MPPT_TYPE >(&changeMPPTType);
+  xbee.registerMethod< REQUEST_BATTERY > (&requestBattery);
+  xbee.registerMethod< REQUEST_MPPT > (&requestMPPT);
+  xbee.registerMethod< REQUEST_MPPT_INTERVAL >(&requestMPPTInterval);
+  xbee.registerMethod< SET_MPPT_INTERVAL >(&setMPPTInterval);
+  xbee.registerMethod< DATA_TO_MPPT >(&dataToMPPT);
+  xbee.registerMethod< MyXBee::ERROR >(&error);
+  xbee.registerMethod< MyXBee::CONNECTION_INTERRUPTED > (&connectionInterrupted);
   
   Counter::initialize();
 }
 
-void Solarboot::error(uint8_t arg1)
+void Solarboot::Callback::error(const Message::MessageData< MyXBee::ERROR >* data, uint8_t length)
 {
   // simply do nothing for now
+}
+
+void Solarboot::Callback::connectionInterrupted(const Message::MessageData< MyXBee::CONNECTION_INTERRUPTED >* data, uint8_t length)
+{
+  servoMotor.write(90);
+  servoTurn.write (90);
+  mppt->updateSpeed(128);
 }
 
 void Solarboot::sendData()
@@ -66,82 +111,47 @@ void Solarboot::sendData()
     strom += analogRead (stromId);
   strom /= readStromCount;
   int spannung = analogRead (spannungId);
-  
-  uint8_t data[11];
-  data[0] = Message::FromSolarboat::DATA_FROM_SOLARBOAT;
-  data[1] = strom & 0xFF;
-  data[2] = strom >> 8;
-  data[3] = spannung & 0xFF;
-  data[4] = spannung >> 8;
-  data[5] = mpptType;
-  unsigned long int freqCount = Counter::getCount();
-  data[6] = freqCount & 0xFF;
-  data[7] = (freqCount & 0xFF00) >> 8;
-  data[8] = (freqCount & 0xFF0000) >> 16;
-  data[9] = freqCount >> 24;
-  data[10] = mppt->getDisplayData ();
-  
-  writeData(data, sizeof(data));
+  xbee.writePackage< Message::FromSolarboat::DATA_FROM_SOLARBOAT > (strom, spannung, mpptType, Counter::getCount(), mppt->getDisplayData ());
 }
 
-void Solarboot::connectionInterrupted()
+void Solarboot::Callback::potiData(const Message::MessageData< Message::ToSolarboat::POTI_DATA >* data, uint8_t length)
 {
-  servoMotor.write(90);
-  servoTurn.write (90);
-  mppt->updateSpeed(128);
+  mppt->updateSpeed (data->speed);
+  servoTurn.write (data->turn);
 }
 
+void Solarboot::Callback::changeMPPTType(const Message::MessageData< Message::ToSolarboat::CHANGE_MPPT_TYPE >* data, uint8_t length)
+{
+  mpptType = data->mpptType;
+  changeMPPT ();
+}
 
-void Solarboot::readData(const uint8_t* data, uint8_t length)
-{  
-  switch (data[0])
-  {
-    case Message::ToSolarboat::POTI_DATA:
-    {
-      mppt->updateSpeed (data[1]);
-      servoTurn.write (data[2]*45/64);
-      break;
-    }
-    case Message::ToSolarboat::CHANGE_MPPT_TYPE:
-    {
-      mpptType = data[1];
-      changeMPPT ();
-      break;
-    }
-    case Message::ToSolarboat::REQUEST_BATTERY:
-    {
-      int value = analogRead (BATTERY);
-      uint8_t d_data[3];
-      d_data[0] = Message::FromSolarboat::BATTERY;
-      d_data[1] = value & 0xFF;
-      d_data[2] = value >> 8;
-      writeData (d_data, 3);
-      break;
-    }
-    case Message::ToSolarboat::REQUEST_MPPT:
-    {
-      mppt->receiveData(*this, const_cast< uint8_t * > (data+1), length-1); //TODO: remove const_cast, add const to receiveData method signature
-      break;
-    }
-    case Message::ToSolarboat::REQUEST_MPPT_INTERVAL:
-    {
-      uint8_t d_data[3];
-      d_data[0] = Message::FromSolarboat::RESPONSE_MPPT_INTERVAL;
-      d_data[1] = mpptInterval;
-      d_data[2] = 0;
-      writeData (d_data, 3);
-      break;
-    }
-    case Message::ToSolarboat::SET_MPPT_INTERVAL:
-    {
-      mpptInterval = data[1];
-      break;
-    }
-    case Message::ToSolarboat::DATA_TO_MPPT:
-    {
-      mppt->setData (data[1]);
-    }
-  }
+void Solarboot::Callback::requestBattery(const Message::MessageData< Message::ToSolarboat::REQUEST_BATTERY >* data, uint8_t length)
+{
+  int value = analogRead (BATTERY);
+  xbee.writePackage< Message::FromSolarboat::BATTERY > (value);
+}
+
+void Solarboot::Callback::requestMPPT(const Message::MessageData< Message::ToSolarboat::REQUEST_MPPT >* data, uint8_t length)
+{
+  //FIXME!!!
+  //TODO: change
+  //mppt->receiveData(*this, const_cast< uint8_t * > (data+1), length-1); //TODO: remove const_cast, add const to receiveData method signature
+}
+
+void Solarboot::Callback::requestMPPTInterval(const Message::MessageData< Message::ToSolarboat::REQUEST_MPPT_INTERVAL >* data, uint8_t length)
+{
+  xbee.writePackage< Message::FromSolarboat::RESPONSE_MPPT_INTERVAL > (mpptInterval);
+}
+
+void Solarboot::Callback::setMPPTInterval(const Message::MessageData< Message::ToSolarboat::SET_MPPT_INTERVAL >* data, uint8_t length)
+{
+  //FIXME: mpptInterval = data[1];
+}
+
+void Solarboot::Callback::dataToMPPT(const Message::MessageData< Message::ToSolarboat::DATA_TO_MPPT >* data, uint8_t length)
+{
+  mppt->setData (data->data);
 }
 
 void Solarboot::changeMPPT()
@@ -190,11 +200,7 @@ void Solarboot::checkBattery()
   int value = analogRead (BATTERY);
   if (value < 500)
   {
-    uint8_t data[3];
-    data[0] = Message::FromSolarboat::BATTERY;
-    data[1] = 0;
-    data[2] = 0;
-    writeData(data, 3);
+    xbee.writePackage< Message::FromSolarboat::BATTERY > (0);
   }
 }
 

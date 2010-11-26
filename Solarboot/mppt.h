@@ -21,7 +21,7 @@
 // die MPPT Algorithmen folgen http://www.solarbuildings.ca/c/sbn/file_db/Advanced%20algorithm%20for%20MPPT.pdf
 
 class MyXBee;
-class MPPT: public Dispatcheable
+class MPPT
 {
   public:
     /**
