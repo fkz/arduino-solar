@@ -19,6 +19,12 @@
 #include <WConstants.h>
 #include <HardwareSerial.h>
 
+void FileManagement::clear()
+{
+  memory.clear();
+}
+
+
 int FileManagement::startRecord()
 {
   if (actual != 0)

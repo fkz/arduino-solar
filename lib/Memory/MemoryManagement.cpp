@@ -60,6 +60,11 @@ Memory::Memory()
   capacity = 1024-32;
 #endif
   
+  format();
+}
+
+void Memory::format()
+{
   bool formatiert = _read(0) == 0x27;
   if (!formatiert)
   {
@@ -68,6 +73,13 @@ Memory::Memory()
     _write (0, 0x27);
   }
 }
+
+void Memory::clear()
+{
+  _write (0, 0);
+  format();
+}
+
 
 int Memory::getCount()
 {

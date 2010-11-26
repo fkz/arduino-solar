@@ -41,6 +41,8 @@ public:
   {
     return memory.diskSpace();
   }
+  
+  void clear();
     
 private:
   MemorySegment* actual;

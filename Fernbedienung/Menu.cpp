@@ -248,7 +248,7 @@ void Menu::setExecute()
       }
       else if (actual == 1)
       {
-	EEPROM.write (0, 0);
+	Fernbedienung::files.clear();
 	activate (MAINMENU);
       }
     default:;
