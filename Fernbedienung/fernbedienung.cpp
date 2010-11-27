@@ -86,9 +86,7 @@ void Fernbedienung::Callback::distance(const Message::MessageData< DISTANCE >* d
     lcd.setCursor (9, 1);
     lcd.print (data->leftDistance);
     lcd.write (' ');
-    lcd.write (' ');
     lcd.print (data->rightDistance);
-    lcd.write (' ');
   }
 }
 
