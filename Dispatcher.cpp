@@ -28,9 +28,6 @@ Dispatcher<count>::Dispatcher()
     exec[i] = 0;
     interval[i] = 100000;
     lastCall[i] = 0;
-#ifdef OLD_CASE
-    objects[i] = 0;
-#endif
   }
 }
 
@@ -43,28 +40,16 @@ void Dispatcher<count>::call()
     if (lastCall[i] <= now)
     {
       lastCall[i] = now + interval[i];
-#ifdef OLD_CASE
-      if (exec[i] != 0)
-	(objects[i]->*exec[i])();
-#else
       if (exec[i] != 0)
 	exec[i]();
-#endif
     }
   }
 }
 
 template< int count >
-#ifdef OLD_CASE
-void Dispatcher<count>::setMethod(int id, Dispatcheable *object, void (Dispatcheable::*method) () , unsigned long interval )
-#else
 void Dispatcher<count>::setMethod(int id, void (*method) () , unsigned long interval )
-#endif
 {
   this->exec[id] = method;
   this->interval[id] = interval;
   this->lastCall[id] = 0;
-#ifdef OLD_CASE
-  this->objects[id] = object;
-#endif
 }

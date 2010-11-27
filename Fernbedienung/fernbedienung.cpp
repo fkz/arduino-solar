@@ -57,7 +57,7 @@ void Fernbedienung::initialize()
   dispatcher.addMethod(&Buttons::controlButtons, 0);
   
   lcd.begin(16,2);
-  lcd.print ("Initialisiere2");
+  lcd.print (":)");
   
   using namespace Fernbedienung::Callback;
   using Message::MessageData;
@@ -72,6 +72,7 @@ void Fernbedienung::initialize()
   xbee.registerMethod< DISTANCE >(distance);
   
   Pot::initialize();
+  pinMode(LED_PIN, OUTPUT);
 }
 
 void Fernbedienung::Callback::distance(const Message::MessageData< DISTANCE >* data, uint8_t length)
@@ -100,7 +101,7 @@ void Fernbedienung::menuInterval()
 void Fernbedienung::Callback::error(const Message::MessageData< MyXBee::ERROR >* data, uint8_t length)
 {
   lcd.setCursor(0,0);
-  lcd.print ("ERROR");
+  lcd.print ("ERR");
   lcd.print (data->errorNumber, 10);
 }
 
@@ -112,17 +113,13 @@ void Fernbedienung::Callback::connection(const Message::MessageData< MyXBee::CON
 
 void Fernbedienung::Callback::dataFromSolarboat(const Message::MessageData< Message::FromSolarboat::DATA_FROM_SOLARBOAT >* data, uint8_t length)
 {
-  unsigned long strom = data->strom;
-  if (strom < 512)
-    strom = 512 - strom;
-  else
-    strom -= 512;
+  signed long strom = data->strom;
   unsigned long spannung = data->spannung;
 
   if (Flags::getFlag(Flags::RECORDING))
     files.newData(spannung, strom, data->freqCount);
   
-  //FIXME: set correct factor
+  strom = 511 - strom;
   strom *= 26394;
   strom /= 1000;
 
@@ -133,6 +130,7 @@ void Fernbedienung::Callback::dataFromSolarboat(const Message::MessageData< Mess
   SolData::setActualMPPTType(data->mpptType);
   Menu::writeStromAndSpannung(spannung, strom);
   Menu::writeDrehzahl (data->freqCount);
+  Menu::writeMPPTData (data->mpptData);
 }
 
 void Fernbedienung::Callback::battery(const Message::MessageData< Message::FromSolarboat::BATTERY >* data, uint8_t length)
@@ -194,25 +192,14 @@ void Fernbedienung::Buttons::controlButtons()
       }
       else if (steuerungX.isDown())
       {
-//	menu.flipPage();
+	xbee.writePackage< Message::ToSolarboat::DATA_TO_MPPT > (1);
       }
       steuerungY.control();
       if (steuerungY.isUp())
       {
-	uint8_t diff = SolData::getMPPTDiff();
-	xbee.writePackage< Message::ToSolarboat::REQUEST_MPPT > ('s', (diff+1)%10);
-	SolData::setMPPTDiff(255);
-//	menu.setPage (1);
       }
       else if (steuerungY.isDown())
       {
-	/*unsigned int inte = menu.getMPPTInterval();
-	inte += 50;
-	if (inte > 1000)
-	  inte = 100;
-	sendMPPTInterval (inte);
-	menu.setMPPTInterval(65535);
-	menu.setPage(1);*/
 	if (Flags::getFlag (Flags::RECORDING))
 	{
 	  files.endRecord();

@@ -28,10 +28,13 @@ int COMPILE_TIME_ASSERT_INT[(sizeof(int)==2)*2-1];
 int main ()
 {
   init ();
+  Serial.begin (MyXBee::baudRate);
   
-  Solarboot solarboot;
+  Solarboot::initialize();
   
   while (true)
-    solarboot.call();
-  
+  {
+    Solarboot::dispatcher.call();
+    Solarboot::xbee.readPackages();
+  } 
 }

@@ -19,6 +19,12 @@
 #include <WConstants.h>
 #include <HardwareSerial.h>
 
+void FileManagement::clear()
+{
+  memory.clear();
+}
+
+
 int FileManagement::startRecord()
 {
   if (actual != 0)
@@ -110,10 +116,11 @@ void FileManagement::readAllCvs()
       date += timediff;
       
       if (timediff == 1)
-	Serial.println ("Error Wrong Time");
+	Serial.print ("Error Wrong Time");
       
+      //TODO: remove duplicated code from fernbedinung.cpp Fernbedienung::Callback::dataFromSolarboat
       unsigned long sp = (unsigned long)spannung * 15271 / 1000;
-      unsigned long st = (unsigned long)strom * 26394 / 1000;
+      signed long st = (signed long)(511 - strom) * 26394 / 1000;
       Serial.print (date);
       Serial.write (',');
       Serial.print (drehzahl);

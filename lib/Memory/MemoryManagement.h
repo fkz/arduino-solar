@@ -55,6 +55,7 @@ public:
   
   Memory ();
   
+  void clear();
   int getCount ();
   MemorySegment *getSegement (int index);
   MemorySegment *startSegment ();
@@ -68,6 +69,7 @@ public:
   void sync();
   
 private:
+  void format();
   MemorySegment actual;
   size_type capacity;
 };

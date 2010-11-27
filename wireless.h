@@ -20,13 +20,11 @@
 #include "Dispatcher.h"
 #include "MessageTypes.h"
 
-#ifdef OLD_CASE
-class MyXBee: public Dispatcheable
-#else
 class MyXBee
-#endif
 {
   public:
+    static const unsigned int baudRate = 57600;
+    
     enum SpecialCharacters
     {
       #ifdef REALLY_WORLD
@@ -48,18 +46,26 @@ class MyXBee
     {
       NO_START_BYTE = 1,
       START_BYTE_INSIDE_MESSAGE = 2,
-      MESSAGE_NOT_REGISTERED = 3
+      MESSAGE_NOT_REGISTERED = 3,
+      ERROR_TO_LONG_MESSAGE = 4
     };
     
-    const static int MAX_TIME_BETWEEN_TWO_REQUESTS = 2000; // 2 seconds
+    const static unsigned int MAX_TIME_BETWEEN_TWO_REQUESTS = 2000; // 2 seconds
+    const static uint8_t MAX_MESSAGE_LENGTH = 50;
     
     MyXBee ();
     
     void readPackages();
     bool isConnected ();
     
-    /// @deprecated use writePackage instead
-    void writeData (uint8_t *data, uint8_t length);
+    template< const char type >
+    void writePackage ()
+    {
+      static_assert (Message::MessageData< type >::ParamCount == 0, "wrong param count");
+      Serial.write (START_BYTE);
+      writeEscaped (1);
+      writeEscaped (type);
+    }
     
     template< const char type >
     void writePackage (typename Message::MessageData< type >::Param1 param1)
@@ -68,7 +74,7 @@ class MyXBee
       Serial.write (START_BYTE);
       writeEscaped (1+sizeof (typename Message::MessageData< type >::Param1));
       writeEscaped (type);
-      for (uint8_t* it = &param1; it != &param1 + 1; ++it)
+      for (uint8_t* it = reinterpret_cast< uint8_t * > (&param1); it != reinterpret_cast< uint8_t * > (&param1 + 1); ++it)
 	writeEscaped (*it);
     }
     
@@ -118,13 +124,28 @@ class MyXBee
 	writeEscaped (*it);
     }
     
+    template< const char type >
+    void writePackage (typename Message::MessageData< type >::Param1 param1, typename Message::MessageData< type >::Param2 param2, typename Message::MessageData< type >::Param3 param3, typename Message::MessageData< type >::Param4 param4, typename Message::MessageData< type >::Param5 param5)
+    {
+      static_assert (Message::MessageData< type >::ParamCount == 5, "wrong param count");
+      Serial.write (START_BYTE);
+      writeEscaped (1+sizeof (typename Message::MessageData< type >::Param1) + sizeof (typename Message::MessageData< type >::Param2) + sizeof (typename Message::MessageData< type >::Param3) + sizeof (typename Message::MessageData< type >::Param4) + sizeof (typename Message::MessageData< type >::Param5));
+      writeEscaped (type);
+      for (uint8_t* it = reinterpret_cast< uint8_t * > (&param1); it != reinterpret_cast< uint8_t * > (&param1 + 1); ++it)
+	writeEscaped (*it);
+      for (uint8_t* it = reinterpret_cast< uint8_t * > (&param2); it != reinterpret_cast< uint8_t * > (&param2 + 1); ++it)
+	writeEscaped (*it);
+      for (uint8_t* it = reinterpret_cast< uint8_t * > (&param3); it != reinterpret_cast< uint8_t * > (&param3 + 1); ++it)
+	writeEscaped (*it);
+      for (uint8_t* it = reinterpret_cast< uint8_t * > (&param4); it != reinterpret_cast< uint8_t * > (&param4 + 1); ++it)
+	writeEscaped (*it);
+      for (uint8_t* it = reinterpret_cast< uint8_t * > (&param5); it != reinterpret_cast< uint8_t * > (&param5 + 1); ++it)
+	writeEscaped (*it);
+    }
+    
     long getReadCount () { return read_count; }
     
-#ifdef OLD_CASE
-    typedef void (*ReadPackage) (const uint8_t *data, uint8_t length);
-#else
     typedef void (*ReadPackage) (const void *data, uint8_t length);
-#endif
     
     void _registerMethod (uint8_t type, ReadPackage package);
     
@@ -135,13 +156,7 @@ class MyXBee
     }
     
   private:
-#ifndef OLD_CASE
     void readData (const uint8_t *data, uint8_t length);
-#else
-protected:
-    virtual void readData (const uint8_t *data, uint8_t length) = 0;    
-#endif
-private:
     void writeEscaped(uint8_t arg1);
     
     void error(uint8_t arg1)
@@ -151,7 +166,6 @@ private:
       data[1] = arg1;
       return readData (data, 2);
     }
-    
     void connectionInterrupted ()
     {
       static const uint8_t connectionInterrupted[2] = { CONNECTION_INTERRUPTED, false };
@@ -166,7 +180,7 @@ private:
     
   private:
     
-    uint8_t package[100];
+    uint8_t package[MAX_MESSAGE_LENGTH + 5];
     long unsigned int alredyRead;
     long unsigned int lastPackageRead;
     

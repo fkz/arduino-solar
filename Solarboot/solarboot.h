@@ -25,9 +25,11 @@
 
 class MPPT;
 
-class Solarboot: public MyXBee, public NDispatcher
+namespace Solarboot
 {
-  public:
+    extern NDispatcher dispatcher;
+    extern MyXBee xbee;
+  
     static const int motorId = 9;
     static const int turnId = 10;
     
@@ -36,31 +38,10 @@ class Solarboot: public MyXBee, public NDispatcher
 
     static const int BATTERY = 2;
     
-    static const int readStromCount = 8;
+    static const int readStromCount = 50;
     
      /// initialize pin modes and XBee connection
-    Solarboot();
+    void initialize();
     void changeMPPT();
     void checkBattery ();
-    
-    
-  protected:
-    virtual void error(uint8_t arg1);
-    virtual void readData(const uint8_t* data, uint8_t length);
-    virtual void connectionInterrupted();
-    
-    
-  private:
-    void messureDistance();
-    
-    // number of 20ms-states until MPPT is used
-    int mpptInterval, mpptIntervalIndex;
-    
-    void sendData ();
-    void iterateMPPT ();
-    MPPT *mppt;
-    char mpptType;
-    Servo servoMotor, servoTurn;
-    
-    UltraSound left, right;
 };

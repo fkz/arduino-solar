@@ -22,22 +22,6 @@
 int MPPT::diff = 5;
 uint8_t MPPT::speed = 128;
 
-void MPPT::receiveData(MyXBee& xbee, uint8_t* data, uint8_t size)
-{
-  if (data[0] == 'r')
-  {
-    uint8_t r_data[3];
-    r_data[0] = Message::FromSolarboat::SEND_MPPT;
-    r_data[1] = 'r';
-    r_data[2] = diff;
-    xbee.writeData(r_data, 3);
-  }
-  else if (data[0] == 's')
-  {
-    diff = data[1];
-  }
-}
-
 
 int NoMPPT::loop(int strom, int spannung)
 {
@@ -46,7 +30,7 @@ int NoMPPT::loop(int strom, int spannung)
 
 bool OptimizingMPPT::isMPPT()
 {
-  bool mpptMode = speed < 100;
+  bool mpptMode = speed > 150;
   if (mpptMode != isInMPPTMode)
   {
     isInMPPTMode = mpptMode;
@@ -239,32 +223,46 @@ int PerturbEstimateEstimate::loop(int strom, int sp)
 
 int ConstMPPT::loop(int strom, int spannung)
 {
-  if (lastSpeed != speed)
+  if (speed < 160)
   {
-    int8_t lastSpeedV = lastSpeed < 100 ? 1 : lastSpeed > 200 ? -1 : 0;
-    int8_t speedV = speed < 100 ? 1 : speed > 200 ? -1 : 0;
-    if (lastSpeedV != speedV && speedV != 0 && ( refSpannungN != 0 || speedV == 1 ) && (refSpannungN != 12 || speedV == -1))
-    {
-      refSpannungN += speedV;
-      refSpannung = refSpannungN * 1250 / 19;
-    }
-    lastSpeed = speed;
+    actualValue = speed * 45 / 64;
+    return actualValue;
   }
   
-  if (spannung < refSpannung - 20)
-    --actualValue;
-  else if (spannung > refSpannung + 20)
+  if (strom < refStrom - 20)
     ++actualValue;
-  
-  if (spannung < refSpannung - 40)
+  else if (strom > refStrom + 20)
     --actualValue;
-  else if (spannung > refSpannung + 40)
+  
+  if (strom < refStrom - 40)
     ++actualValue;
-  
-  if (spannung < refSpannung)
+  else if (strom > refStrom + 40)
     --actualValue;
+  
+  if (strom < refStrom)
+    ++actualValue;
   else
-    ++actualValue;
+    --actualValue;
+  
+  if (actualValue < 90)
+    actualValue = 90;
+  else if (actualValue > 180)
+    actualValue = 180;
+  
   return actualValue;
 }
+
+char ConstMPPT::getDisplayData()
+{
+  return refStromN + '0';  
+}
+
+void ConstMPPT::setData(char data)
+{
+  ++refStromN;
+  if (refStromN > 5)
+    refStromN = 0;
+  refStrom = 511 - (long)refStromN * 1000000 / 26394;
+}
+
 

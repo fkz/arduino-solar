@@ -21,7 +21,7 @@
 // die MPPT Algorithmen folgen http://www.solarbuildings.ca/c/sbn/file_db/Advanced%20algorithm%20for%20MPPT.pdf
 
 class MyXBee;
-class MPPT: public Dispatcheable
+class MPPT
 {
   public:
     /**
@@ -31,11 +31,13 @@ class MPPT: public Dispatcheable
      @return zum Motor-Servo gebender Wert
     */
     virtual int loop (int strom, int spannung) = 0;
-    virtual void receiveData (MyXBee &xbee, uint8_t *data, uint8_t size);
     static void updateSpeed(uint8_t arg1)
     {
       speed = arg1;
     }
+    
+    virtual char getDisplayData () { return ' '; };
+    virtual void setData (char data) { }
     
     static int diff;
     static int interval;
@@ -54,12 +56,14 @@ class NoMPPT: public MPPT
 class ConstMPPT: public MPPT
 {
 public:
-  ConstMPPT () : MPPT(), lastSpeed(0), actualValue(128), refSpannung(0) {}
+  ConstMPPT () : MPPT(), actualValue(128), refStrom(0), lastSpeed(0)  {}
   virtual int loop (int strom, int spannung);
+  virtual char getDisplayData();
+  virtual void setData(char data);
 private:
-  uint8_t refSpannungN;
+  uint8_t refStromN;
   int actualValue;
-  int refSpannung;
+  int refStrom;
   int lastSpeed;
 };
 
