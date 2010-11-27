@@ -83,6 +83,7 @@ void MyXBee::readPackages()
 	connectionRestored();
       }
       _isConnected = true;
+      return;
     }
     
     b = Serial.read();
