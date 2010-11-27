@@ -29,11 +29,8 @@ const prog_uint8_t commandData[Menu::MENU_COUNT*5*2] PROGMEM = {
     21, 26, 26, 31, 10, 15, 0, 9 , 32, 32,
       32, 32 ,  32, 32 ,  32, 32 ,  32, 32 ,  32, 32   ,
       16, 21 ,  22, 27 ,  28, 31 ,  32, 32 ,  32, 32   ,
-       13,  15 ,  26, 29 ,  32, 32 ,  32, 32 ,  32, 32   ,
-      16, 19 ,  19, 22 ,  29, 31 ,  32, 32 ,  32, 32   ,
       19, 26 ,  27, 30 ,  32, 32 ,  32, 32 ,  32, 32   ,
       25, 28 ,  28, 31 ,  32, 32 ,  32, 32 ,  32, 32   ,
-      16, 19 ,  19, 22 ,  29, 31 ,  32, 32 ,  32, 32   ,
       16, 25 ,  25, 31 ,  32, 32 ,  32, 32 ,  32, 32   ,
       32, 32 ,  32, 32 ,  32, 32 ,  32, 32 ,  32, 32   
 };
@@ -42,11 +39,8 @@ const prog_char commandStrings[Menu::MENU_COUNT*2*16+1] PROGMEM =
   " Drehzahl  Data "    "       Akku Trim" 
   "Akku Fer.       "    "Solarboot       "
   "   ---Trim---   "    " Pot1  Pot2  up "
-  "--MPPT--diff:   "    "Intervall:      "
-  "-inter.-akt.:   "    " up ok einst.   "
   "Pot        -    "    "    einst.  up  "
   "einst.     -    "    "Wert:     ok up "
-  "-diff-    akt.: "    " up ok einst.   "
   " Daten          "    " auslesen forma "
   "                "    "                "
 ;
@@ -183,9 +177,6 @@ void Menu::setExecute()
 	activate (CUSTOM_TRIM);
       }
       break;
-    case MPPT:
-      activate (MAINMENU);
-      break;
     case SAVE_DATA:
       if (actual == 0)
       {
@@ -213,7 +204,6 @@ void Menu::goUp()
     case AKKU:
     case TRIM:
     case CUSTOM_TRIM:
-    case MPPT:
       activate (MAINMENU);
       break;
     case CUSTOM_TRIM2:

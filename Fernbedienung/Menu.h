@@ -31,11 +31,8 @@ namespace Menu
     MAINMENU = 0,
     AKKU,
     TRIM,
-    MPPT,
-    UNUSED2,
     CUSTOM_TRIM,
     CUSTOM_TRIM2,
-    UNUSED,
     SAVE_DATA,
     DREHZAHL,
     MENU_COUNT
