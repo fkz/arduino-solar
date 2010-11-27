@@ -118,25 +118,6 @@ void Solarboot::readData(const uint8_t* data, uint8_t length)
       writeData (d_data, 3);
       break;
     }
-    case Message::ToSolarboat::REQUEST_MPPT:
-    {
-      mppt->receiveData(*this, const_cast< uint8_t * > (data+1), length-1); //TODO: remove const_cast, add const to receiveData method signature
-      break;
-    }
-    case Message::ToSolarboat::REQUEST_MPPT_INTERVAL:
-    {
-      uint8_t d_data[3];
-      d_data[0] = Message::FromSolarboat::RESPONSE_MPPT_INTERVAL;
-      d_data[1] = mpptInterval;
-      d_data[2] = 0;
-      writeData (d_data, 3);
-      break;
-    }
-    case Message::ToSolarboat::SET_MPPT_INTERVAL:
-    {
-      mpptInterval = data[1];
-      break;
-    }
     case Message::ToSolarboat::DATA_TO_MPPT:
     {
       mppt->setData (data[1]);

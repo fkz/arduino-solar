@@ -57,7 +57,6 @@ uint8_t actual;
 
 //BEGIN TODO: REARRANGE!!
 
-uint8_t mppt_act;
 Fernbedienung::Pot::Poti trim_poti;
 int max_pot_backup;
 int min_pot_backup;
@@ -76,11 +75,6 @@ void Menu::setAction(int8_t richtung)
 	if (pgm_read_byte (commandData + mode*10 + actual*5) == 32)
 	  break;
       --actual;
-    }
-    else if ((mode == MPPT_SET_DIFF || mode == MPPT_SET_INTERVAL) && actual == 2)
-    {
-      mppt_act += richtung;
-      interval();
     }
     else
     {
@@ -196,49 +190,7 @@ void Menu::setExecute()
       }
       break;
     case MPPT:
-      if (actual == 0)
-      {
-	mppt_act = Fernbedienung::SolData::getMPPTDiff();
-	activate (MPPT_SET_DIFF);
-      }
-      else
-      {
-	mppt_act = Fernbedienung::SolData::getMPPTInterval();
-	activate (MPPT_SET_INTERVAL);
-      }
-      break;
-    case MPPT_SET_DIFF:
-    case MPPT_SET_INTERVAL:
-      if (actual == 0)
-	activate (MAINMENU);
-      else if (actual == 1)
-      {
-	if (mode == MPPT_SET_DIFF)
-	{
-	  uint8_t data[3];
-	  data[0] = Message::ToSolarboat::REQUEST_MPPT;
-	  data[1] = 's';
-	  data[2] = mppt_act;
-	  xbee.writeData(data, 3);
-	}
-	else
-	{
-	  uint8_t data[3];
-	  data[0] = Message::ToSolarboat::SET_MPPT_INTERVAL;
-	  data[1] = mppt_act & 0xFF;
-	  data[2] = mppt_act >> 8;
-	  xbee.writeData(data, 3);
-	}
-	Fernbedienung::SolData::requestMPPTDiff();
-	Fernbedienung::SolData::requestMPPTInterval();
-	activate (MPPT);
-      }
-      else if (actual == 2)
-      {
-	highlight(' ');
-	actual = 0;
-	highlight ('_');
-      }
+      activate (MAINMENU);
       break;
     case SAVE_DATA:
       if (actual == 0)
@@ -268,8 +220,6 @@ void Menu::goUp()
     case TRIM:
     case CUSTOM_TRIM:
     case MPPT:
-    case MPPT_SET_INTERVAL:
-    case MPPT_SET_DIFF:
       activate (MAINMENU);
       break;
     case CUSTOM_TRIM2:
@@ -365,40 +315,6 @@ void Menu::interval()
       lcd.print ("  ");
     }
   }
-  else if (mode == MPPT)
-  {
-    uint8_t data[2];
-    data[0] = Message::ToSolarboat::REQUEST_MPPT;
-    data[1] = 'r';
-    xbee.writeData(data, 2);
-    lcd.setCursor (14, 0);
-    if (Fernbedienung::SolData::getMPPTDiff() == 255)
-    {
-      lcd.write ('-');
-    }
-    else
-      lcd.write (Fernbedienung::SolData::getMPPTDiff() + '0');
-    lcd.setCursor (11, 1);
-    if (Fernbedienung::SolData::getMPPTInterval() == 65535)
-    {
-      lcd.print ("--");
-    }
-    else
-      lcd.print (Fernbedienung::SolData::getMPPTInterval());
-    
-    {
-      uint8_t data[2];
-      data[0] = Message::ToSolarboat::REQUEST_MPPT;
-      data[1] = 'r';
-      xbee.writeData(data, 2);
-    }
-    
-    { 
-      uint8_t data[1];
-      data[0] = Message::ToSolarboat::REQUEST_MPPT_INTERVAL;
-      xbee.writeData(data, 1);
-    }
-  }
   else if (mode == CUSTOM_TRIM || mode == CUSTOM_TRIM2)
   {
     int max = Fernbedienung::Pot::max_pot (trim_poti);
@@ -428,26 +344,6 @@ void Menu::interval()
     lcd.setCursor (12, 0);
     lcd.print (max);
     
-  }
-  else if (mode == MPPT_SET_DIFF)
-  {
-    lcd.setCursor (15, 0);
-    if (Fernbedienung::SolData::getMPPTDiff() == 255)
-      lcd.write ('-');
-    else
-      lcd.write (Fernbedienung::SolData::getMPPTDiff() + '0');
-    lcd.setCursor (14, 1);
-    lcd.write (mppt_act + '0');
-  }
-  else if (mode == MPPT_SET_INTERVAL)
-  {
-    lcd.setCursor (13, 0);
-    if (Fernbedienung::SolData::getMPPTInterval() == 65535)
-      lcd.write ('-');
-    else
-      lcd.print (Fernbedienung::SolData::getMPPTInterval());
-    lcd.setCursor (14, 1);
-    lcd.print (mppt_act);
   }
   else if (mode == SAVE_DATA)
   {
