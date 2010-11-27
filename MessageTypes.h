@@ -28,7 +28,7 @@ const char DATA_FROM_SOLARBOAT = 'd';
 const char BATTERY = 'b';
 const char SEND_MPPT = '1';
 const char RESPONSE_MPPT_INTERVAL = 'I';
-const char DISTANCE = 'v';
+const char DISTANCE = 'q';
 };
 
 MESSAGE_DATA_5(FromSolarboat::DATA_FROM_SOLARBOAT, unsigned int, strom, unsigned int, spannung, char, mpptType, unsigned long int, freqCount, uint8_t, mpptData);
