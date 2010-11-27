@@ -26,7 +26,7 @@
 
 
 const prog_uint8_t commandData[Menu::MENU_COUNT*5*2] PROGMEM = {
-    16, 21, 21, 26, 26, 31, 10, 15, 0, 9 ,
+    21, 26, 26, 31, 10, 15, 0, 9 , 32, 32,
       32, 32 ,  32, 32 ,  32, 32 ,  32, 32 ,  32, 32   ,
       16, 21 ,  22, 27 ,  28, 31 ,  32, 32 ,  32, 32   ,
        13,  15 ,  26, 29 ,  32, 32 ,  32, 32 ,  32, 32   ,
@@ -39,7 +39,7 @@ const prog_uint8_t commandData[Menu::MENU_COUNT*5*2] PROGMEM = {
 };
 
 const prog_char commandStrings[Menu::MENU_COUNT*2*16+1] PROGMEM = 
-  " Drehzahl  Data "    "  MPPT Akku Trim" 
+  " Drehzahl  Data "    "       Akku Trim" 
   "Akku Fer.       "    "Solarboot       "
   "   ---Trim---   "    " Pot1  Pot2  up "
   "--MPPT--diff:   "    "Intervall:      "
@@ -137,20 +137,14 @@ void Menu::setExecute()
     case MAINMENU:
       if (actual == 0)
       {
-	Fernbedienung::SolData::requestMPPTDiff ();
-	Fernbedienung::SolData::requestMPPTInterval ();
-	activate (MPPT);
-      }
-      else if (actual == 1)
-      {
 	activate (AKKU);
 	Fernbedienung::SolData::requestSolarBattery ();
       }
-      else if (actual == 2)
+      else if (actual == 1)
 	activate (TRIM);
-      else if (actual == 3)
+      else if (actual == 2)
 	activate (SAVE_DATA);
-      else if (actual == 4)
+      else if (actual == 3)
 	activate (DREHZAHL);
       break;
     case AKKU:
