@@ -354,7 +354,7 @@ void Menu::writeStromAndSpannung(long unsigned int spannung, long signed int str
 {
   using Fernbedienung::LcdHelper::lcd;
   using Fernbedienung::LcdHelper::writeCommaNumber;
-  if (mode == RUNNING && haltUntil < millis())
+  if (mode == RUNNING)
   {
     lcd.clear();
     lcd.setCursor (0, 0);

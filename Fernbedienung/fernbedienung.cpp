@@ -79,11 +79,11 @@ void Fernbedienung::Callback::distance(const Message::MessageData< DISTANCE >* d
 {
   if (Menu::halt (millis() + 1100))
   {
-    lcd.setCursor (0, 0);
+    lcd.setCursor (8,1);    
     for (uint8_t i = 0; i != 8; ++i)
       lcd.write (' ');
-    
-    lcd.setCursor (1, 0);
+
+    lcd.setCursor (9, 1);
     lcd.print (data->leftDistance);
     lcd.write (' ');
     lcd.write (' ');
