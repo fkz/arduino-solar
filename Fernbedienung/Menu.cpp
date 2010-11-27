@@ -303,8 +303,6 @@ void Menu::interval()
   if (mode == RUNNING)
   {
     lcd.setCursor (8,1);
-    //if (interval_page)
-    //{   
       switch (Fernbedienung::SolData::getActualMPPTType())
       {
 	case Message::MPPT::UNKNOWN:
@@ -347,34 +345,6 @@ void Menu::interval()
 	lcd.write (Fernbedienung::Flags::getFlag (Fernbedienung::Flags::BATTERY_SOLARBOOT) ? '!' : ' ');
 	lcd.write (' ');
       }
-    //}
-    //else
-    /*{
-      if (mppt_interval == 65535)
-      {
-	lcd.print ("????");
-      }
-      else
-	lcd.print (mppt_interval);
-      lcd.setCursor (14, 1);
-      if (mppt_diff == 255)
-      {
-	lcd.print ("??");
-      }
-      else
-	lcd.print (mppt_diff);
-      {
-	uint8_t data[1];
-	data[0] = Message::ToSolarboat::REQUEST_MPPT_INTERVAL;
-	xbee.writeData(data, 1);
-      }
-      {
-	uint8_t data[2];
-	data[0] = Message::ToSolarboat::REQUEST_MPPT;
-	data[1] = 'r';
-	xbee.writeData(data, 2);
-      }
-    }*/
   }
   else if (mode == AKKU)
   {
