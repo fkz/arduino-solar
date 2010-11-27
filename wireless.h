@@ -63,7 +63,7 @@ class MyXBee
     bool isConnected ();
     
     /// @deprecated use writePackage instead
-    void writeData (uint8_t *data, uint8_t length);
+    void writeData (uint8_t *data, uint8_t length) __attribute__ ((deprecated));
     
     template< const char type >
     void writePackage (typename Message::MessageData< type >::Param1 param1)

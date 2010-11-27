@@ -57,7 +57,7 @@ class NoMPPT: public MPPT
 class ConstMPPT: public MPPT
 {
 public:
-  ConstMPPT () : MPPT(), lastSpeed(0), actualValue(128), refStrom(0) {}
+  ConstMPPT () : MPPT(), actualValue(128), refStrom(0), lastSpeed(0)  {}
   virtual int loop (int strom, int spannung);
   virtual char getDisplayData();
   virtual void setData(char data);
