@@ -49,9 +49,6 @@ using namespace Message::ToSolarboat;
 void potiData (const MessageData< POTI_DATA > *data, uint8_t length);
 void changeMPPTType (const MessageData< CHANGE_MPPT_TYPE > *data, uint8_t length);
 void requestBattery (const MessageData< REQUEST_BATTERY > *data, uint8_t length);
-void requestMPPT (const MessageData< REQUEST_MPPT > *data, uint8_t length);
-void requestMPPTInterval (const MessageData< REQUEST_MPPT_INTERVAL > *data, uint8_t length);
-void setMPPTInterval(const MessageData< SET_MPPT_INTERVAL > *data, uint8_t length);
 void dataToMPPT(const MessageData< DATA_TO_MPPT > *data, uint8_t length);
 void error (const MessageData< MyXBee::ERROR > *data, uint8_t length);
 void connectionInterrupted (const MessageData< MyXBee::CONNECTION_INTERRUPTED > *data, uint8_t length);
@@ -82,9 +79,6 @@ void Solarboot::initialize()
   xbee.registerMethod< POTI_DATA >(&potiData);
   xbee.registerMethod< CHANGE_MPPT_TYPE >(&changeMPPTType);
   xbee.registerMethod< REQUEST_BATTERY > (&requestBattery);
-  xbee.registerMethod< REQUEST_MPPT > (&requestMPPT);
-  xbee.registerMethod< REQUEST_MPPT_INTERVAL >(&requestMPPTInterval);
-  xbee.registerMethod< SET_MPPT_INTERVAL >(&setMPPTInterval);
   xbee.registerMethod< DATA_TO_MPPT >(&dataToMPPT);
   xbee.registerMethod< MyXBee::ERROR >(&error);
   xbee.registerMethod< MyXBee::CONNECTION_INTERRUPTED > (&connectionInterrupted);
@@ -132,22 +126,6 @@ void Solarboot::Callback::requestBattery(const Message::MessageData< Message::To
   xbee.writePackage< Message::FromSolarboat::BATTERY > (value);
 }
 
-void Solarboot::Callback::requestMPPT(const Message::MessageData< Message::ToSolarboat::REQUEST_MPPT >* data, uint8_t length)
-{
-  //FIXME!!!
-  //TODO: change
-  //mppt->receiveData(*this, const_cast< uint8_t * > (data+1), length-1); //TODO: remove const_cast, add const to receiveData method signature
-}
-
-void Solarboot::Callback::requestMPPTInterval(const Message::MessageData< Message::ToSolarboat::REQUEST_MPPT_INTERVAL >* data, uint8_t length)
-{
-  xbee.writePackage< Message::FromSolarboat::RESPONSE_MPPT_INTERVAL > (mpptInterval);
-}
-
-void Solarboot::Callback::setMPPTInterval(const Message::MessageData< Message::ToSolarboat::SET_MPPT_INTERVAL >* data, uint8_t length)
-{
-  //FIXME: mpptInterval = data[1];
-}
 
 void Solarboot::Callback::dataToMPPT(const Message::MessageData< Message::ToSolarboat::DATA_TO_MPPT >* data, uint8_t length)
 {

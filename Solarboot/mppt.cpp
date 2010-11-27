@@ -22,22 +22,6 @@
 int MPPT::diff = 5;
 uint8_t MPPT::speed = 128;
 
-void MPPT::receiveData(MyXBee& xbee, uint8_t* data, uint8_t size)
-{
-  if (data[0] == 'r')
-  {
-    uint8_t r_data[3];
-    r_data[0] = Message::FromSolarboat::SEND_MPPT;
-    r_data[1] = 'r';
-    r_data[2] = diff;
-    xbee.writeData(r_data, 3);
-  }
-  else if (data[0] == 's')
-  {
-    diff = data[1];
-  }
-}
-
 
 int NoMPPT::loop(int strom, int spannung)
 {

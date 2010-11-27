@@ -31,7 +31,6 @@ class MPPT
      @return zum Motor-Servo gebender Wert
     */
     virtual int loop (int strom, int spannung) = 0;
-    virtual void receiveData (MyXBee &xbee, uint8_t *data, uint8_t size);
     static void updateSpeed(uint8_t arg1)
     {
       speed = arg1;
@@ -57,7 +56,7 @@ class NoMPPT: public MPPT
 class ConstMPPT: public MPPT
 {
 public:
-  ConstMPPT () : MPPT(), lastSpeed(0), actualValue(128), refStrom(0) {}
+  ConstMPPT () : MPPT(), actualValue(128), refStrom(0), lastSpeed(0)  {}
   virtual int loop (int strom, int spannung);
   virtual char getDisplayData();
   virtual void setData(char data);

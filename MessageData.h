@@ -12,6 +12,14 @@ struct MessageData
 
 };
 
+#define MESSAGE_DATA_0(type) \
+template<> \
+struct MessageData< type > \
+{ \
+  static const int ParamCount = 0; \
+} __attribute__((__packed__));
+
+
 #define MESSAGE_DATA_1(type,param,name) \
 template<> \
 struct MessageData< type > \
