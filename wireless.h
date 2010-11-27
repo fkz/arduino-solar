@@ -66,6 +66,15 @@ class MyXBee
     void writeData (uint8_t *data, uint8_t length) __attribute__ ((deprecated));
     
     template< const char type >
+    void writePackage ()
+    {
+      static_assert (Message::MessageData< type >::ParamCount == 0, "wrong param count");
+      Serial.write (START_BYTE);
+      writeEscaped (1);
+      writeEscaped (type);
+    }
+    
+    template< const char type >
     void writePackage (typename Message::MessageData< type >::Param1 param1)
     {
       static_assert (Message::MessageData< type >::ParamCount == 1, "wrong param count");

@@ -286,9 +286,7 @@ void Menu::interval()
     lcd.setCursor(10, 0);
     Fernbedienung::LcdHelper::writeSpannung15 (value);
     lcd.print ("  ");
-    uint8_t data[1];
-    data[0] = Message::ToSolarboat::REQUEST_BATTERY;
-    xbee.writeData(data, 1);
+    xbee.writePackage< Message::ToSolarboat::REQUEST_BATTERY > ();
     
     lcd.setCursor (10, 1);
     if (Fernbedienung::SolData::getSolarBattery() == 0)

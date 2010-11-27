@@ -47,6 +47,7 @@ const char DATA_TO_MPPT = 'v';
 MESSAGE_DATA_2 (ToSolarboat::POTI_DATA, uint8_t, speed, uint8_t, turn);
 MESSAGE_DATA_1 (ToSolarboat::CHANGE_MPPT_TYPE, uint8_t, mpptType);
 MESSAGE_DATA_1 (ToSolarboat::DATA_TO_MPPT, uint8_t, data);
+MESSAGE_DATA_0 (ToSolarboat::REQUEST_BATTERY);
 
 
 // MPPT types
