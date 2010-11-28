@@ -70,7 +70,7 @@ void Solarboot::initialize()
   servoMotor.write (90);
   
   dispatcher.addMethod(&Solarboot::sendData, 500);
-  dispatcher.addMethod(&Solarboot::iterateMPPT, 300);
+  dispatcher.addMethod(&Solarboot::iterateMPPT, 20);
   dispatcher.addMethod(&Solarboot::checkBattery, 60000);
   
   using namespace Message::ToSolarboat;
