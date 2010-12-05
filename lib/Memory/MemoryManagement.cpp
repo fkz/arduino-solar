@@ -43,7 +43,8 @@ inline uint8_t _read (Memory::size_type index)
 inline void _write (Memory::size_type index, uint8_t data)
 {
 #ifndef SD
-  EEPROM.write (index, data);
+  if (index < Memory::EEPROM_SIZE)
+    EEPROM.write (index, data);
 #else
   sd_raw_write (index, &data, 1);
 #endif

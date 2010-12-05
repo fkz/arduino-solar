@@ -68,6 +68,10 @@ public:
   
   void sync();
   
+#ifndef SD
+  static const size_type EEPROM_SIZE = 1024;
+#endif
+  
 private:
   void format();
   MemorySegment actual;
