@@ -17,6 +17,7 @@
 */
 #include "MemoryManagement.h"
 #include <EEPROM/EEPROM.h>
+#include <avr/eeprom.h>
 
 #ifdef SD
 #include <sd-reader_source_20101010/sd_raw.h>
@@ -29,6 +30,74 @@
 // 0x01  0x1F    Länge der einzelnen Segmente, oder 0 falls leer
 // 0x20  Rest    Beginn of Data
 
+#ifndef SD
+
+struct EEPROMEntry
+{
+  int address;
+  uint8_t value;
+  
+  bool isSet()
+  {
+    return address == -1;
+  }
+};
+
+class EEPROMList
+{
+private:
+  static const int size = 10;
+  
+  EEPROMEntry entrys[size];
+  
+  int start, end;
+  
+public:
+  EEPROMList () : start(0), end(0) { }
+  
+  bool isEmpty()
+  {
+    return start == end;
+  }
+  
+  void push (int address, uint8_t value)
+  {
+    int end2 = end+1;
+    if (end2 == size)
+      end2 = 0;
+    
+    if (end2 == start)
+      pop();
+    
+    entrys[end].address = address;
+    entrys[end].value = value;
+    
+    end = end2;    
+  }
+  
+  void pop ()
+  {
+    if (!isEmpty())
+    {
+      EEPROM.write (entrys[start].address, entrys[start].value);
+      ++start;
+      if (start == size)
+	start = 0;
+    }
+  }
+};
+
+
+EEPROMList eeprom;
+
+void EEPROMdispatcher()
+{
+  if (eeprom_is_ready())
+    eeprom.pop();
+}
+#endif
+
+
 inline uint8_t _read (Memory::size_type index)
 {
 #ifndef SD
@@ -40,11 +109,19 @@ inline uint8_t _read (Memory::size_type index)
 #endif
 }
 
+
 inline void _write (Memory::size_type index, uint8_t data)
 {
 #ifndef SD
   if (index < Memory::EEPROM_SIZE)
-    EEPROM.write (index, data);
+  {
+    if (eeprom_is_ready())
+      EEPROM.write (index, data);
+    else
+    {
+      eeprom.push (index, data);
+    }
+  }
 #else
   sd_raw_write (index, &data, 1);
 #endif
@@ -117,7 +194,7 @@ MemorySegment* Memory::startSegment()
 Memory::size_type Memory::diskSpace()
 {
   size_type result = 0;
-  for (int i = 1; i != 20; ++i)
+  for (int i = 1; i != 0x10; ++i)
   {
     uint16_t data = _read (2*i) | _read (2*i+1) << 8;
     result += data;

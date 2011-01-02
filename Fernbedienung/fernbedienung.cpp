@@ -54,6 +54,7 @@ void Fernbedienung::initialize()
   dispatcher.addMethod(&checkBatteryState, 60000);
   dispatcher.addMethod(menuInterval, 2000);
   dispatcher.addMethod(&Buttons::controlButtons, 0);
+  dispatcher.addMethod(&EEPROMdispatcher, 0);
   
   lcd.begin(16,2);
   lcd.print (":)");

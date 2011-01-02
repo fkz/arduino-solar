@@ -23,7 +23,7 @@
 class MyXBee
 {
   public:
-    static const unsigned int baudRate = 57600;
+    static const unsigned int baudRate = 38400;
     
     enum SpecialCharacters
     {

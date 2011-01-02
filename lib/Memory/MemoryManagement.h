@@ -72,8 +72,22 @@ public:
   static const size_type EEPROM_SIZE = 1024;
 #endif
   
+  static const int BUFFER_SIZE = 10;
+  
 private:
   void format();
   MemorySegment actual;
   size_type capacity;
+  
+  struct PendingData
+  {
+    int address;
+    uint8_t data;
+  };
+  
+  static PendingData pending[BUFFER_SIZE];
+  static int startIndex;
+  static int endIndex;
 };
+
+void EEPROMdispatcher();
