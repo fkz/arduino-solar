@@ -36,7 +36,7 @@ const prog_uint8_t commandData[Menu::MENU_COUNT*5*2] PROGMEM = {
 };
 
 const prog_char commandStrings[Menu::MENU_COUNT*2*16+1] PROGMEM = 
-  " Drehzahl  Data "    "       Akku Trim" 
+  " Drehzahl  Data "    "      Akku Trim " 
   "Akku Fer.       "    "Solarboot       "
   "   ---Trim---   "    " Pot1  Pot2  up "
   "Pot        -    "    "    einst.  up  "
