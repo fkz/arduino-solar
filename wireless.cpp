@@ -57,7 +57,10 @@ void MyXBee::readPackages()
     else if (alredyRead >= 1)
     {
       if (b == ESCAPE)
-	package[alredyRead++-1] = Serial.read ()+32;
+      {
+	while ((b = Serial.read()) >= 0) //TODO: if it takes too long...
+	  package[alredyRead++-1] = b;
+      }
       else if (b == START_BYTE)
       {
 	error (START_BYTE_INSIDE_MESSAGE);
