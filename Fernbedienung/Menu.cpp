@@ -66,7 +66,7 @@ void Menu::setAction(int8_t richtung)
     if (actual == 0 && richtung == -1)
     {
       for (actual = 1; actual != 5; ++actual)
-	if (pgm_read_byte (commandData + mode*10 + actual*5) == 32)
+	if (pgm_read_byte (commandData + mode*10 + actual*2) == 32)
 	  break;
       --actual;
     }
