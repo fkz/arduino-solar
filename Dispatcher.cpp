@@ -40,6 +40,8 @@ void Dispatcher<count>::call()
     if (lastCall[i] <= now)
     {
       lastCall[i] = now + interval[i];
+      while (lastCall[i] < now)
+	lastCall[i] += interval[i];
       if (exec[i] != 0)
 	exec[i]();
     }
