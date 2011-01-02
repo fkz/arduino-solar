@@ -71,6 +71,7 @@ class OptimizingMPPT: public MPPT
 {
 protected:
   bool isMPPT ();
+  virtual char getDisplayData();
   
 private:
   bool isInMPPTMode;

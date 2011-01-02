@@ -39,6 +39,12 @@ bool OptimizingMPPT::isMPPT()
   return isInMPPTMode;
 }
 
+char OptimizingMPPT::getDisplayData()
+{
+  return isInMPPTMode ? 'M' : ' ';
+}
+
+
 
 PerturbAndObserve::PerturbAndObserve()
 :  lastSpannung(0), lastStrom(0), lastServo(110)
