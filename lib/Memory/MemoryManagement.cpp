@@ -98,7 +98,7 @@ void EEPROMdispatcher()
 #endif
 
 
-inline uint8_t _read (Memory::size_type index)
+inline uint8_t _read (int index)
 {
 #ifndef SD
   return EEPROM.read(index);
@@ -110,7 +110,7 @@ inline uint8_t _read (Memory::size_type index)
 }
 
 
-inline void _write (Memory::size_type index, uint8_t data)
+inline void _write (int index, uint8_t data)
 {
 #ifndef SD
   if (index < Memory::EEPROM_SIZE)
