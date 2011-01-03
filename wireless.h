@@ -185,6 +185,7 @@ class MyXBee
     long unsigned int lastPackageRead;
     
     bool _isConnected;
+    bool in_escape_mode;
     long read_count;
     
     struct RegisterPair
