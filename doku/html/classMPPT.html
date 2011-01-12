@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>Arduino-Solarboot: MPPT Klassenreferenz</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javaScript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body onload='searchBox.OnSelectItem(0);'>
+<!-- Erzeugt von Doxygen 1.7.2 -->
+<script type="text/javascript"><!--
+var searchBox = new SearchBox("searchBox", "search",false,'Suchen');
+--></script>
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Hauptseite</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Klassen</span></a></li>
+      <li><a href="files.html"><span>Dateien</span></a></li>
+      <li id="searchli">
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Suchen" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>Auflistung&#160;der&#160;Klassen</span></a></li>
+      <li><a href="classes.html"><span>Klassen-Verzeichnis</span></a></li>
+      <li><a href="hierarchy.html"><span>Klassenhierarchie</span></a></li>
+      <li><a href="functions.html"><span>Klassen-Elemente</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Öffentliche Methoden</a> &#124;
+<a href="#pub-static-methods">Öffentliche, statische Methoden</a> &#124;
+<a href="#pub-static-attribs">Statische öffentliche Attribute</a> &#124;
+<a href="#pro-static-attribs">Statische geschützte Attribute</a>  </div>
+  <div class="headertitle">
+<h1>MPPT Klassenreferenz</h1>  </div>
+</div>
+<div class="contents">
+<!-- doxytag: class="MPPT" --><!-- startSectionHeader --><div class="dynheader">
+Klassendiagramm für MPPT:<!-- endSectionHeader --></div>
+<!-- startSectionSummary --><!-- endSectionSummary --><!-- startSectionContent --><div class="dyncontent">
+ <div class="center">
+  <img src="classMPPT.png" usemap="#MPPT_map" alt=""/>
+  <map id="MPPT_map" name="MPPT_map">
+<area href="classConstMPPT.html" alt="ConstMPPT" shape="rect" coords="0,56,146,80"/>
+<area href="classNoMPPT.html" alt="NoMPPT" shape="rect" coords="156,56,302,80"/>
+<area href="classOptimizingMPPT.html" alt="OptimizingMPPT" shape="rect" coords="312,56,458,80"/>
+<area href="classPerturbAndObserve.html" alt="PerturbAndObserve" shape="rect" coords="156,112,302,136"/>
+<area href="classPerturbEstimate.html" alt="PerturbEstimate" shape="rect" coords="312,112,458,136"/>
+<area href="classPerturbEstimateEstimate.html" alt="PerturbEstimateEstimate" shape="rect" coords="468,112,614,136"/>
+</map>
+ </div><!-- endSectionContent --></div>
+
+<p><a href="classMPPT-members.html">Aufstellung aller Elemente</a></p>
+<table class="memberdecls">
+<tr><td colspan="2"><h2><a name="pub-methods"></a>
+Öffentliche Methoden</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPPT.html#a928573b1a51085eeb665589ad5d420c3">loop</a> (int strom, int spannung)=0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a37ea69c5b74923327b7c9b595771e5ca"></a><!-- doxytag: member="MPPT::getDisplayData" ref="a37ea69c5b74923327b7c9b595771e5ca" args="()" -->
+virtual char&#160;</td><td class="memItemRight" valign="bottom"><b>getDisplayData</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8a4854cf338fa87a80f10fd5e166c8e8"></a><!-- doxytag: member="MPPT::setData" ref="a8a4854cf338fa87a80f10fd5e166c8e8" args="(char data)" -->
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setData</b> (char data)</td></tr>
+<tr><td colspan="2"><h2><a name="pub-static-methods"></a>
+Öffentliche, statische Methoden</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae260c97b4297734d2df4a3f46d5fe6f1"></a><!-- doxytag: member="MPPT::updateSpeed" ref="ae260c97b4297734d2df4a3f46d5fe6f1" args="(uint8_t arg1)" -->
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>updateSpeed</b> (uint8_t arg1)</td></tr>
+<tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
+Statische öffentliche Attribute</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5bd081a19c7cc52ce49e225d8b0d301b"></a><!-- doxytag: member="MPPT::diff" ref="a5bd081a19c7cc52ce49e225d8b0d301b" args="" -->
+static int&#160;</td><td class="memItemRight" valign="bottom"><b>diff</b> = 5</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a26bf6d5ad212f7cdcc90e562aa976cd8"></a><!-- doxytag: member="MPPT::interval" ref="a26bf6d5ad212f7cdcc90e562aa976cd8" args="" -->
+static int&#160;</td><td class="memItemRight" valign="bottom"><b>interval</b></td></tr>
+<tr><td colspan="2"><h2><a name="pro-static-attribs"></a>
+Statische geschützte Attribute</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a769b15dd29e526778675a84b095ab6f0"></a><!-- doxytag: member="MPPT::speed" ref="a769b15dd29e526778675a84b095ab6f0" args="" -->
+static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>speed</b> = 128</td></tr>
+</table>
+<hr/><h2>Dokumentation der Elementfunktionen</h2>
+<a class="anchor" id="a928573b1a51085eeb665589ad5d420c3"></a><!-- doxytag: member="MPPT::loop" ref="a928573b1a51085eeb665589ad5d420c3" args="(int strom, int spannung)=0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int MPPT::loop </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"> <em>strom</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"> <em>spannung</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>loops </p>
+<dl><dt><b>Parameter:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">strom</td><td>gemessene aktuelle Stromstärke </td></tr>
+    <tr><td class="paramname">spannung</td><td>gemessene aktuelle Spannung </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Rückgabe:</b></dt><dd>zum Motor-Servo gebender Wert </dd></dl>
+
+<p>Implementiert in <a class="el" href="classNoMPPT.html#ab84cbd7d16ae0a38d30233c323464f7b">NoMPPT</a>, <a class="el" href="classConstMPPT.html#a0aadeadd650e936294e99187ddbd8578">ConstMPPT</a>, <a class="el" href="classPerturbAndObserve.html#a081d79d567b30542db2d0d6b82d8d09d">PerturbAndObserve</a>, <a class="el" href="classPerturbEstimate.html#a3f8a91dbbf6bbea37df3333a212b4f5a">PerturbEstimate</a> und <a class="el" href="classPerturbEstimateEstimate.html#ae5f5e16ef0e21dc2091c9875c346761b">PerturbEstimateEstimate</a>.</p>
+
+</div>
+</div>
+<hr/>Die Dokumentation für diese Klasse wurde erzeugt aufgrund der Dateien:<ul>
+<li>Solarboot/<a class="el" href="mppt_8h_source.html">mppt.h</a></li>
+<li>Solarboot/mppt.cpp</li>
+</ul>
+</div>
+<!--- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Alle</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Klassen</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Funktionen</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<hr class="footer"/><address class="footer"><small>Erzeugt am Wed Jan 12 2011 17:38:05 für Arduino-Solarboot von&#160;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>Arduino-Solarboot: Dispatcher&lt; count &gt; Template-Klassenreferenz</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javaScript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body onload='searchBox.OnSelectItem(0);'>
+<!-- Erzeugt von Doxygen 1.7.2 -->
+<script type="text/javascript"><!--
+var searchBox = new SearchBox("searchBox", "search",false,'Suchen');
+--></script>
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Hauptseite</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Klassen</span></a></li>
+      <li><a href="files.html"><span>Dateien</span></a></li>
+      <li id="searchli">
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Suchen" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>Auflistung&#160;der&#160;Klassen</span></a></li>
+      <li><a href="classes.html"><span>Klassen-Verzeichnis</span></a></li>
+      <li><a href="hierarchy.html"><span>Klassenhierarchie</span></a></li>
+      <li><a href="functions.html"><span>Klassen-Elemente</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Öffentliche Methoden</a>  </div>
+  <div class="headertitle">
+<h1>Dispatcher&lt; count &gt; Template-Klassenreferenz</h1>  </div>
+</div>
+<div class="contents">
+<!-- doxytag: class="Dispatcher" -->
+<p>Diese Klasse handelt wiederkehrende Aufgaben.  
+<a href="#_details">Mehr ...</a></p>
+
+<p><code>#include &lt;<a class="el" href="Dispatcher_8h_source.html">Dispatcher.h</a>&gt;</code></p>
+
+<p><a href="classDispatcher-members.html">Aufstellung aller Elemente</a></p>
+<table class="memberdecls">
+<tr><td colspan="2"><h2><a name="pub-methods"></a>
+Öffentliche Methoden</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDispatcher.html#a26cd247933d174547a633e5c8a28d2c7">call</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDispatcher.html#a3e5b967412c87af3882bbb14c4d664c0">setMethod</a> (int id, void(*)(), unsigned long interval)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDispatcher.html#ab9406f1b70d62d7c90d417a717874db3">addMethod</a> (void(*method)(), unsigned long interval)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9594f24fe2f278854031d1703d04ebfd"></a><!-- doxytag: member="Dispatcher::getInterval" ref="a9594f24fe2f278854031d1703d04ebfd" args="(int id)" -->
+unsigned long&#160;</td><td class="memItemRight" valign="bottom"><b>getInterval</b> (int id)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6fc1c36a857882e3c163b961f8b526ee"></a><!-- doxytag: member="Dispatcher::setInterval" ref="a6fc1c36a857882e3c163b961f8b526ee" args="(int id, unsigned long _interval)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setInterval</b> (int id, unsigned long _interval)</td></tr>
+</table>
+<hr/><a name="_details"></a><h2>Ausführliche Beschreibung</h2>
+<h3>template&lt;int count&gt;<br/>
+ class Dispatcher&lt; count &gt;</h3>
+
+<p>Diese Klasse handelt wiederkehrende Aufgaben. </p>
+<hr/><h2>Dokumentation der Elementfunktionen</h2>
+<a class="anchor" id="ab9406f1b70d62d7c90d417a717874db3"></a><!-- doxytag: member="Dispatcher::addMethod" ref="ab9406f1b70d62d7c90d417a717874db3" args="(void(*method)(), unsigned long interval)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int count&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classDispatcher.html">Dispatcher</a>&lt; count &gt;::addMethod </td>
+          <td>(</td>
+          <td class="paramtype">void(*)()&#160;</td>
+          <td class="paramname"> <em>method</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned long&#160;</td>
+          <td class="paramname"> <em>interval</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>fügt eine Methode hinzu. Es dürfen maximal <code>count</code> Methoden hinzugefügt werden, weitere werden nicht erkannt, bzw. führen zu undefiniertem Verhalten </p>
+<dl><dt><b>Parameter:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">object</td><td>Objekt, von dem aus aufgerufen wird </td></tr>
+    <tr><td class="paramname">method</td><td>aufzurufende Methode des Objekts </td></tr>
+    <tr><td class="paramname">interval</td><td>Intervall in ms, in dem die Methode aufgerufen werden soll </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="note"><dt><b>Zu beachten:</b></dt><dd>die Methode wird beim nächsten <a class="el" href="classDispatcher.html#a26cd247933d174547a633e5c8a28d2c7">call</a> Aufruf ausfeführt </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a26cd247933d174547a633e5c8a28d2c7"></a><!-- doxytag: member="Dispatcher::call" ref="a26cd247933d174547a633e5c8a28d2c7" args="()" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int count&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classDispatcher.html">Dispatcher</a>&lt; count &gt;::call </td>
+          <td>(</td>
+          <td class="paramname">&#160;)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>diese Methode sollte möglichst häufig aufgerufen werden </p>
+
+</div>
+</div>
+<a class="anchor" id="a3e5b967412c87af3882bbb14c4d664c0"></a><!-- doxytag: member="Dispatcher::setMethod" ref="a3e5b967412c87af3882bbb14c4d664c0" args="(int id, void(*)(), unsigned long interval)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int count&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classDispatcher.html">Dispatcher</a>&lt; count &gt;::setMethod </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"> <em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void(*)()&#160;</td>
+          <td class="paramname"> <em>method</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned long&#160;</td>
+          <td class="paramname"> <em>interval</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>setze eine Methode an Stelle <code>id</code>. <code>id</code> muss zwischen 0 und count liegen. Möglicherweise bereits dort befindliche Methoden werden überschrieben </p>
+
+</div>
+</div>
+<hr/>Die Dokumentation für diese Klasse wurde erzeugt aufgrund der Dateien:<ul>
+<li><a class="el" href="Dispatcher_8h_source.html">Dispatcher.h</a></li>
+<li>Dispatcher.cpp</li>
+</ul>
+</div>
+<!--- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Alle</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Klassen</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Funktionen</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<hr class="footer"/><address class="footer"><small>Erzeugt am Wed Jan 12 2011 17:38:05 für Arduino-Solarboot von&#160;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
+</body>
+</html>

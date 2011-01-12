@@ -1,0 +1,388 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>Arduino-Solarboot: Menu Klassenreferenz</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javaScript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body onload='searchBox.OnSelectItem(0);'>
+<!-- Erzeugt von Doxygen 1.7.1 -->
+<script type="text/javascript"><!--
+var searchBox = new SearchBox("searchBox", "search",false,'Suchen');
+--></script>
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Hauptseite</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Klassen</span></a></li>
+      <li><a href="files.html"><span>Dateien</span></a></li>
+      <li id="searchli">
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Suchen" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>Auflistung&nbsp;der&nbsp;Klassen</span></a></li>
+      <li><a href="classes.html"><span>Klassen-Verzeichnis</span></a></li>
+      <li><a href="hierarchy.html"><span>Klassenhierarchie</span></a></li>
+      <li><a href="functions.html"><span>Klassen-Elemente</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Öffentliche Typen</a> &#124;
+<a href="#pub-methods">Öffentliche Methoden</a>  </div>
+  <div class="headertitle">
+<h1>Menu Klassenreferenz</h1>  </div>
+</div>
+<div class="contents">
+<!-- doxytag: class="Menu" --><!-- doxytag: inherits="Dispatcheable" --><div class="dynheader">
+Klassendiagramm für Menu:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classMenu.png" usemap="#Menu_map" alt=""/>
+  <map id="Menu_map" name="Menu_map">
+<area href="classDispatcheable.html" alt="Dispatcheable" shape="rect" coords="0,0,92,24"/>
+</map>
+</div>
+
+<p><a href="classMenu-members.html">Aufstellung aller Elemente</a></p>
+<table class="memberdecls">
+<tr><td colspan="2"><h2><a name="pub-types"></a>
+Öffentliche Typen</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><b>Mode</b> { <br/>
+&nbsp;&nbsp;<b>RUNNING</b> =  255, 
+<b>MAINMENU</b> =  0, 
+<b>AKKU</b>, 
+<b>TRIM</b>, 
+<br/>
+&nbsp;&nbsp;<b>MPPT</b>, 
+<b>MPPT_SET_INTERVAL</b>, 
+<b>CUSTOM_TRIM</b>, 
+<b>CUSTOM_TRIM2</b>, 
+<br/>
+&nbsp;&nbsp;<b>MPPT_SET_DIFF</b>, 
+<b>MENU_COUNT</b>
+<br/>
+ }</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><b>Poti</b> { <b>SPEED</b>, 
+<b>TURN</b>
+ }</td></tr>
+<tr><td colspan="2"><h2><a name="pub-methods"></a>
+Öffentliche Methoden</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1fe4ec090e950ed0e0c08e54363ff659"></a><!-- doxytag: member="Menu::Menu" ref="a1fe4ec090e950ed0e0c08e54363ff659" args="(LiquidCrystal &amp;lcd, MyXBee &amp;xbee)" -->
+&nbsp;</td><td class="memItemRight" valign="bottom"><b>Menu</b> (LiquidCrystal &amp;lcd, <a class="el" href="classMyXBee.html">MyXBee</a> &amp;xbee)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMenu.html#a5a9dd631c24a6ccdd44572047513e28c">setAction</a> (int8_t richtung)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMenu.html#a22edeff53a304dff8d21f5cf67cf863d">setExecute</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMenu.html#a08645d47e69c38ae34cb9d93cda047bc">goUp</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMenu.html#aefac88e01c8888617881cac259f587a5">writeStromAndSpannung</a> (long int spannung, long int strom)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMenu.html#a1944a32ec0cb3c4b51a6f4f12ee67644">writeSpannung15</a> (int arg1)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMenu.html#a92031bd2caa317f03a086c26059e8351">setSolarBattery</a> (int value=0)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMenu.html#a8a0b2a81821ccad8bf1d08f0615c83ba">setFernBattery</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMenu.html#aaef5a837a580e493dd0543abdc565740">setConnection</a> (bool connection)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMenu.html#a3173a1230dc32741e46da5805244581e">interval</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMenu.html#ac0d14ed888762094e6c81650abb5f656">setActualMPPTType</a> (uint8_t arg1)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5799ae79fbb972fff2a0b4fe22483584"></a><!-- doxytag: member="Menu::getPotiValue" ref="a5799ae79fbb972fff2a0b4fe22483584" args="(Poti poti)" -->
+uint8_t&nbsp;</td><td class="memItemRight" valign="bottom"><b>getPotiValue</b> (Poti poti)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a571a0180a69832eb91691d784a5766d5"></a><!-- doxytag: member="Menu::setMPPTDiff" ref="a571a0180a69832eb91691d784a5766d5" args="(uint8_t arg1)" -->
+void&nbsp;</td><td class="memItemRight" valign="bottom"><b>setMPPTDiff</b> (uint8_t arg1)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMenu.html#ab6ad6c5a234cf94a0a424c7b37835d9b">writeCommaNumber</a> (long int arg1, const char *str)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae1ec62e738dda7faaaec850bd0b58ffe"></a><!-- doxytag: member="Menu::start" ref="ae1ec62e738dda7faaaec850bd0b58ffe" args="()" -->
+void&nbsp;</td><td class="memItemRight" valign="bottom"><b>start</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8794208a61bf826bf6915237ccc05eb9"></a><!-- doxytag: member="Menu::end" ref="a8794208a61bf826bf6915237ccc05eb9" args="()" -->
+void&nbsp;</td><td class="memItemRight" valign="bottom"><b>end</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa1f57634331ca448f0f8d22f59e471d5"></a><!-- doxytag: member="Menu::isStarted" ref="aa1f57634331ca448f0f8d22f59e471d5" args="()" -->
+bool&nbsp;</td><td class="memItemRight" valign="bottom"><b>isStarted</b> ()</td></tr>
+</table>
+<hr/><h2>Dokumentation der Elementfunktionen</h2>
+<a class="anchor" id="a08645d47e69c38ae34cb9d93cda047bc"></a><!-- doxytag: member="Menu::goUp" ref="a08645d47e69c38ae34cb9d93cda047bc" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Menu::goUp </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>go down </p>
+
+</div>
+</div>
+<a class="anchor" id="a3173a1230dc32741e46da5805244581e"></a><!-- doxytag: member="Menu::interval" ref="a3173a1230dc32741e46da5805244581e" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Menu::interval </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>this method is regularily called and updates the menu </p>
+
+</div>
+</div>
+<a class="anchor" id="a5a9dd631c24a6ccdd44572047513e28c"></a><!-- doxytag: member="Menu::setAction" ref="a5a9dd631c24a6ccdd44572047513e28c" args="(int8_t richtung)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Menu::setAction </td>
+          <td>(</td>
+          <td class="paramtype">int8_t&nbsp;</td>
+          <td class="paramname"> <em>richtung</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>navigation in the menu, go left or right </p>
+<dl><dt><b>Parameter:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>richtung</em>&nbsp;</td><td>should be -1 or 1 to go left/right </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ac0d14ed888762094e6c81650abb5f656"></a><!-- doxytag: member="Menu::setActualMPPTType" ref="ac0d14ed888762094e6c81650abb5f656" args="(uint8_t arg1)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Menu::setActualMPPTType </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&nbsp;</td>
+          <td class="paramname"> <em>arg1</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>sets the actual mppt type as returned by the boat </p>
+
+</div>
+</div>
+<a class="anchor" id="aaef5a837a580e493dd0543abdc565740"></a><!-- doxytag: member="Menu::setConnection" ref="aaef5a837a580e493dd0543abdc565740" args="(bool connection)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Menu::setConnection </td>
+          <td>(</td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>connection</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>sets the connection flag </p>
+
+</div>
+</div>
+<a class="anchor" id="a22edeff53a304dff8d21f5cf67cf863d"></a><!-- doxytag: member="Menu::setExecute" ref="a22edeff53a304dff8d21f5cf67cf863d" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Menu::setExecute </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>"ok" clicked </p>
+
+</div>
+</div>
+<a class="anchor" id="a8a0b2a81821ccad8bf1d08f0615c83ba"></a><!-- doxytag: member="Menu::setFernBattery" ref="a8a0b2a81821ccad8bf1d08f0615c83ba" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Menu::setFernBattery </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>sets the flag of the battery. Should be called, if the battery is low </p>
+
+</div>
+</div>
+<a class="anchor" id="a92031bd2caa317f03a086c26059e8351"></a><!-- doxytag: member="Menu::setSolarBattery" ref="a92031bd2caa317f03a086c26059e8351" args="(int value=0)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Menu::setSolarBattery </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>value</em> = <code>0</code></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>sets the solar battery intensity. (only used if one is build in) </p>
+<dl><dt><b>Parameter:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>value</em>&nbsp;</td><td>either 0, stands for "LOW BATTERY" or between 1 and 1023 which is the value returned by analogRead(). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ab6ad6c5a234cf94a0a424c7b37835d9b"></a><!-- doxytag: member="Menu::writeCommaNumber" ref="ab6ad6c5a234cf94a0a424c7b37835d9b" args="(long int arg1, const char *str)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Menu::writeCommaNumber </td>
+          <td>(</td>
+          <td class="paramtype">long int&nbsp;</td>
+          <td class="paramname"> <em>arg1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&nbsp;</td>
+          <td class="paramname"> <em>str</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>writes a number on lcd with two digits after comma </p>
+<dl><dt><b>Parameter:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>arg1</em>&nbsp;</td><td>number*1000 </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>str</em>&nbsp;</td><td>Einheit (which is appended) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a1944a32ec0cb3c4b51a6f4f12ee67644"></a><!-- doxytag: member="Menu::writeSpannung15" ref="a1944a32ec0cb3c4b51a6f4f12ee67644" args="(int arg1)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Menu::writeSpannung15 </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>arg1</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>writes the spannung with <a class="el" href="classMenu.html#ab6ad6c5a234cf94a0a424c7b37835d9b">writeCommaNumber()</a> </p>
+
+</div>
+</div>
+<a class="anchor" id="aefac88e01c8888617881cac259f587a5"></a><!-- doxytag: member="Menu::writeStromAndSpannung" ref="aefac88e01c8888617881cac259f587a5" args="(long int spannung, long int strom)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Menu::writeStromAndSpannung </td>
+          <td>(</td>
+          <td class="paramtype">long int&nbsp;</td>
+          <td class="paramname"> <em>spannung</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long int&nbsp;</td>
+          <td class="paramname"> <em>strom</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>updates strom, spannung and power </p>
+<dl><dt><b>Parameter:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>spannung</em>&nbsp;</td><td>spannung in mV </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>strom</em>&nbsp;</td><td>strom in mA </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<hr/>Die Dokumentation für diese Klasse wurde erzeugt aufgrund der Dateien:<ul>
+<li>Fernbedienung/<a class="el" href="Menu_8h_source.html">Menu.h</a></li>
+<li>Fernbedienung/Menu.cpp</li>
+</ul>
+</div>
+<!--- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Alle</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Klassen</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Funktionen</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<hr class="footer"/><address class="footer"><small>Erzeugt am Thu Aug 12 2010 18:20:47 für Arduino-Solarboot von&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
+</body>
+</html>

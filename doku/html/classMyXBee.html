@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>Arduino-Solarboot: MyXBee Klassenreferenz</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javaScript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body onload='searchBox.OnSelectItem(0);'>
+<!-- Erzeugt von Doxygen 1.7.2 -->
+<script type="text/javascript"><!--
+var searchBox = new SearchBox("searchBox", "search",false,'Suchen');
+--></script>
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Hauptseite</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Klassen</span></a></li>
+      <li><a href="files.html"><span>Dateien</span></a></li>
+      <li id="searchli">
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Suchen" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>Auflistung&#160;der&#160;Klassen</span></a></li>
+      <li><a href="classes.html"><span>Klassen-Verzeichnis</span></a></li>
+      <li><a href="hierarchy.html"><span>Klassenhierarchie</span></a></li>
+      <li><a href="functions.html"><span>Klassen-Elemente</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">Klassen</a> &#124;
+<a href="#pub-types">Öffentliche Typen</a> &#124;
+<a href="#pub-methods">Öffentliche Methoden</a> &#124;
+<a href="#pub-static-attribs">Statische öffentliche Attribute</a>  </div>
+  <div class="headertitle">
+<h1>MyXBee Klassenreferenz</h1>  </div>
+</div>
+<div class="contents">
+<!-- doxytag: class="MyXBee" -->
+<p><a href="classMyXBee-members.html">Aufstellung aller Elemente</a></p>
+<table class="memberdecls">
+<tr><td colspan="2"><h2><a name="nested-classes"></a>
+Klassen</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><b>RegisterPair</b></td></tr>
+<tr><td colspan="2"><h2><a name="pub-types"></a>
+Öffentliche Typen</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>SpecialCharacters</b> { <b>START_BYTE</b> =  's', 
+<b>ESCAPE</b> =  'e'
+ }</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>SpecialPackageTypes</b> { <b>ERROR</b> =  254, 
+<b>CONNECTION_INTERRUPTED</b> =  255
+ }</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>ErrorMessages</b> { <b>NO_START_BYTE</b> =  1, 
+<b>START_BYTE_INSIDE_MESSAGE</b> =  2, 
+<b>MESSAGE_NOT_REGISTERED</b> =  3, 
+<b>ERROR_TO_LONG_MESSAGE</b> =  4
+ }</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a83d954fbe97336caa8ed38d4f6e4e912"></a><!-- doxytag: member="MyXBee::ReadPackage" ref="a83d954fbe97336caa8ed38d4f6e4e912" args=")(const void *data, uint8_t length)" -->
+typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>ReadPackage</b> )(const void *data, uint8_t length)</td></tr>
+<tr><td colspan="2"><h2><a name="pub-methods"></a>
+Öffentliche Methoden</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a459fc7ac182a18e69a2f1cf10f4fc541"></a><!-- doxytag: member="MyXBee::readPackages" ref="a459fc7ac182a18e69a2f1cf10f4fc541" args="()" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>readPackages</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a018dc2bf4614ef84ecb647f3d869fd52"></a><!-- doxytag: member="MyXBee::isConnected" ref="a018dc2bf4614ef84ecb647f3d869fd52" args="()" -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isConnected</b> ()</td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="aa5d9f1ea5781c60d89178b59508416eb"></a><!-- doxytag: member="MyXBee::writePackage" ref="aa5d9f1ea5781c60d89178b59508416eb" args="()" -->
+template&lt;const char type&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>writePackage</b> ()</td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="a641ce711b7b8686184667a14535a0f3f"></a><!-- doxytag: member="MyXBee::writePackage" ref="a641ce711b7b8686184667a14535a0f3f" args="(typename Message::MessageData&lt; type &gt;::Param1 param1)" -->
+template&lt;const char type&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>writePackage</b> (typename <a class="el" href="structMessage_1_1MessageData.html">Message::MessageData</a>&lt; type &gt;::Param1 param1)</td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="aa9aa2422c5594b9f6c3814e6962d911b"></a><!-- doxytag: member="MyXBee::writePackage" ref="aa9aa2422c5594b9f6c3814e6962d911b" args="(typename Message::MessageData&lt; type &gt;::Param1 param1, typename Message::MessageData&lt; type &gt;::Param2 param2)" -->
+template&lt;const char type&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>writePackage</b> (typename <a class="el" href="structMessage_1_1MessageData.html">Message::MessageData</a>&lt; type &gt;::Param1 param1, typename <a class="el" href="structMessage_1_1MessageData.html">Message::MessageData</a>&lt; type &gt;::Param2 param2)</td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="a1e6fd5da194cbd312984c6057a837f34"></a><!-- doxytag: member="MyXBee::writePackage" ref="a1e6fd5da194cbd312984c6057a837f34" args="(typename Message::MessageData&lt; type &gt;::Param1 param1, typename Message::MessageData&lt; type &gt;::Param2 param2, typename Message::MessageData&lt; type &gt;::Param3 param3)" -->
+template&lt;const char type&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>writePackage</b> (typename <a class="el" href="structMessage_1_1MessageData.html">Message::MessageData</a>&lt; type &gt;::Param1 param1, typename <a class="el" href="structMessage_1_1MessageData.html">Message::MessageData</a>&lt; type &gt;::Param2 param2, typename <a class="el" href="structMessage_1_1MessageData.html">Message::MessageData</a>&lt; type &gt;::Param3 param3)</td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="a8a0a7011d7a3cfc5d5fd938251ae9ed5"></a><!-- doxytag: member="MyXBee::writePackage" ref="a8a0a7011d7a3cfc5d5fd938251ae9ed5" args="(typename Message::MessageData&lt; type &gt;::Param1 param1, typename Message::MessageData&lt; type &gt;::Param2 param2, typename Message::MessageData&lt; type &gt;::Param3 param3, typename Message::MessageData&lt; type &gt;::Param4 param4)" -->
+template&lt;const char type&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>writePackage</b> (typename <a class="el" href="structMessage_1_1MessageData.html">Message::MessageData</a>&lt; type &gt;::Param1 param1, typename <a class="el" href="structMessage_1_1MessageData.html">Message::MessageData</a>&lt; type &gt;::Param2 param2, typename <a class="el" href="structMessage_1_1MessageData.html">Message::MessageData</a>&lt; type &gt;::Param3 param3, typename <a class="el" href="structMessage_1_1MessageData.html">Message::MessageData</a>&lt; type &gt;::Param4 param4)</td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="a82036273b8fad296f3c5750a8d619885"></a><!-- doxytag: member="MyXBee::writePackage" ref="a82036273b8fad296f3c5750a8d619885" args="(typename Message::MessageData&lt; type &gt;::Param1 param1, typename Message::MessageData&lt; type &gt;::Param2 param2, typename Message::MessageData&lt; type &gt;::Param3 param3, typename Message::MessageData&lt; type &gt;::Param4 param4, typename Message::MessageData&lt; type &gt;::Param5 param5)" -->
+template&lt;const char type&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>writePackage</b> (typename <a class="el" href="structMessage_1_1MessageData.html">Message::MessageData</a>&lt; type &gt;::Param1 param1, typename <a class="el" href="structMessage_1_1MessageData.html">Message::MessageData</a>&lt; type &gt;::Param2 param2, typename <a class="el" href="structMessage_1_1MessageData.html">Message::MessageData</a>&lt; type &gt;::Param3 param3, typename <a class="el" href="structMessage_1_1MessageData.html">Message::MessageData</a>&lt; type &gt;::Param4 param4, typename <a class="el" href="structMessage_1_1MessageData.html">Message::MessageData</a>&lt; type &gt;::Param5 param5)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5140628c6a0a5b88faab85095988902f"></a><!-- doxytag: member="MyXBee::getReadCount" ref="a5140628c6a0a5b88faab85095988902f" args="()" -->
+long&#160;</td><td class="memItemRight" valign="bottom"><b>getReadCount</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aab89764c3a20695cf9ff5f8d57312cbe"></a><!-- doxytag: member="MyXBee::_registerMethod" ref="aab89764c3a20695cf9ff5f8d57312cbe" args="(uint8_t type, ReadPackage package)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>_registerMethod</b> (uint8_t type, ReadPackage package)</td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="a5129e2acdbbc5c26476a45579012ba67"></a><!-- doxytag: member="MyXBee::registerMethod" ref="a5129e2acdbbc5c26476a45579012ba67" args="(void(*p)(const Message::MessageData&lt; type &gt; *data, uint8_t length))" -->
+template&lt;const char type&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>registerMethod</b> (void(*p)(const <a class="el" href="structMessage_1_1MessageData.html">Message::MessageData</a>&lt; type &gt; *data, uint8_t length))</td></tr>
+<tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
+Statische öffentliche Attribute</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af2255a46ef60678da09a267bc36f9763"></a><!-- doxytag: member="MyXBee::baudRate" ref="af2255a46ef60678da09a267bc36f9763" args="" -->
+static const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>baudRate</b> = 38400</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8cf2d5229c5c124a3b1712d8963a5f06"></a><!-- doxytag: member="MyXBee::MAX_TIME_BETWEEN_TWO_REQUESTS" ref="a8cf2d5229c5c124a3b1712d8963a5f06" args="" -->
+static const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>MAX_TIME_BETWEEN_TWO_REQUESTS</b> = 2000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a577b95156ea858c5899fed7967071ff0"></a><!-- doxytag: member="MyXBee::MAX_MESSAGE_LENGTH" ref="a577b95156ea858c5899fed7967071ff0" args="" -->
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>MAX_MESSAGE_LENGTH</b> = 50</td></tr>
+</table>
+<hr/>Die Dokumentation für diese Klasse wurde erzeugt aufgrund der Dateien:<ul>
+<li><a class="el" href="wireless_8h_source.html">wireless.h</a></li>
+<li>wireless.cpp</li>
+</ul>
+</div>
+<!--- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Alle</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Klassen</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Funktionen</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<hr class="footer"/><address class="footer"><small>Erzeugt am Wed Jan 12 2011 17:38:05 für Arduino-Solarboot von&#160;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
+</body>
+</html>
