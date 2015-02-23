@@ -1,6 +1,7 @@
 language: cpp
 
 before_script:
+  - sudo apt-get install arduino arduino-core
   - mkdir build
   - cd build
   - cmake ..
