@@ -7,7 +7,7 @@ add_library (arduinoLib STATIC
 	${path}/WInterrupts.c
 	${path}/wiring_digital.c
 	${path}/WMath.cpp
-	${path}/pins_arduino.c
+#	${path}/pins_arduino.c
 	${path}/wiring_analog.c
 	${path}/wiring_pulse.c
 )
